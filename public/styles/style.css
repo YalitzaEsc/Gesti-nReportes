@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+}
+
+.titulo-header {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: lighter;
+}
