@@ -4,7 +4,42 @@ body {
 
 .navbar {
     display: flex;
-    flex-direction: row;
-    margin: 10px 0 0 10px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px;
+    color: white;
+}
 
+#usuario {
+    cursor: pointer;
+    position: relative;
+}
+
+/* Estilo del menú desplegable */
+.dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #444;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown a:hover {
+    background-color: #555;
+}
+
+/* Mostrar el menú al hacer hover */
+#usuario:hover .dropdown {
+    display: block;
 }
