@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/styles/main.css">
     <title>Tickets</title>
 </head>
@@ -17,13 +18,42 @@
 
     <main>
 
-    <div class = "inicio-sesion">
-        <form action="/inicio" method="POST">
-            <img src="images/user2.png" height = "100" class = "img-icono" alt="imagen del ícono"> 
-            <input type="text" class = "input" placeholder="usuario">
-            <input type="password" class = "input" placeholder="contraseña" required> 
-            <button class = "btn login">LOG IN</button>
-        </form>
+
+    <div class = "contenedor">
+
+        <div class = "imagen-lateral">
+            <img src="images/mantenimiento.png" alt="hombre dando mantenimiento">
+        </div>
+
+        <div class = "inicio-sesion">
+            <form action="/inicio" method="POST">
+                <div class = "img-container">
+                    <img src="images/user.png" height = "140" class = "img-icono" alt="imagen del ícono">
+                </div>
+                
+                <div id = "inputs">
+                    <div id = "input-usuario">
+                        <i class="fa fa-user icon"></i>
+                        <input type="text" class = "input" placeholder="Usuario">
+                    </div>
+                    <div id = "input-contraseña">
+                        <i class="fa fa-lock icon"></i>
+                        <input type="password" class = "input" placeholder="Contraseña" required> 
+                    </div>
+                    
+                </div>
+    
+                <div id = "recuerdame-container">
+                    <input type="checkbox" id = "recordar">
+                    <label class = "recuerdame-text" for = "recordar">Recuérdame</label>
+                </div>
+    
+                <button class = "btn login">LOGIN</button>
+    
+            </form>
+        </div>
     </div>
+
+    
 
 <%- include("partials/footer.ejs") %>
