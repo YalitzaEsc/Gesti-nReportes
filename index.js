@@ -32,6 +32,12 @@ db.connect((err) =>{
   }
 });
 
+app.use((req, res, next) => {
+  res.locals.nombre = req.session.nombre;
+  res.locals.departamento = req.session.departamento;
+  next();
+});
+
 app.get("/", (req, res) => {
   res.render("index.ejs");
 });
@@ -57,6 +63,11 @@ app.post("/submit", async (req, res) => {
     if(contraseña == obj_usuario.contraseña){
       const consulta_departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [obj_usuario.id_departamento]);
       const nombre_departamento = consulta_departamento.rows[0];    
+
+      req.session.usuario = obj_usuario.username;
+      req.session.nombre = obj_usuario.nombre;
+      req.session.departamento = nombre_departamento;
+
       res.render("inicio.ejs", {nombre: obj_usuario.nombre, departamento: nombre_departamento.nombre});
     } else {
       res.render("index.ejs", {error: "Contraseña Incorrecta."});
@@ -65,6 +76,15 @@ app.post("/submit", async (req, res) => {
     res.render("index.ejs", {error: "Usuario no encontrado."});
   }
 
+});
+
+app.get("/cerrar-sesion", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return console.log(err);
+    }
+    res.redirect("/");
+  });
 });
 
 app.listen(port, () => {
