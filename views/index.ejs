@@ -29,7 +29,7 @@
         </div>
 
         <div class = "inicio-sesion">
-            <form action="/inicio" method="POST">
+            <form action="/submit" method="POST">
                 <div class = "img-container">
                     <img src="images/user.png" height = "140" class = "img-icono" alt="imagen del ícono">
                 </div>
@@ -37,21 +37,26 @@
                 <div id = "inputs">
                     <div id = "input-usuario">
                         <i class="fa fa-user icon"></i>
-                        <input type="text" class = "input" placeholder="Usuario">
+                        <input type="text" name = "usuario" class = "input" placeholder="Usuario">
                     </div>
                     <div id = "input-contraseña">
                         <i class="fa fa-lock icon"></i>
-                        <input type="password" class = "input" placeholder="Contraseña" required> 
+                        <input type="password" name = "contraseña" class = "input" placeholder="Contraseña" required> 
                     </div>
                     
                 </div>
     
                 <div id = "recuerdame-container">
-                    <input type="checkbox" id = "recordar">
+                    <div id = "check">
+                        <input type="checkbox" id = "recordar">
                     <label class = "recuerdame-text" for = "recordar">Recuérdame</label>
+                    </div>
+                    <% if(locals.error){ %>
+                    <label class = "error-login"> <%= error %> </label>
+                    <% } %>
                 </div>
     
-                <button class = "btn login">INICIAR SESIÓN</button>
+                <input type = "submit" class = "btn login" value = "INICIAR SESIÓN">
     
             </form>
         </div>
