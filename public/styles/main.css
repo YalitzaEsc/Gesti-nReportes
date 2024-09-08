@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(rgba(1, 11, 81, 0.427), rgba(124, 121, 121, 0.421));
+    background: url('../images/back3.png');
     margin: 0;
     height: 100vh;
     display: flex;
@@ -15,7 +15,7 @@ body {
     width: 1000px;
     height: 600px;
     border-radius: 6px;
-    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.2);
 }
 
 .imagen-lateral, .inicio-sesion {
@@ -36,7 +36,7 @@ body {
 .inicio-sesion {
     width: 350px;
     height: 560px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-bottom-right-radius: 8px;
     border-top-right-radius: 8px;
@@ -58,25 +58,27 @@ form {
 
 #inputs {
     margin: 5px 0;
-    height: 110px;
+    padding: 5px 0;
+    height: 100px;
     width: 430px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(255, 255, 255);
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.941);
     padding: 20px 10px;
+    border-radius: 2px;
 }
 
 .input {
-    padding: 18px 32px;
+    padding: 25px 32px;
     margin: 0;
     width: 310px;
-    border-radius: 5px;
     border: none;
     color: black;
     text-align: left;
     font-size: 16px;
-    background-color: rgba(255, 255, 255, 0.0);
+    background-color: rgba(255, 255, 255, 0);
 }
 
 input::placeholder {
@@ -105,6 +107,7 @@ input::placeholder {
     background-color: rgba(0, 0, 0, 0.9); 
     box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
     border: none; 
+    border-radius: 2px;
     color: white;
     transition: 0.3s all; 
     position: relative;
