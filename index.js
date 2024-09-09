@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  res.redirect("index.ejs");
 });
 
 app.get("/inicio", (req, res) =>{
