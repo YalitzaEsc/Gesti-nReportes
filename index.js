@@ -39,8 +39,12 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.redirect("index.ejs");
+  res.render("index.ejs");
 });
+
+app.get("/registro", (req, res) => {
+  res.render("registro.ejs");
+})
 
 app.get("/inicio", (req, res) =>{
   if (req.session.usuario) {

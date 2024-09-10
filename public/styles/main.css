@@ -34,6 +34,8 @@ body {
 }
 
 .inicio-sesion {
+    display: flex;
+    flex-direction: column;
     width: 350px;
     height: 560px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -135,5 +137,18 @@ input[type=checkbox] {
 
 .input:focus {
     outline: none;
+}
+
+.crear-cuenta {
+    background: none;
+    border: none;
+    position: relative;
+    top: 50px;
+    color: white;
+    font-style: italic;
+}
+
+.crear-cuenta:hover{
+    cursor: pointer;
 }
 
