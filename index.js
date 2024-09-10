@@ -1,25 +1,18 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import bcrypt from "bcrypt";
 import session from "express-session";
+import { cp } from "fs";
 
 const app = express();
 const port = 3000;
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-app.use(session({
-  secret: "contraseña", 
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 60000 } // Tiempo de vida de la sesión (en milisegundos)
-}));
+const saltRounds = 10;
 
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
-  database: "gestion",
+  database: "gestionTec",
   password: "98490133",
   port: 5432,
 });
@@ -32,11 +25,22 @@ db.connect((err) =>{
   }
 });
 
-app.use((req, res, next) => {
-  res.locals.nombre = req.session.nombre;
-  res.locals.departamento = req.session.departamento;
-  next();
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
+// app.use(session({
+//   secret: "contraseña", 
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: { maxAge: 60000 } // Tiempo de vida de la sesión (en milisegundos)
+// }));
+
+
+// app.use((req, res, next) => {
+//   res.locals.nombre = req.session.nombre;
+//   res.locals.departamento = req.session.departamento;
+//   next();
+// });
 
 app.get("/", (req, res) => {
   res.render("index.ejs");
@@ -46,53 +50,93 @@ app.get("/login", (req, res) => {
   res.render("index.ejs");
 });
 
-app.get("/registro", (req, res) => {
-  res.render("registro.ejs");
-})
-
-app.get("/inicio", (req, res) =>{
-  if (req.session.usuario) {
-    res.render("inicio.ejs", { nombre: req.session.nombre, departamento: req.session.departamento });
-  } else {
-    res.redirect("/");
-  }
-});
-
 // Envío del formulario de inicio de sesión
 app.post("/login", async (req, res) => {
 
   let usuario = req.body["usuario"];
   let contraseña = req.body["contraseña"];
 
-  const consulta_usuario = await db.query("SELECT * FROM usuarios WHERE username = $1", [usuario]);
+  //const consulta_usuario = await db.query("SELECT * FROM usuarios WHERE username = $1", [usuario]);
   
-  if (consulta_usuario.rows.length > 0){
-    const obj_usuario = consulta_usuario.rows[0];
-    if(contraseña == obj_usuario.contraseña){
-      const consulta_departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [obj_usuario.id_departamento]);
-      const nombre_departamento = consulta_departamento.rows[0];    
+  // if (consulta_usuario.rows.length > 0){
+  //   const obj_usuario = consulta_usuario.rows[0];
+  //   if(contraseña == obj_usuario.contraseña){
+  //     const consulta_departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [obj_usuario.id_departamento]);
+  //     const nombre_departamento = consulta_departamento.rows[0];    
 
-      req.session.usuario = obj_usuario.username;
-      req.session.nombre = obj_usuario.nombre;
-      req.session.departamento = nombre_departamento;
+  //     req.session.usuario = obj_usuario.username;
+  //     req.session.nombre = obj_usuario.nombre;
+  //     req.session.departamento = nombre_departamento;
 
-      res.render("inicio.ejs", {nombre: obj_usuario.nombre, departamento: nombre_departamento.nombre});
-    } else {
-      res.render("index.ejs", {error: "Contraseña Incorrecta."});
-    }
+  //     res.render("inicio.ejs", {nombre: obj_usuario.nombre, departamento: nombre_departamento.nombre});
+  //   } else {
+  //     res.render("index.ejs", {error: "Contraseña Incorrecta."});
+  //   }
+  // } else {
+  //   res.render("index.ejs", {error: "Usuario no encontrado."});
+  // }
+
+});
+
+app.get("/registro", async (req, res) => {
+  const dep = await db.query("SELECT * FROM departamentos");
+  res.render("registro.ejs", {departamentos: departamentos.rows});
+})
+
+app.post("/registro", async (req, res) =>{
+
+  const nombres = req.body.nombre;
+  const apellidos = req.body.apellidos;
+  const usuario = req.body.nombreUsuario;
+  const departamento = req.body.departamento;
+  const contraseña = req.body.registroContraseña;
+  const confContraseña = req.body.confirmarRegistroContraseña;
+
+
+  const consultaCheck = await db.query("SELECT * FROM usuarios WHERE nombre_usuario = $1", [usuario]);
+
+  if (consultaCheck.rows.length > 0){
+    res.render("registro.ejs", {error: "Nombre de usuario no disponible."});
   } else {
-    res.render("index.ejs", {error: "Usuario no encontrado."});
+
+    if (contraseña == confContraseña){
+      bcrypt.hash(contraseña, saltRounds, async (err, hash) => {
+        if(err){
+          console.log("Error al hashear contraseña.");
+        }else {
+
+          await db.query("INSERT INTO usuarios(nombre, apellidos, nombre_usuario, id_departamento, contraseña) VALUES($1, $2, $3, $4, $5)",
+            [nombres, apellidos, usuario, departamento, hash]
+          );
+
+          res.render("inicio.ejs");
+        }
+      });
+    } else {
+      res.render("registro.ejs", {error: "Las contraseñas no coinciden."});
+    }
   }
 
 });
 
+app.get("/inicio", (req, res) =>{
+
+  // if (req.session.usuario) {
+  //   res.render("inicio.ejs", { nombre: req.session.nombre, departamento: req.session.departamento });
+  // } else {
+  //   res.redirect("/");
+  // }
+});
+
+
+
 app.get("/cerrar-sesion", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return console.log(err);
-    }
-    res.redirect("/");
-  });
+  // req.session.destroy((err) => {
+  //   if (err) {
+  //     return console.log(err);
+  //   }
+  //   res.redirect("/");
+  // });
 });
 
 app.listen(port, () => {

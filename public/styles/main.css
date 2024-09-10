@@ -10,6 +10,12 @@ body {
     font-family: "Reddit Sans Condensed", sans-serif;;
 }
 
+h1 {
+    color: white;
+    font-size: 15pt;
+    font-family: "Reddit Sans Condensed", sans-serif;;
+}
+
 .contenedor {
     display: flex;
     width: 1000px;
@@ -90,12 +96,11 @@ form {
     margin: 5px;
     width: 310px;
     border: none;
-    color: black;
+    color: rgb(255, 255, 255);
     text-align: left;
     font-size: 16px;
     background-color: rgba(255, 255, 255, 0);
     outline: none;
-
 }
 
 select {
@@ -116,10 +121,12 @@ select {
 
 .registro-contenedor {
     background-color: rgba(0, 0, 0, 0.351);
+    border-radius: 5px;
 }
 
 .input-r::placeholder {
     color: rgb(255, 255, 255);
+    font-family: "Reddit Sans Condensed", sans-serif;;
 }
 
 .registro-contenedor {
@@ -129,27 +136,10 @@ select {
     align-items: center;
 }
 
-/*
-#reg-departamento {
-    margin: 30px 0;
+.icon-r {
+    color: white;
 }
 
- .input-registro{
-    padding: 25px 32px;
-    width: 350px;
-    border: none;
-    outline: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgb(0, 0, 0);
-    text-align: left;
-    font-size: 16px;
-}
-
-#inputs-registro {
-    background-color: rgba(255, 255, 255, 0.409);
-    position: relative;
-    top: 20px
-} */
 
 .input-registro::placeholder{
     color: white;

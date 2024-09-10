@@ -28,38 +28,43 @@
             </div>
     
             <div class = "registro-contenedor">
+                <h1>Registro</h1>
+
+                <form action="/registro" method = "POST">
 
                     <div class = "registro-nombre">
-                        <i class="fa fa-user icon"></i>
+                        <i class="fa fa-user icon icon-r"></i>
                         <input type="text" name = "nombre" class = "input-r" placeholder="Nombre(s)">
                     </div>
 
                     <div class = "registro-apellidos">
-                        <i class="fa-solid fa-user-tie"></i>
+                        <i class="fa-solid fa-user-tie icon-r"></i>
                         <input type="text" name = "apellidos" class = "input-r" placeholder="Apellido(s)">
                     </div>
                     
                     <div class = "registro-nombre-usuario">
-                        <i class="fa-solid fa-user-tag"></i>
-                        <input type="text" name = "nombre-usuario" class = "input-r" placeholder="Nombre de usuario">
+                        <i class="fa-solid fa-user-tag icon-r"></i>
+                        <input type="text" name = "nombreUsuario" class = "input-r" placeholder="Nombre de usuario">
                     </div>
 
                     <div class = "registro-departamento">
-                        <i class="fa-solid fa-list"></i>
+                        <i class="fa-solid fa-list icon-r"></i>
                         <select name="departamento" id="departamento">
                             <option value="" disabled selected>Departamento</option>
-                            <option value=""></option>
+                            <% for (let departamento of departamentos){ %>
+                                <option value="<%= departamento.id_departamento %>"><%= departamento.nombre %></option>
+                            <% } %>
                         </select>
                     </div>
 
                     <div class = "registro-contraseña">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" name = "registro-contraseña" class = "input-r" placeholder="Contraseña">
+                        <i class="fa-solid fa-lock icon-r"></i>
+                        <input type="password" name = "registroContraseña" class = "input-r" placeholder="Contraseña">
                     </div>
 
                     <div class = "confirmar-registro-contraseña">
-                        <i class="fa-solid fa-lock"></i>
-                        <input type="password" name = "confirmar-registro-contraseña" class = "input-r" placeholder="Confirmar contraseña">
+                        <i class="fa-solid fa-lock icon-r"></i>
+                        <input type="password" name = "confirmarRegistroContraseña" class = "input-r" placeholder="Confirmar contraseña">
                     </div>
 
                     <% if(locals.error){ %>
@@ -67,6 +72,8 @@
                         <% } %>
 
                     <input type = "submit" class = "btn registrobtn" value = "CONFIRMAR REGISTRO">
+
+                </form>
 
                 <form action="/login" method="GET">
                     <input type = "submit" class = "iniciar" value = "¿Ya estás registrado? Inicia sesión.">
