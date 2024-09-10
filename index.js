@@ -42,6 +42,10 @@ app.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
+app.get("/login", (req, res) => {
+  res.render("index.ejs");
+});
+
 app.get("/registro", (req, res) => {
   res.render("registro.ejs");
 })
@@ -55,7 +59,7 @@ app.get("/inicio", (req, res) =>{
 });
 
 // Envío del formulario de inicio de sesión
-app.post("/submit", async (req, res) => {
+app.post("/login", async (req, res) => {
 
   let usuario = req.body["usuario"];
   let contraseña = req.body["contraseña"];

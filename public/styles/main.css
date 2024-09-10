@@ -18,7 +18,7 @@ body {
     box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.2);
 }
 
-.imagen-lateral, .inicio-sesion {
+.imagen-lateral, .inicio-sesion{
     flex: 1;
     display: flex;
     justify-content: center;
@@ -58,6 +58,7 @@ form {
     border: none;
 }
 
+
 #inputs {
     margin: 5px 0;
     padding: 5px 0;
@@ -72,8 +73,9 @@ form {
     border-radius: 2px;
 }
 
+
 .input {
-    padding: 25px 32px;
+    padding: 10px 32px;
     margin: 0;
     width: 310px;
     border: none;
@@ -81,6 +83,76 @@ form {
     text-align: left;
     font-size: 16px;
     background-color: rgba(255, 255, 255, 0);
+}
+
+.input-r {
+    padding: 15px 32px;
+    margin: 5px;
+    width: 310px;
+    border: none;
+    color: black;
+    text-align: left;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0);
+    outline: none;
+
+}
+
+select {
+    width: 380px;
+    padding: 15px 32px;
+    margin: 5px;
+    border: none;
+    color: black;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0);
+    outline: none;
+    color: white;
+}
+
+.registro-contenedor div {
+    border-bottom: 2px solid black;
+}
+
+.registro-contenedor {
+    background-color: rgba(0, 0, 0, 0.351);
+}
+
+.input-r::placeholder {
+    color: rgb(255, 255, 255);
+}
+
+.registro-contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+#reg-departamento {
+    margin: 30px 0;
+}
+
+ .input-registro{
+    padding: 25px 32px;
+    width: 350px;
+    border: none;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgb(0, 0, 0);
+    text-align: left;
+    font-size: 16px;
+}
+
+#inputs-registro {
+    background-color: rgba(255, 255, 255, 0.409);
+    position: relative;
+    top: 20px
+} */
+
+.input-registro::placeholder{
+    color: white;
 }
 
 input::placeholder {
@@ -108,6 +180,12 @@ input::placeholder {
     color: rgb(197, 22, 22);
 }
 
+.error-registro {
+    color: rgb(197, 22, 22);
+    margin: 15px;
+}
+
+
 .login{
     width: 450px;
     height: 70px;
@@ -131,6 +209,29 @@ input::placeholder {
     color: black;
 }
 
+.registrobtn{
+    width: 420px;
+    height: 70px;
+    padding: 15px 32px;
+    margin: 30px 15px;
+    background-color: rgba(0, 0, 0, 0.9); 
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
+    border: none; 
+    border-radius: 2px;
+    color: white;
+    transition: 0.3s all; 
+}
+
+.registro-departamento {
+    margin: 0;
+}
+
+.registrobtn:hover {
+    background-color: rgba(255, 255, 255, 0.9);  
+    cursor: pointer;
+    color: black;
+}
+
 input[type=checkbox] {
     accent-color: rgba(0, 0, 0, 0.3); 
   }
@@ -146,6 +247,17 @@ input[type=checkbox] {
     top: 50px;
     color: white;
     font-style: italic;
+}
+
+.iniciar {
+    background: none;
+    border: none;
+    color: rgb(247, 247, 247);
+    font-style: italic;
+}
+
+.iniciar:hover {
+    cursor: pointer;
 }
 
 .crear-cuenta:hover{
