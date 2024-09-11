@@ -58,23 +58,25 @@ app.post("/login", async (req, res) => {
 
   const consulta_usuario = await db.query("SELECT * FROM usuarios WHERE nombre_usuario = $1", [usuario_login]);
   
-  // if (consulta_usuario.rows.length > 0){
-  //   const obj_usuario = consulta_usuario.rows[0];
-  //   if(contraseña == obj_usuario.contraseña){
-  //     const consulta_departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [obj_usuario.id_departamento]);
-  //     const nombre_departamento = consulta_departamento.rows[0];    
+  if (consulta_usuario.rows.length > 0){
+    const usuario = consulta_usuario.rows[0];
+    const contraseñaHasheada = usuario.contraseña; 
 
-  //     req.session.usuario = obj_usuario.username;
-  //     req.session.nombre = obj_usuario.nombre;
-  //     req.session.departamento = nombre_departamento;
+    bcrypt.compare(contraseña_login, contraseñaHasheada, (err, result) => {
+      if (err) {
+        console.log("Error al comparar contradeñas: ", err);
+      } else {
+        if (result){
+          res.render("inicio.ejs");
+        } else {
+          res.render("index.ejs", {error: "Contraseña incorrecta."});
+        }
+      }
+    });
 
-  //     res.render("inicio.ejs", {nombre: obj_usuario.nombre, departamento: nombre_departamento.nombre});
-  //   } else {
-  //     res.render("index.ejs", {error: "Contraseña Incorrecta."});
-  //   }
-  // } else {
-  //   res.render("index.ejs", {error: "Usuario no encontrado."});
-  // }
+  } else {
+    res.render("index.ejs", {error: "Usuario no encontrado."});
+  }
 
 });
 
@@ -107,7 +109,7 @@ app.post("/registro", async (req, res) =>{
           await db.query("INSERT INTO usuarios(nombre, apellidos, nombre_usuario, id_departamento, contraseña) VALUES($1, $2, $3, $4, $5)",
             [nombres, apellidos, usuario, departamento, hash]
           );
-          res.render("inicio.ejs");
+          res.render("index.ejs");
         }
       });
     } else {
@@ -124,6 +126,8 @@ app.get("/inicio", (req, res) =>{
   // } else {
   //   res.redirect("/");
   // }
+
+  res.render("inicio.ejs");
 });
 
 
