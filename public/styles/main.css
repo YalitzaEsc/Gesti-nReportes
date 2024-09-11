@@ -167,11 +167,11 @@ input::placeholder {
 }
 
 .error-login {
-    color: rgb(197, 22, 22);
+    color: rgb(235, 104, 104);
 }
 
 .error-registro {
-    color: rgb(197, 22, 22);
+    color: rgb(235, 104, 104);
     margin: 15px;
 }
 
@@ -203,7 +203,7 @@ input::placeholder {
     width: 420px;
     height: 70px;
     padding: 15px 32px;
-    margin: 30px 15px;
+    margin: 15px 15px;
     background-color: rgba(0, 0, 0, 0.9); 
     box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
     border: none; 

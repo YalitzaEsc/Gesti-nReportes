@@ -53,10 +53,10 @@ app.get("/login", (req, res) => {
 // Envío del formulario de inicio de sesión
 app.post("/login", async (req, res) => {
 
-  let usuario = req.body["usuario"];
-  let contraseña = req.body["contraseña"];
+  let usuario_login = req.body["usuario"];
+  let contraseña_login = req.body["contraseña"];
 
-  //const consulta_usuario = await db.query("SELECT * FROM usuarios WHERE username = $1", [usuario]);
+  const consulta_usuario = await db.query("SELECT * FROM usuarios WHERE nombre_usuario = $1", [usuario_login]);
   
   // if (consulta_usuario.rows.length > 0){
   //   const obj_usuario = consulta_usuario.rows[0];
@@ -78,8 +78,9 @@ app.post("/login", async (req, res) => {
 
 });
 
+const departamentos = await db.query("SELECT * FROM departamentos");
+
 app.get("/registro", async (req, res) => {
-  const dep = await db.query("SELECT * FROM departamentos");
   res.render("registro.ejs", {departamentos: departamentos.rows});
 })
 
@@ -92,11 +93,10 @@ app.post("/registro", async (req, res) =>{
   const contraseña = req.body.registroContraseña;
   const confContraseña = req.body.confirmarRegistroContraseña;
 
-
   const consultaCheck = await db.query("SELECT * FROM usuarios WHERE nombre_usuario = $1", [usuario]);
 
   if (consultaCheck.rows.length > 0){
-    res.render("registro.ejs", {error: "Nombre de usuario no disponible."});
+    res.render("registro.ejs", { departamentos: departamentos.rows, error: "Nombre de usuario no disponible." });
   } else {
 
     if (contraseña == confContraseña){
@@ -104,16 +104,14 @@ app.post("/registro", async (req, res) =>{
         if(err){
           console.log("Error al hashear contraseña.");
         }else {
-
           await db.query("INSERT INTO usuarios(nombre, apellidos, nombre_usuario, id_departamento, contraseña) VALUES($1, $2, $3, $4, $5)",
             [nombres, apellidos, usuario, departamento, hash]
           );
-
           res.render("inicio.ejs");
         }
       });
     } else {
-      res.render("registro.ejs", {error: "Las contraseñas no coinciden."});
+      res.render("registro.ejs", { departamentos: departamentos.rows, error: "Las contraseñas no coinciden." });
     }
   }
 
