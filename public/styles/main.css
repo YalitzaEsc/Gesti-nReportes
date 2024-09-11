@@ -58,7 +58,7 @@ form {
 
 .img-container {
     position: relative;
-    top: -50px;
+    top: -60px;
     left: 70px;
     transform: translateX(-50%);
     border: none;
@@ -66,7 +66,7 @@ form {
 
 
 #inputs {
-    margin: 5px 0;
+    margin: 0;
     padding: 5px 0;
     height: 100px;
     width: 430px;
@@ -74,7 +74,7 @@ form {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.941);
+    background-color: rgba(0, 0, 0, 0);
     padding: 20px 10px;
     border-radius: 2px;
 }
@@ -85,7 +85,7 @@ form {
     margin: 0;
     width: 310px;
     border: none;
-    color: black;
+    color: white;
     text-align: left;
     font-size: 16px;
     background-color: rgba(255, 255, 255, 0);
@@ -94,7 +94,7 @@ form {
 .input-r {
     padding: 15px 32px;
     margin: 5px;
-    width: 310px;
+    width: 270px;
     border: none;
     color: rgb(255, 255, 255);
     text-align: left;
@@ -104,7 +104,7 @@ form {
 }
 
 select {
-    width: 380px;
+    width: 330px;
     padding: 15px 32px;
     margin: 5px;
     border: none;
@@ -117,6 +117,8 @@ select {
 
 .registro-contenedor div {
     border-bottom: 2px solid black;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 .registro-contenedor {
@@ -126,7 +128,7 @@ select {
 
 .input-r::placeholder {
     color: rgb(255, 255, 255);
-    font-family: "Reddit Sans Condensed", sans-serif;;
+    font-family: "Reddit Sans Condensed", sans-serif;
 }
 
 .registro-contenedor {
@@ -140,25 +142,31 @@ select {
     color: white;
 }
 
+.icon {
+    color: white;
+}
 
 .input-registro::placeholder{
     color: white;
 }
 
 input::placeholder {
-    color: rgba(0, 0, 0, 0.5);
+    color: white;
 }
 
-#input-usuario {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+
+#input-usuario, #input-contraseña{
+    border-bottom: 1.5px solid rgb(0, 0, 0);
+    margin: 15px 0;
 }
+
 
 #recuerdame-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 10px 0;
-    width: 455px;
+    margin: 10px 10px;
+    width: 405px;
 }
 
 .recuerdame-text {
@@ -200,7 +208,7 @@ input::placeholder {
 }
 
 .registrobtn{
-    width: 420px;
+    width: 400px;
     height: 70px;
     padding: 15px 32px;
     margin: 15px 15px;
