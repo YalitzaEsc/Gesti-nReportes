@@ -61,9 +61,17 @@ app.get("/login", (req, res) => {
 
 const departamentos = await db.query("SELECT * FROM departamentos");
 
-app.get("/registro", async (req, res) => {
-  res.render("registro.ejs", {departamentos: departamentos.rows});
-})
+app.get("/registro", (req, res) => {
+  if (req.isAuthenticated()) {
+    if (req.user.nombre_usuario === 'Administrador') {
+      res.render("registro.ejs", {departamentos: departamentos.rows});
+    } else {
+      res.redirect("/inicio");  
+    }
+  } else {
+    res.redirect("/login");
+  }
+});
 
 app.get("/inicio", (req, res) =>{
   if (req.isAuthenticated()){
