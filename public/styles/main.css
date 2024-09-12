@@ -7,13 +7,13 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    font-family: "Reddit Sans Condensed", sans-serif;;
+    font-family: "Reddit Sans Condensed", sans-serif;
 }
 
 h1 {
     color: white;
     font-size: 15pt;
-    font-family: "Reddit Sans Condensed", sans-serif;;
+    font-family: "Reddit Sans Condensed", sans-serif;
 }
 
 .contenedor {
@@ -122,6 +122,10 @@ select {
     margin-right: 30px;
 }
 
+.registro-contenedor div.botones {
+    border-bottom: none;
+}
+
 .registro-contenedor {
     background-color: rgba(0, 0, 0, 0.5);
     box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.378);
@@ -139,6 +143,10 @@ select {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.exito-registro {
+    color: rgb(255, 255, 255);
 }
 
 .icon-r {
@@ -210,17 +218,40 @@ input::placeholder {
 }
 
 .registrobtn{
-    width: 400px;
-    height: 70px;
+    width: 160px;
+    height: 67px;
     padding: 15px 32px;
     margin: 15px 15px;
     background-color: rgba(0, 0, 0, 0.9); 
     box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
     border: none; 
-    border-radius: 2px;
+    border-radius: 5px;
     color: white;
     transition: 0.3s all; 
+    
 }
+
+a.iniciobtn{
+    width: 160px;
+    height: 68px;
+    padding: 23px 58px;
+    margin: 15px 5px;
+    background-color: rgba(248, 248, 248, 0.9); 
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.8);
+    border: none; 
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    transition: 0.3s all; 
+    text-decoration: none;
+    font-family: "Reddit Sans Condensed", sans-serif;
+    font-size: 14px;
+}
+
+input.registrobtn {
+    text-align: center;
+    font-family: "Reddit Sans Condensed", sans-serif;
+}
+
 
 .registro-departamento {
     margin: 0;
@@ -230,6 +261,12 @@ input::placeholder {
     background-color: rgba(255, 255, 255, 0.9);  
     cursor: pointer;
     color: black;
+}
+
+.iniciobtn:hover {
+    background-color: rgba(0, 0, 0, 0.9);  
+    cursor: pointer;
+    color: rgb(255, 255, 255);
 }
 
 input[type=checkbox] {

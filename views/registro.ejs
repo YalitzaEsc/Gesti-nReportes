@@ -71,13 +71,16 @@
                         <label class = "error-registro"> <%= error %> </label>
                         <% } %>
 
-                    <input type = "submit" class = "btn registrobtn" value = "CONFIRMAR REGISTRO">
-
+                    <div class = "botones">
+                        <a href="/inicio" class="btn iniciobtn">INICIO</a>
+                        <input type = "submit" class = "btn registrobtn" value = "REGISTRAR">
+                    </div>
+                    
                 </form>
 
-                <form action="/login" method="GET" autocomplete="off">
-                    <input type = "submit" class = "iniciar" value = "¿Ya estás registrado? Inicia sesión.">
-                </form>   
+                <% if(locals.exito){ %>
+                    <label class = "exito-registro"> <%= exito %> </label>
+                    <% } %>
     
             </div>
         </div>

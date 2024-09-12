@@ -123,14 +123,8 @@ app.post("/registro", async (req, res) =>{
         if(err){
           console.log("Error al hashear contraseña:", err);
         }else {
-          const consulta = await db.query("INSERT INTO usuarios(nombre, apellidos, nombre_usuario, id_departamento, contraseña) VALUES($1, $2, $3, $4, $5) RETURNING *",
-            [nombres, apellidos, usuario, departamento, hash]
-          );
-          const objUsuario = consulta.rows[0];
-          req.login(objUsuario, (err) => {
-            console.log("Login exitoso.")
-            res.redirect("/inicio");
-          });
+          await db.query("INSERT INTO usuarios(nombre, apellidos, contraseña, id_departamento, nombre_usuario) VALUES($1, $2, $3, $4, $5)", [nombres, apellidos, hash, departamento, usuario]);
+          res.render("registro.ejs", {exito: "Usuario registrado con éxito.", departamentos: departamentos.rows});
         }
       });
     } else {
