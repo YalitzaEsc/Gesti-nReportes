@@ -1,5 +1,5 @@
 body {
-    background: url('../images/back3.png');
+    
     margin: 0;
     height: 100vh;
     display: flex;
@@ -21,7 +21,7 @@ h1 {
     width: 1000px;
     height: 600px;
     border-radius: 6px;
-    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.378);
 }
 
 .imagen-lateral, .inicio-sesion{
@@ -29,6 +29,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.378);
 }
 
 .imagen-lateral img {
@@ -105,7 +106,7 @@ form {
 
 select {
     width: 330px;
-    padding: 15px 32px;
+    padding: 15px 26px;
     margin: 5px;
     border: none;
     color: black;
@@ -122,8 +123,10 @@ select {
 }
 
 .registro-contenedor {
-    background-color: rgba(0, 0, 0, 0.351);
-    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.378);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .input-r::placeholder {
@@ -163,8 +166,7 @@ input::placeholder {
 
 #recuerdame-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     margin: 10px 10px;
     width: 405px;
 }
@@ -175,11 +177,11 @@ input::placeholder {
 }
 
 .error-login {
-    color: rgb(235, 104, 104);
+    color: rgb(112, 17, 17);
 }
 
 .error-registro {
-    color: rgb(235, 104, 104);
+    color: rgb(112, 17, 17);
     margin: 15px;
 }
 
