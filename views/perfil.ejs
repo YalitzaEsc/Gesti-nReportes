@@ -2,11 +2,22 @@
 
 <div class = "contenedor-perfil">
 
+    <div class = "titulo-perfil">
+        <h1>Perfil de usuario</h1>
+        <p>Para solicitar cualquier cambio, <br>
+            contacte al administrador.
+        </p>
+    </div>
+    
+
     <div class = "perfil">
         <img src="images/user.png" height = "150" alt="icono de perfil">
-        <p> <%= user.nombre %> <%= user.apellidos %></p>
-        <p><%= user.puesto %></p>
-        <p><%= departamento.nombre %></p>
+        <p class = "p-nombre"><%= user.nombre %> <%= user.apellidos %></p>
+        <div class = "info">
+            <p class = "p"><%= user.puesto %></p>
+            <p class = "p"><%= departamento.nombre %></p>
+        </div>
+        
     </div>
 
 </div>

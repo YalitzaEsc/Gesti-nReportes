@@ -113,3 +113,48 @@ main {
 
 /* PERFIL */
 
+.contenedor-perfil {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 20px;
+}
+
+.titulo-perfil {
+    padding-right: 120px;
+    padding-top: 110px;
+    align-items: center;
+    text-align: center;
+}
+
+.perfil {
+    margin-top: 150px;
+    width: 550px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:rgb(29, 28, 28);
+    box-shadow: 1px 0 5px rgba(63, 63, 63, 0.2); 
+    border-radius: 6px;
+    color: white;
+}
+
+.p-nombre {
+    margin-bottom: 50px
+}
+
+.p {
+    margin: 0;
+}
+
+.info {
+    width: 80%;
+    border-top: 2px solid rgb(255, 255, 255);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
