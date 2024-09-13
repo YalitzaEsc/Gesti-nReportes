@@ -13,12 +13,14 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 env.config();
+
 // Siempre se inicia primero la sesión antes que el passport
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 horas
   })
 );
 
@@ -35,11 +37,11 @@ app.use((req, res, next) => {
 });
 
 const db = new pg.Client({
-  user: "postgres",
-  host: "localhost",
-  database: "gestionTec",
-  password: "98490133",
-  port: 5432,
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
+  port: process.env.PG_PORT,
 });
 
 db.connect((err) =>{
@@ -52,7 +54,11 @@ db.connect((err) =>{
 
 
 app.get("/", (req, res) => {
-  res.render("index.ejs");
+  if (req.isAuthenticated()){
+    res.render("inicio.ejs");
+  } else {
+    res.redirect("/login")
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -115,6 +121,7 @@ app.post("/registro", async (req, res) =>{
   const nombres = req.body.nombre;
   const apellidos = req.body.apellidos;
   const usuario = req.body.nombreUsuario;
+  const cargo = req.body.cargo;
   const departamento = req.body.departamento;
   const contraseña = req.body.registroContraseña;
   const confContraseña = req.body.confirmarRegistroContraseña;
@@ -131,7 +138,7 @@ app.post("/registro", async (req, res) =>{
         if(err){
           console.log("Error al hashear contraseña:", err);
         }else {
-          await db.query("INSERT INTO usuarios(nombre, apellidos, contraseña, id_departamento, nombre_usuario) VALUES($1, $2, $3, $4, $5)", [nombres, apellidos, hash, departamento, usuario]);
+          await db.query("INSERT INTO usuarios(nombre, apellidos, contraseña, id_departamento, nombre_usuario, puesto) VALUES($1, $2, $3, $4, $5, $6)", [nombres, apellidos, hash, departamento, usuario, cargo]);
           res.render("registro.ejs", {exito: "Usuario registrado con éxito.", departamentos: departamentos.rows});
         }
       });
@@ -187,7 +194,24 @@ passport.deserializeUser((user, cb) => {
   cb(null, user);
 });
 
+
+
+
+  // Sidebar
+
+  app.get("/perfil", (req, res) => {
+    if (req.isAuthenticated()){
+      res.render("perfil.ejs");
+    } else {
+      res.redirect("/login");
+    }
+  })
+
+
+
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
   
+

@@ -34,22 +34,23 @@
 
                     <div class = "registro-nombre">
                         <i class="fa fa-user icon icon-r"></i>
-                        <input type="text" name = "nombre" class = "input-r" placeholder="Nombre(s)">
+                        <input type="text" name = "nombre" class = "input-r" placeholder="Nombre(s)" required>
                     </div>
 
                     <div class = "registro-apellidos">
                         <i class="fa-solid fa-user-tie icon-r"></i>
-                        <input type="text" name = "apellidos" class = "input-r" placeholder="Apellido(s)">
+                        <input type="text" name = "apellidos" class = "input-r" placeholder="Apellido(s)" required>
                     </div>
-                    
+
                     <div class = "registro-nombre-usuario">
                         <i class="fa-solid fa-user-tag icon-r"></i>
-                        <input type="text" name = "nombreUsuario" class = "input-r" placeholder="Nombre de usuario">
+                        <input type="text" name = "nombreUsuario" class = "input-r" placeholder="Nombre de usuario" required>
                     </div>
+
 
                     <div class = "registro-departamento">
                         <i class="fa-solid fa-list icon-r"></i>
-                        <select name="departamento" id="departamento">
+                        <select name="departamento" id="departamento" required>
                             <option value="" disabled selected>Departamento</option>
                             <% for (let departamento of departamentos){ %>
                                 <option value="<%= departamento.id_departamento %>"><%= departamento.nombre %></option>
@@ -57,14 +58,19 @@
                         </select>
                     </div>
 
+                    <div class = "registro-cargo">
+                        <i class="fa-solid fa-user-tie icon-r"></i>
+                        <input type="text" name = "cargo" class = "input-r" placeholder="Puesto" required>
+                    </div>
+
                     <div class = "registro-contraseña">
                         <i class="fa-solid fa-lock icon-r"></i>
-                        <input type="password" name = "registroContraseña" class = "input-r" placeholder="Contraseña">
+                        <input type="password" name = "registroContraseña" class = "input-r" placeholder="Contraseña" required>
                     </div>
 
                     <div class = "confirmar-registro-contraseña">
                         <i class="fa-solid fa-lock icon-r"></i>
-                        <input type="password" name = "confirmarRegistroContraseña" class = "input-r" placeholder="Confirmar contraseña">
+                        <input type="password" name = "confirmarRegistroContraseña" class = "input-r" placeholder="Confirmar contraseña" required>
                     </div>
 
                     <% if(locals.error){ %>
