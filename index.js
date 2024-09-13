@@ -186,28 +186,42 @@ passport.use(
   })
 );
 
-passport.serializeUser((user, cb) => {
-  cb(null, user);
-});
-
-passport.deserializeUser((user, cb) => {
-  cb(null, user);
-});
-
-
-
 
   // Sidebar
 
-  app.get("/perfil", (req, res) => {
+  app.get("/perfil", async (req, res) => {
+
     if (req.isAuthenticated()){
-      res.render("perfil.ejs");
+      const usuario = res.locals.user;
+      const id_departamento = usuario.id_departamento;
+    
+      const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+      console.log(res.locals.user);
+      res.render("perfil.ejs", {departamento: departamento.rows[0]});
     } else {
       res.redirect("/login");
     }
-  })
+  });
 
 
+  app.get("/edificios", (req, res) => {
+    if (req.isAuthenticated()){
+      res.render("edificios.ejs");
+    } else {
+      res.redirect("/login");
+    }
+  });
+
+
+  passport.serializeUser((user, cb) => {
+    cb(null, user);
+  });
+  
+  passport.deserializeUser((user, cb) => {
+    cb(null, user);
+  });
+  
+  
 
 
 app.listen(port, () => {

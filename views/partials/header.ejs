@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Tickets</title>
 </head>
 
@@ -14,35 +18,35 @@
         <aside class = "sidebar">
             <nav class="navbar">
 
-                <div id="titutlo">
-                    <p class = "tituloPrincipal">Gestión</p> 
-                </div>
-
                 <div id = "inicio">
-                    <i class="fa-solid fa-lock icon-r"></i>
+                    <i class="fa-solid fa-house icon-sidebar"></i>
                     <a href="/inicio" class="tituloOpciones">Inicio</a>
                 </div>
 
-                <div id = "edificios">
-                    <i class="fa-solid fa-lock icon-r"></i>
-                    <a href="/inicio" class="tituloOpciones">Edificios</a>
-                </div>
-
-                <div id = "registro">
-                    <i class="fa-solid fa-lock icon-r"></i>
-                    <a href="/registro" class="tituloOpciones">Registro</a>
-                </div>
 
                 <div id = "perfil">
-                    <i class="fa-solid fa-lock icon-r"></i>
+                    <i class="fa-solid fa-user icon-sidebar"></i>
                     <a href="/perfil" class="tituloOpciones">Perfil</a>
                 </div>
 
-                <div id="usuario">
-                    <p class = "tituloOpciones"><%= user.nombre %> <%= user.apellidos %> </p>
-                    <a class = "tituloOpciones" href="/cerrar-sesion" class="cerrar-sesion">Cerrar sesión</a>
+
+                <div id = "edificios">
+                    <i class="fa-solid fa-building icon-sidebar"></i>
+                    <a href="/edificios" class="tituloOpciones">Edificios</a>
                 </div>
 
+                <% if (user.nombre_usuario == "Administrador") { %>
+                    <div id = "registro">
+                        <i class="fa-solid fa-clipboard icon-sidebar"></i>
+                        <a href="/registro" class="tituloOpciones">Registro</a>
+                    </div>
+    
+                    <% } %>
+
+                <div id="usuario">
+                    <i class="fa-solid fa-right-from-bracket icon-sidebar"></i>
+                    <a class = "tituloOpciones" href="/cerrar-sesion" class="cerrar-sesion">Cerrar sesión</a>
+                </div>
 
             </nav>
         </aside>

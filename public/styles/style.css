@@ -1,26 +1,77 @@
 body {
     margin: 0;
-    font-family: "Reddit Sans Condensed", sans-serif;
 }
 
 .sidebar {
-    height: 100%;
+    height: 100vh;
     width: 250px; /* Ancho del menú lateral */
     position: fixed; /* Fija el menú lateral a la izquierda */
     top: 0;
     left: 0;
-    background-color:rgba(181, 178, 178, 0.472); /* Color de fondo del menú */
-    padding-top: 20px; /* Espaciado superior */
+    background-color:rgb(29, 28, 28);
+    padding-top: 20px; 
     color: rgb(0, 0, 0);
-    box-shadow: 1px 0 5px rgba(0,0,0,0.4); /* Sombra del menú */
+    box-shadow: 1px 0 5px rgba(0,0,0,0.4); 
+    font-family: "Roboto Condensed", sans-serif;
 }
 
 .navbar {
     display: flex;
     flex-direction: column;
-    height: 93%;
-    align-items: center;
-    text-align: center;
+    margin-top: 30px;
+    height: 90%;
+}
+
+.tituloOpciones {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 17px;
+}
+
+.sidebar .navbar div {
+    padding: 13px 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    transition: 0.3s all;
+    position: relative;
+}
+
+.sidebar .navbar div:hover {
+    padding: 13px 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    transition: 0.3s all;
+    position: relative;
+    cursor: pointer;
+}
+
+.sidebar .navbar div::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    height: 2px;
+    width: 0;
+    background-color: white;
+    transition: 0.3s width ease-in-out;
+}
+
+.sidebar .navbar div:hover::after {
+    width: 80%; 
+}
+
+
+.icon-sidebar {
+    margin: 0 10px;
+    color: white;
+    font-size: 17px;
+}
+
+div a {
+    display: block;
+    text-align: left;
 }
 
 #usuario {
@@ -31,3 +82,34 @@ body {
     text-decoration: none;
     color: rgb(172, 37, 37);
 }
+
+
+
+/* MAIN - INICIO */
+
+main {
+    margin-left: 250px;
+}
+
+.inicio-contenedor {
+    font-family: "Inter Tight", sans-serif;
+}
+
+.titulo-bienvenida {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 140px;
+    font-size: 30px;
+    color: rgb(29, 28, 28);
+}
+
+.icon-inicio {
+    color: black;
+    font-size: 90px;
+}
+
+
+/* PERFIL */
+
