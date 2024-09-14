@@ -158,3 +158,52 @@ main {
     flex-direction: column;
     align-items: center;
 }
+
+
+
+/* EDIFICIOS */
+
+.contenedor-edificios {
+    margin: 10px 35px 10px 10px;
+    padding-left: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: "Inter Tight", sans-serif;
+}
+
+.input-edificio {
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+    width: 83%;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid rgba(100, 94, 94, 0.446);
+    outline: none;
+}
+
+.input-edificio::placeholder {
+    padding-left: 10px;
+}
+
+.agregarEdificioBtn {
+    margin-left: 5px;
+    padding: 9.5px 15px;
+    border-radius: 5px;
+    background-color: black;
+    border: none;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+}
+
+.agregarEdificioBtn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.icon-agregar {
+    padding-right: 6px;
+}
