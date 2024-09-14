@@ -30,6 +30,9 @@ app.use(express.static("public"));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
 // Middleware para hacer que el usuario esté disponible en todas las vistas
 app.use((req, res, next) => {
   res.locals.user = req.user; // Almacena el usuario en res.locals
@@ -221,11 +224,17 @@ passport.use(
       const id_departamento = usuario.id_departamento;
       const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
       const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1", [id_departamento]);
-      
+      const tipos = await db.query("SELECT * FROM tipos");
+      const localidadesPorEdificio = {};
+      for (const edificio of edificios.rows){
+        const localidades  = await db.query("SELECT * FROM localidades WHERE id_edificio = $1", [edificio.id_edificio]);
+        localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
+      }
+     
       res.render("edificios.ejs", {departamento: departamento.rows[0], 
-        id_departamento: id_departamento, edificios: edificios.rows});
+        id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio});
     } else {
-      res.redirect("/login");
+      res.render("login.ejs");
     }
   });
 
@@ -246,6 +255,56 @@ passport.use(
       res.redirect("/login");
     }
   });
+
+
+  // LOCALIDADES
+
+ app.post("/agregarLocalidad", async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const nombreLocalidad = req.body.nuevaLocalidad;
+      const tipo = req.body.tipo;
+      const id_edificio = req.body.id_edificio;
+
+      const usuario = res.locals.user;
+      const id_departamento = usuario.id_departamento;
+
+      // Consultar todos los edificios del departamento del usuario
+      const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1", [id_departamento]);
+
+      // Consultar todos los tipos
+      const tipos = await db.query("SELECT * FROM tipos");
+
+      // Insertar la nueva localidad en la base de datos
+      await db.query("INSERT INTO localidades(nombre, id_tipo, id_edificio) VALUES($1, $2, $3)", [nombreLocalidad, tipo, id_edificio]);
+
+      // Consultar todas las localidades agrupadas por edificio
+      const localidades = await db.query("SELECT * FROM localidades WHERE id_edificio IN (SELECT id_edificio FROM edificios WHERE id_departamento = $1)", [id_departamento]);
+
+      // Agrupar localidades por edificio
+      const localidadesPorEdificio = localidades.rows.reduce((acc, localidad) => {
+        if (!acc[localidad.id_edificio]) {
+          acc[localidad.id_edificio] = [];
+        }
+        acc[localidad.id_edificio].push(localidad);
+        return acc;
+      }, {});
+
+      // Renderizar la vista con todas las localidades agrupadas por edificio
+      res.render("edificios.ejs", {
+        edificios: edificios.rows,
+        tipos: tipos.rows,
+        localidadesPorEdificio: localidadesPorEdificio
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error al procesar la solicitud');
+    }
+  } else {
+    // Redirige al usuario a la página de login si no está autenticado
+    res.redirect("/login");
+  }
+});
 
 
   passport.serializeUser((user, cb) => {

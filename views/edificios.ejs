@@ -6,24 +6,52 @@
 
     <div class = "contenedor-agregar">
          <form action="/agregarEdificio" method="POST">
-            <input type="text" name = "edificio" class = "input-edificio" placeholder="Nombre del nuevo edificio" autocomplete="off">
+            <input type="text" name = "edificio" class = "input-edificio" placeholder="Nombre del nuevo edificio" autocomplete="off" required>
             <button type = "submit" class = "agregarEdificioBtn">  <i class="fa-solid fa-circle-plus icon-agregar"></i> Agregar Edificio</button>
         </form>
     </div>
-   
-    <% if (edificios && edificios.length > 0) { %>
-        <% for (let edificio of edificios) { %>
-            <div class = "edificio-info">
-                <form action="/agregarLocalidad">
-                    <h2 class = "nombre-edificio"> <i class="fa-solid fa-building"></i> <%= edificio.nombre %> </h2>
-                    <input type="text" name = "nuevaLocalidad" class = "input-edificio" placeholder="Nueva localidad" autocapitalize="off">
-                    <button type = "submit" class = "agregarEdificioBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Localidad</button>
-                </form>
-                
-             </div>
-     <% } %>
+   <div class = "contenedor-edificios-info">
+        <% if (edificios && edificios.length > 0) { %>
+                <% for (let edificio of edificios) { %>
+                    <div class = "edificio-info">
+                            <h2 class = "nombre-edificio"> <i class="fa-solid fa-building icon-agregar-local"></i> <%= edificio.nombre %> </h2>
+                            <form action="/agregarLocalidad" method="POST">
+                            <input type="text" name = "nuevaLocalidad" class = "input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
+                            <select name="tipo" id="tipo" required>
+                                <option value="" disabled selected>Tipo</option>
+                                <% for (let tipo of tipos){ %>
+                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                <% } %>
+                            </select>
+                            <button type = "submit" class = "agregarLocalidadBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                            <div class = "contenedor-localidades">
+
+                            
+                            <% if (localidadesPorEdificio[edificio.id_edificio] && localidadesPorEdificio[edificio.id_edificio].length > 0) { %>
+                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                          <div class = "localidades-info">
+                                            <p class = "nombre-localidad"> <i class="fa-solid fa-door-open"></i> <%= localidad.nombre %> </p>
+                                          </div>  
+                                    <% } %>
+                            <% } %>
+                            </div>
+                            <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
+                        </form>
+                        
+                    </div>
+            <% } %>
+   </div>
         <% } %>
 
             </div>
+
+    <script>
+        function handler(id) {
+            document.getElementById("title" + id).setAttribute("hidden", true)
+            document.getElementById("edit" + id).setAttribute("hidden", true)
+            document.getElementById("done" + id).removeAttribute("hidden")
+            document.getElementById("input" + id).removeAttribute("hidden")
+        }
+    </script>
 
 <%- include("partials/footer.ejs") %>
