@@ -215,9 +215,14 @@ passport.use(
   })
 
 
-  app.get("/edificios", (req, res) => {
+  app.get("/edificios", async(req, res) => {
     if (req.isAuthenticated()){
-      res.render("edificios.ejs");
+      const usuario = res.locals.user;
+      const id_departamento = usuario.id_departamento;
+      const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+
+      res.render("edificios.ejs", {departamento: departamento.rows[0], 
+        id_departamento: id_departamento});
     } else {
       res.redirect("/login");
     }
