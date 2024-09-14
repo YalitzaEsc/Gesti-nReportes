@@ -69,6 +69,12 @@ body {
     font-size: 17px;
 }
 
+.icon-sidebarUsuarios {
+    margin: 0 6px;
+    color: white;
+    font-size: 17px;
+}
+
 div a {
     display: block;
     text-align: left;
@@ -109,6 +115,7 @@ main {
     color: black;
     font-size: 90px;
 }
+
 
 
 /* PERFIL */

@@ -203,6 +203,17 @@ passport.use(
     }
   });
 
+  app.get("/usuarios", async (req, res) => {
+
+    if (req.isAuthenticated()) {
+      const usuarios = await db.query("SELECT * FROM usuarios");
+      res.render("usuarios.ejs", {usuarios: usuarios.rows});
+    } else {
+      res.redirect("/login");
+    }
+    
+  })
+
 
   app.get("/edificios", (req, res) => {
     if (req.isAuthenticated()){
