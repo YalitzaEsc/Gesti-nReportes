@@ -5,15 +5,25 @@
     <h1 class = "titulo-edficios">Gestión de Edificios</h1>
 
     <div class = "contenedor-agregar">
-         <form action="agregarEdificio"></form>
-            <input type="text" class = "input-edificio" placeholder="Nombre del nuevo edificio">
+         <form action="/agregarEdificio" method="POST">
+            <input type="text" name = "edificio" class = "input-edificio" placeholder="Nombre del nuevo edificio" autocomplete="off">
             <button type = "submit" class = "agregarEdificioBtn">  <i class="fa-solid fa-circle-plus icon-agregar"></i> Agregar Edificio</button>
         </form>
     </div>
    
+    <% if (edificios && edificios.length > 0) { %>
+        <% for (let edificio of edificios) { %>
+            <div class = "edificio-info">
+                <form action="/agregarLocalidad">
+                    <h2 class = "nombre-edificio"> <i class="fa-solid fa-building"></i> <%= edificio.nombre %> </h2>
+                    <input type="text" name = "nuevaLocalidad" class = "input-edificio" placeholder="Nueva localidad" autocapitalize="off">
+                    <button type = "submit" class = "agregarEdificioBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Localidad</button>
+                </form>
+                
+             </div>
+     <% } %>
+        <% } %>
 
-    
-
-</div>
+            </div>
 
 <%- include("partials/footer.ejs") %>

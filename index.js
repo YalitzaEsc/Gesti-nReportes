@@ -220,9 +220,28 @@ passport.use(
       const usuario = res.locals.user;
       const id_departamento = usuario.id_departamento;
       const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
-
+      const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1", [id_departamento]);
+      
       res.render("edificios.ejs", {departamento: departamento.rows[0], 
-        id_departamento: id_departamento});
+        id_departamento: id_departamento, edificios: edificios.rows});
+    } else {
+      res.redirect("/login");
+    }
+  });
+
+
+  // EDIFICIOS
+
+
+  app.post("/agregarEdificio", async (req, res) => {
+    if (req.isAuthenticated()){
+    const usuario = res.locals.user;
+    const id_departamento = usuario.id_departamento;
+    const nombre_edificio = req.body.edificio;
+
+    await db.query("INSERT INTO edificios(nombre, id_departamento) VALUES($1, $2)", [nombre_edificio, id_departamento]);
+    res.redirect("/edificios");
+
     } else {
       res.redirect("/login");
     }
