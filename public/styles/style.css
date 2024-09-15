@@ -179,7 +179,9 @@ main {
     font-family: "Inter Tight", sans-serif;
 }
 
-
+.nombre-edificio {
+    margin-left: 70px;
+}
 
 .input-edificio {
     font-family: "Inter Tight", sans-serif;
@@ -197,9 +199,10 @@ main {
 }
 
 .input-localidad {
+    margin-left: 70px;
     font-family: "Inter Tight", sans-serif;
     font-size: 16px;
-    width: 75%;
+    width: 61.5%;
     height: 35px;
     border-radius: 5px;
     border: 1px solid rgba(100, 94, 94, 0.446);
@@ -231,7 +234,7 @@ main {
 
 .agregarLocalidadBtn {
     margin-left: 0;
-    padding: 9.5px 15px;
+    padding: 9.5px 20px;
     border-radius: 5px;
     background-color: black;
     border: 1px solid black;
@@ -261,6 +264,7 @@ main {
 }
 
 .edificio-info {
+
     background-color: rgba(182, 178, 178, 0.462);
     border: 1px solid rgba(100, 94, 94, 0.446);
     font-family: "Inter Tight", sans-serif;
@@ -271,7 +275,7 @@ main {
 
 #tipo {
     font-family: "Inter Tight", sans-serif;
-    padding: 9px 20px;
+    padding: 9px 25px;
     font-size: 14px;
     background-color: white;
     color: rgb(0, 0, 0);
@@ -280,11 +284,34 @@ main {
 }
 
 
+.botonesEdicion {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.flechita {
+    font-size: 25px;
+    margin-right: 20px;
+    transition: 0.2s all;
+}
+
+.flechita:hover {
+    cursor: pointer;
+    color: white;
+}
+
+.toggle {
+    display: none; /* Oculta el contenido por defecto */
+}
+
+
 /* LOCALIDADES */
 
 .contenedor-localidades {
     justify-content: center;
     align-items: center;
+    margin-left: 70px;
 }
 
 .localidades-info {
@@ -292,8 +319,7 @@ main {
     background-color: white;
     font-family: "Inter Tight", sans-serif;
     border-radius: 5px;
-    width: 32%;
-    margin-left: 2px;
+    width: 18%;
     margin-top: 5px;
     padding-bottom: 50px;
     display: inline-block;
@@ -311,4 +337,25 @@ main {
     text-align: center;
     justify-content: center;
     align-items: center;
+}
+
+.toggle-localidades {
+    /* display: none;  */
+}
+
+.botonesEdicionLocalidades {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.flechita-local {
+    padding-top: 40px;
+    padding-left: 10px;
+    transition: 0.2s all;
+}
+
+.flechita-local:hover {
+    color: white;
+    cursor: pointer;
 }

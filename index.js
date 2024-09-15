@@ -223,18 +223,18 @@ passport.use(
       const usuario = res.locals.user;
       const id_departamento = usuario.id_departamento;
       const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
-      const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1", [id_departamento]);
+      const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
       const tipos = await db.query("SELECT * FROM tipos");
       const localidadesPorEdificio = {};
       for (const edificio of edificios.rows){
-        const localidades = await db.query("SELECT localidades.*, tipos.nombre AS nombre_tipo FROM localidades JOIN tipos ON localidades.id_tipo = tipos.id_tipo WHERE id_edificio = $1", [edificio.id_edificio]);
+        const localidades = await db.query("SELECT localidades.*, tipos.nombre AS nombre_tipo FROM localidades JOIN tipos ON localidades.id_tipo = tipos.id_tipo WHERE id_edificio = $1 ORDER BY localidades.nombre ASC", [edificio.id_edificio]);
         localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
       }
 
       res.render("edificios.ejs", {departamento: departamento.rows[0], 
         id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio});
     } else {
-      res.render("login.ejs");
+      res.redirect("/login");
     }
   });
 

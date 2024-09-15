@@ -15,7 +15,11 @@
         <% if (edificios && edificios.length > 0) { %>
             <% for (let edificio of edificios) { %>
                 <div class="edificio-info">
-                    <h2 class="nombre-edificio"><i class="fa-solid fa-building icon-agregar-local"></i> <%= edificio.nombre %></h2>
+                    <div class = "botonesEdicion">
+                        <h2 class="nombre-edificio"><i class="fa-solid fa-building icon-agregar-local"></i> <%= edificio.nombre %></h2>
+                        <p><i class="fa-solid fa-caret-down flechita" id="flechita-<%= edificio.id_edificio %>"></i></p>
+                    </div>
+                    <div class = "toggle" id="toggle-content-<%= edificio.id_edificio %>">
                     <form action="/agregarLocalidad" method="POST">
                         <input type="text" name="nuevaLocalidad" class="input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
                         <select name="tipo" id="tipo" required>
@@ -32,62 +36,91 @@
                                 <!-- Aulas -->
                             
                                 <div class="contenedor-localidades-aula">
-                                    <h2 class = "titulo-local">Aulas</h2>
-                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                        <% if (localidad.nombre_tipo === "Aula") { %>
-                                            <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-door-open"></i> <%= localidad.nombre %></p>
-                                            </div>
+                                    <div class = "botonesEdicionLocalidades">
+                                        <h2 class = "titulo-local">Aulas</h2>
+                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-aula-<%= edificio.id_edificio %>"></i></p>
+                                    </div>
+                                    <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
+                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% if (localidad.nombre_tipo === "Aula") { %>
+                                                <div class="localidades-info">
+                                                    <p class="nombre-localidad"><i class="fa-solid fa-door-open"></i> <%= localidad.nombre %></p>
+                                                </div>
+                                            <% } %>
                                         <% } %>
-                                    <% } %>
+                                    </div>
                                 </div>
 
                                 <!-- Oficinas -->
                                 <div class="contenedor-localidades-oficina">
-                                    <h2 class = "titulo-local">Oficinas</h2>
-                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                    <div class = "botonesEdicionLocalidades">
+                                        <h2 class = "titulo-local">Oficinas</h2>
+                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-oficina-<%= edificio.id_edificio %>"></i></p>
+                                    </div>
+                                    <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
+                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Oficina") { %>
                                             <div class="localidades-info">
                                                 <p class="nombre-localidad"><i class="fa-solid fa-briefcase"></i> <%= localidad.nombre %></p>
                                             </div>
                                         <% } %>
                                     <% } %>
+                                    </div>
+                                    
                                 </div>
 
                                 <!-- Cubículos -->
                                 <div class="contenedor-localidades-cubiculo">
-                                    <h2 class = "titulo-local">Cubículos</h2>
-                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                    <div class = "botonesEdicionLocalidades">
+                                        <h2 class = "titulo-local">Cubículos</h2>
+                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-cubiculo-<%= edificio.id_edificio %>"></i></p>
+                                    </div>
+                                    <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
+                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Cubículo") { %>
                                             <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-user"></i> <%= localidad.nombre %></p>
+                                                <p class="nombre-localidad"><i class="fa-solid fa-desktop"></i></i> <%= localidad.nombre %></p>
                                             </div>
                                         <% } %>
                                     <% } %>
+                                    </div>
+                                    
                                 </div>
 
                                 <!-- Laboratorios -->
                                 <div class="contenedor-localidades-laboratorio">
-                                    <h2 class = "titulo-local">Laboratorios</h2>
-                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                    <div class = "botonesEdicionLocalidades">
+                                        <h2 class = "titulo-local">Laboratorios</h2>
+                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-laboratorio-<%= edificio.id_edificio %>"></i></p>
+                                    </div>
+                                    <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
+                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Laboratorio") { %>
                                             <div class="localidades-info">
                                                 <p class="nombre-localidad"><i class="fa-solid fa-flask"></i> <%= localidad.nombre %></p>
                                             </div>
                                         <% } %>
                                     <% } %>
+                                    </div>
+                                    
                                 </div>
 
                                 <!-- Talleres -->
                                 <div class="contenedor-localidades-taller">
-                                    <h2 class = "titulo-local">Talleres</h2>
-                                    <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                    <div class = "botonesEdicionLocalidades">
+                                        <h2 class = "titulo-local">Talleres</h2>
+                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-taller-<%= edificio.id_edificio %>"></i></p>
+                                    </div>
+                                    <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
+                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Taller") { %>
                                             <div class="localidades-info">
                                                 <p class="nombre-localidad"><i class="fa-solid fa-tools"></i> <%= localidad.nombre %></p>
                                             </div>
                                         <% } %>
                                     <% } %>
+                                    </div>
+                                    
                                 </div>
 
                             <% } %>
@@ -96,10 +129,81 @@
                         <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
                     </form>
                 </div>
+                </div>
             <% } %>
         <% } %>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Selecciona todos los elementos con la clase flechita para los edificios
+    const flechitas = document.querySelectorAll('.flechita');
+    flechitas.forEach(flechita => {
+        const edificioId = flechita.id.split('-')[1];
+        const toggleContent = document.getElementById('toggle-content-' + edificioId);
+        
+        // Leer el estado de localStorage
+        const estado = localStorage.getItem('edificio-' + edificioId);
+        if (estado === 'open') {
+            toggleContent.style.display = 'block';
+            flechita.classList.remove('fa-caret-down');
+            flechita.classList.add('fa-caret-up');
+        } else {
+            toggleContent.style.display = 'none';
+            flechita.classList.remove('fa-caret-up');
+            flechita.classList.add('fa-caret-down');
+        }
+        
+        flechita.addEventListener('click', function() {
+            if (toggleContent.style.display === 'none' || toggleContent.style.display === '') {
+                toggleContent.style.display = 'block';
+                flechita.classList.remove('fa-caret-down');
+                flechita.classList.add('fa-caret-up');
+                localStorage.setItem('edificio-' + edificioId, 'open');
+            } else {
+                toggleContent.style.display = 'none';
+                flechita.classList.remove('fa-caret-up');
+                flechita.classList.add('fa-caret-down');
+                localStorage.setItem('edificio-' + edificioId, 'closed');
+            }
+        });
+    });
+
+    // Selecciona todos los elementos con la clase flechita-local para las secciones de localidades
+    const flechitasLocalidades = document.querySelectorAll('.flechita-local');
+    flechitasLocalidades.forEach(flechita => {
+        const targetId = flechita.getAttribute('data-target');
+        const toggleLocalidadContent = document.getElementById(targetId);
+        
+        // Leer el estado de localStorage
+        const estado = localStorage.getItem('localidad-' + targetId);
+        if (estado === 'open') {
+            toggleLocalidadContent.style.display = 'block';
+            flechita.classList.remove('fa-caret-down');
+            flechita.classList.add('fa-caret-up');
+        } else {
+            toggleLocalidadContent.style.display = 'none';
+            flechita.classList.remove('fa-caret-up');
+            flechita.classList.add('fa-caret-down');
+        }
+        
+        flechita.addEventListener('click', function() {
+            if (toggleLocalidadContent.style.display === 'none' || toggleLocalidadContent.style.display === '') {
+                toggleLocalidadContent.style.display = 'block';
+                flechita.classList.remove('fa-caret-down');
+                flechita.classList.add('fa-caret-up');
+                localStorage.setItem('localidad-' + targetId, 'open');
+            } else {
+                toggleLocalidadContent.style.display = 'none';
+                flechita.classList.remove('fa-caret-up');
+                flechita.classList.add('fa-caret-down');
+                localStorage.setItem('localidad-' + targetId, 'closed');
+            }
+        });
+    });
+});
+</script>
 
 
 <%- include("partials/footer.ejs") %>
