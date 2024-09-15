@@ -227,10 +227,10 @@ passport.use(
       const tipos = await db.query("SELECT * FROM tipos");
       const localidadesPorEdificio = {};
       for (const edificio of edificios.rows){
-        const localidades  = await db.query("SELECT * FROM localidades WHERE id_edificio = $1", [edificio.id_edificio]);
+        const localidades = await db.query("SELECT localidades.*, tipos.nombre AS nombre_tipo FROM localidades JOIN tipos ON localidades.id_tipo = tipos.id_tipo WHERE id_edificio = $1", [edificio.id_edificio]);
         localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
       }
-     
+
       res.render("edificios.ejs", {departamento: departamento.rows[0], 
         id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio});
     } else {
@@ -291,11 +291,7 @@ passport.use(
       }, {});
 
       // Renderizar la vista con todas las localidades agrupadas por edificio
-      res.render("edificios.ejs", {
-        edificios: edificios.rows,
-        tipos: tipos.rows,
-        localidadesPorEdificio: localidadesPorEdificio
-      });
+      res.redirect("/edificios");
     } catch (err) {
       console.error(err);
       res.status(500).send('Error al procesar la solicitud');
@@ -305,6 +301,19 @@ passport.use(
     res.redirect("/login");
   }
 });
+
+
+
+// USUARIOS
+
+app.get("/usuarios", async (req, res) => {
+
+  const consulta = await db.query("SELECT * FROM usuarios");
+  const usuarios = consulta.rows;
+
+  res.render("usuario.ejs", {usuarios: usuarios});
+
+})
 
 
   passport.serializeUser((user, cb) => {

@@ -305,3 +305,10 @@ main {
     text-align: center;
     font-weight: 500;
 }
+
+.titulo-local {
+    padding-top: 30px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}

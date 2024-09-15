@@ -1,3 +1,18 @@
 <%- include("partials/header.ejs") %>
 
+
+<div class = "contenedor-principal-usuarios">
+    <% for (let usuario of usuarios) { %>
+        <div class = "perfil">
+            <img src="images/user.png" height = "150" alt="icono de perfil">
+            <p class = "p-nombre"><%= usuario.nombre %> <%= usuario.apellidos %></p>
+            <div class = "info">
+                <p class = "p"><%= usuario.puesto %></p>
+            </div>
+            
+        </div>
+    <% } %>
+</div>
+
+
 <%- include("partials/footer.ejs") %>
