@@ -265,6 +265,7 @@ passport.use(
       const nombreLocalidad = req.body.nuevaLocalidad;
       const tipo = req.body.tipo;
       const id_edificio = req.body.id_edificio;
+      const encargado = req.body.encargadoLocalidad;
 
       const usuario = res.locals.user;
       const id_departamento = usuario.id_departamento;
@@ -276,7 +277,9 @@ passport.use(
       const tipos = await db.query("SELECT * FROM tipos");
 
       // Insertar la nueva localidad en la base de datos
-      await db.query("INSERT INTO localidades(nombre, id_tipo, id_edificio) VALUES($1, $2, $3)", [nombreLocalidad, tipo, id_edificio]);
+      const encargadoInsert = await db.query("INSERT INTO encargados(nombre) VALUES($1) RETURNING id_encargado", [encargado])
+      const id_encargado = encargadoInsert.rows[0].id_encargado;
+      await db.query("INSERT INTO localidades(nombre, id_tipo, id_edificio, id_encargado) VALUES($1, $2, $3, $4)", [nombreLocalidad, tipo, id_edificio, id_encargado]);
 
       // Consultar todas las localidades agrupadas por edificio
       const localidades = await db.query("SELECT * FROM localidades WHERE id_edificio IN (SELECT id_edificio FROM edificios WHERE id_departamento = $1)", [id_departamento]);

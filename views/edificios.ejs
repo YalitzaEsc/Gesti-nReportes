@@ -22,6 +22,7 @@
                     <div class = "toggle" id="toggle-content-<%= edificio.id_edificio %>">
                     <form action="/agregarLocalidad" method="POST">
                         <input type="text" name="nuevaLocalidad" class="input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
+                        <input type="text" name = "encargadoLocalidad" class = "input-encargado-localidad" placeholder="Encargado" autocomplete="off" required>
                         <select name="tipo" id="tipo" required>
                             <option value="" disabled selected>Tipo</option>
                             <% for (let tipo of tipos) { %>
