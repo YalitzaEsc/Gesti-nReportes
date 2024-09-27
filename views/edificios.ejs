@@ -36,16 +36,29 @@
 
                                 <!-- Aulas -->
                             
+                                <div class = "botonesEdicionLocalidades">
+                                    <h2 class = "titulo-local">Aulas</h2>
+                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-aula-<%= edificio.id_edificio %>"></i></p>
+                                </div>
                                 <div class="contenedor-localidades-aula">
-                                    <div class = "botonesEdicionLocalidades">
-                                        <h2 class = "titulo-local">Aulas</h2>
-                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-aula-<%= edificio.id_edificio %>"></i></p>
-                                    </div>
                                     <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
                                         <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                             <% if (localidad.nombre_tipo === "Aula") { %>
                                                 <div class="localidades-info">
-                                                    <p class="nombre-localidad"><i class="fa-solid fa-door-open"></i> <%= localidad.nombre %></p>
+
+                                                    <div class = "localidades-titulo">
+                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                    </div> 
+
+                                                    <div class = "agregar-componentes">
+                                                        <input type="text" name = "nombreComponente" class = "input-componente" placeholder="Nuevo componente" autocomplete="off" required>
+                                                        <input type="text" name = "descripcionComponente" class = "input-componente" placeholder="Descripcion" autocomplete="off" required>
+                                                        <button><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                    </div>
+
+                                                    <div class = "contenedor-componentes">
+
+                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -53,16 +66,18 @@
                                 </div>
 
                                 <!-- Oficinas -->
+                                <div class = "botonesEdicionLocalidades">
+                                    <h2 class = "titulo-local">Oficinas</h2>
+                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-oficina-<%= edificio.id_edificio %>"></i></p>
+                                </div>
                                 <div class="contenedor-localidades-oficina">
-                                    <div class = "botonesEdicionLocalidades">
-                                        <h2 class = "titulo-local">Oficinas</h2>
-                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-oficina-<%= edificio.id_edificio %>"></i></p>
-                                    </div>
                                     <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
                                         <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Oficina") { %>
                                             <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-briefcase"></i> <%= localidad.nombre %></p>
+                                                <div class = "localidades-titulo">
+                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                </div> 
                                             </div>
                                         <% } %>
                                     <% } %>
@@ -71,16 +86,18 @@
                                 </div>
 
                                 <!-- Cubículos -->
+                                <div class = "botonesEdicionLocalidades">
+                                    <h2 class = "titulo-local">Cubículos</h2>
+                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-cubiculo-<%= edificio.id_edificio %>"></i></p>
+                                </div>
                                 <div class="contenedor-localidades-cubiculo">
-                                    <div class = "botonesEdicionLocalidades">
-                                        <h2 class = "titulo-local">Cubículos</h2>
-                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-cubiculo-<%= edificio.id_edificio %>"></i></p>
-                                    </div>
                                     <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
                                         <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Cubículo") { %>
                                             <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-desktop"></i></i> <%= localidad.nombre %></p>
+                                                <div class = "localidades-titulo">
+                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                </div> 
                                             </div>
                                         <% } %>
                                     <% } %>
@@ -89,16 +106,18 @@
                                 </div>
 
                                 <!-- Laboratorios -->
+                                <div class = "botonesEdicionLocalidades">
+                                    <h2 class = "titulo-local">Laboratorios</h2>
+                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-laboratorio-<%= edificio.id_edificio %>"></i></p>
+                                </div>
                                 <div class="contenedor-localidades-laboratorio">
-                                    <div class = "botonesEdicionLocalidades">
-                                        <h2 class = "titulo-local">Laboratorios</h2>
-                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-laboratorio-<%= edificio.id_edificio %>"></i></p>
-                                    </div>
                                     <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
                                         <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Laboratorio") { %>
                                             <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-flask"></i> <%= localidad.nombre %></p>
+                                                <div class = "localidades-titulo">
+                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                </div> 
                                             </div>
                                         <% } %>
                                     <% } %>
@@ -107,16 +126,18 @@
                                 </div>
 
                                 <!-- Talleres -->
+                                <div class = "botonesEdicionLocalidades">
+                                    <h2 class = "titulo-local">Talleres</h2>
+                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-taller-<%= edificio.id_edificio %>"></i></p>
+                                </div>
                                 <div class="contenedor-localidades-taller">
-                                    <div class = "botonesEdicionLocalidades">
-                                        <h2 class = "titulo-local">Talleres</h2>
-                                        <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-taller-<%= edificio.id_edificio %>"></i></p>
-                                    </div>
                                     <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
                                         <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
                                         <% if (localidad.nombre_tipo === "Taller") { %>
                                             <div class="localidades-info">
-                                                <p class="nombre-localidad"><i class="fa-solid fa-tools"></i> <%= localidad.nombre %></p>
+                                                <div class = "localidades-titulo">
+                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                </div> 
                                             </div>
                                         <% } %>
                                     <% } %>

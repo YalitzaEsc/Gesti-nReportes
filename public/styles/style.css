@@ -271,16 +271,20 @@ main {
 
 .contenedor-edificios-info {
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
 }
 
 .edificio-info {
-
     background-color: rgba(182, 178, 178, 0.462);
     border: 1px solid rgba(100, 94, 94, 0.446);
     font-family: "Inter Tight", sans-serif;
     border-radius: 5px;
     padding: 10px;
     margin: 15px 0;
+    
 }
 
 #tipo {
@@ -319,27 +323,78 @@ main {
 /* LOCALIDADES */
 
 .contenedor-localidades {
-    justify-content: center;
+   
+}
+
+.contenedor-localidades-aula {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-left: 70px;
+    justify-content: center;
+}
+
+.contenedor-localidades-oficina {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor-localidades-oficina {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor-localidades-cubiculo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor-localidades-laboratorio {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor-localidades-taller {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .localidades-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     border: 1px solid rgba(100, 94, 94, 0.446);
     background-color: white;
     font-family: "Inter Tight", sans-serif;
     border-radius: 5px;
-    width: 18%;
     margin-top: 5px;
+    width: 980px;
+    height: auto;
+    margin-left: 70px;
+    margin-right: 70px;
     padding-bottom: 50px;
-    display: inline-block;
-    justify-content: center;
-    align-items: center;
+}
+
+.localidades-titulo {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border-bottom: 1px solid rgb(173, 169, 169);
 }
 
 .nombre-localidad {
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .titulo-local {
@@ -368,4 +423,10 @@ main {
 .flechita-local:hover {
     color: white;
     cursor: pointer;
+}
+
+.agregar-componentes {
+    margin: 20px 70px;
+    display: flex;
+    flex-direction: row;
 }

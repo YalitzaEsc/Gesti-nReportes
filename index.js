@@ -225,14 +225,24 @@ passport.use(
       const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
       const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
       const tipos = await db.query("SELECT * FROM tipos");
+      const id_encargado = req.body.id_encargado;
+      const encargado = (await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado])).rows[0];      
       const localidadesPorEdificio = {};
-      for (const edificio of edificios.rows){
-        const localidades = await db.query("SELECT localidades.*, tipos.nombre AS nombre_tipo FROM localidades JOIN tipos ON localidades.id_tipo = tipos.id_tipo WHERE id_edificio = $1 ORDER BY localidades.nombre ASC", [edificio.id_edificio]);
+      for (const edificio of edificios.rows) {
+        const localidades = await db.query(`
+          SELECT localidades.*, tipos.nombre AS nombre_tipo, encargados.nombre AS nombre_encargado 
+          FROM localidades 
+          JOIN tipos ON localidades.id_tipo = tipos.id_tipo 
+          LEFT JOIN encargados ON localidades.id_encargado = encargados.id_encargado 
+          WHERE id_edificio = $1 
+          ORDER BY localidades.nombre ASC
+        `, [edificio.id_edificio]);
+
         localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
       }
 
       res.render("edificios.ejs", {departamento: departamento.rows[0], 
-        id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio});
+        id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio, encargado: encargado});
     } else {
       res.redirect("/login");
     }
