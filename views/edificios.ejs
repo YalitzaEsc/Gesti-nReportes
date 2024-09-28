@@ -33,118 +33,106 @@
                         
                         <div class="contenedor-localidades">
                             <% if (localidadesPorEdificio[edificio.id_edificio] && localidadesPorEdificio[edificio.id_edificio].length > 0) { %>
-
-                                <!-- Aulas -->
-                            
-                                <div class = "botonesEdicionLocalidades">
-                                    <h2 class = "titulo-local">Aulas</h2>
-                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-aula-<%= edificio.id_edificio %>"></i></p>
+                                <div class = "opciones-localidades"> 
+                                    
+                                    <ul class = "menu-localidades">
+                                        <li class = "titulo-local" data-tipo="Aula">Aulas</li>
+                                        <li class = "titulo-local" data-tipo="Oficina">Oficinas</li>
+                                        <li class = "titulo-local" data-tipo="Cubiculo">Cubículos</li>
+                                        <li class = "titulo-local" data-tipo="Laboratorio">Laboratorios</li>
+                                        <li class = "titulo-local" data-tipo="Taller">Talleres</li>
+                                    </ul> 
+                                    </form>
                                 </div>
-                                <div class="contenedor-localidades-aula">
-                                    <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
-                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                            <% if (localidad.nombre_tipo === "Aula") { %>
-                                                <div class="localidades-info">
+                                <!-- Aulas -->
+                                    <div class="contenedor-localidades-aula">
+                                        <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
+                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                                <% if (localidad.nombre_tipo === "Aula") { %>
+                                                    <div class="localidades-info">
 
+                                                        <div class = "localidades-titulo">
+                                                            <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                        </div> 
+
+                                                        <div class = "agregar-componentes">
+                                                            <input type="text" name = "nombreComponente" class = "input-componente" placeholder="Nuevo componente" autocomplete="off" required>
+                                                            <input type="text" name = "descripcionComponente" class = "input-componente" placeholder="Descripcion" autocomplete="off" required>
+                                                            <button><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                        </div>
+
+                                                        <div class = "contenedor-componentes">
+
+                                                        </div>
+                                                    </div>
+                                                <% } %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                    <!-- Oficinas -->
+                                    <div class="contenedor-localidades-oficina">
+                                        <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
+                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% if (localidad.nombre_tipo === "Oficina") { %>
+                                                <div class="localidades-info">
                                                     <div class = "localidades-titulo">
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
-
-                                                    <div class = "agregar-componentes">
-                                                        <input type="text" name = "nombreComponente" class = "input-componente" placeholder="Nuevo componente" autocomplete="off" required>
-                                                        <input type="text" name = "descripcionComponente" class = "input-componente" placeholder="Descripcion" autocomplete="off" required>
-                                                        <button><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
-                                                    </div>
-
-                                                    <div class = "contenedor-componentes">
-
-                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
+                                        </div>
+                                        
                                     </div>
-                                </div>
 
-                                <!-- Oficinas -->
-                                <div class = "botonesEdicionLocalidades">
-                                    <h2 class = "titulo-local">Oficinas</h2>
-                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-oficina-<%= edificio.id_edificio %>"></i></p>
-                                </div>
-                                <div class="contenedor-localidades-oficina">
-                                    <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
-                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                        <% if (localidad.nombre_tipo === "Oficina") { %>
-                                            <div class="localidades-info">
-                                                <div class = "localidades-titulo">
-                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                </div> 
-                                            </div>
+                                    <!-- Cubículos -->
+                                    <div class="contenedor-localidades-cubiculo">
+                                        <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
+                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% if (localidad.nombre_tipo === "Cubículo") { %>
+                                                <div class="localidades-info">
+                                                    <div class = "localidades-titulo">
+                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                    </div> 
+                                                </div>
+                                            <% } %>
                                         <% } %>
-                                    <% } %>
+                                        </div>
+                                        
                                     </div>
-                                    
-                                </div>
 
-                                <!-- Cubículos -->
-                                <div class = "botonesEdicionLocalidades">
-                                    <h2 class = "titulo-local">Cubículos</h2>
-                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-cubiculo-<%= edificio.id_edificio %>"></i></p>
-                                </div>
-                                <div class="contenedor-localidades-cubiculo">
-                                    <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
-                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                        <% if (localidad.nombre_tipo === "Cubículo") { %>
-                                            <div class="localidades-info">
-                                                <div class = "localidades-titulo">
-                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                </div> 
-                                            </div>
+                                    <!-- Laboratorios -->
+                                    <div class="contenedor-localidades-laboratorio">
+                                        <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
+                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% if (localidad.nombre_tipo === "Laboratorio") { %>
+                                                <div class="localidades-info">
+                                                    <div class = "localidades-titulo">
+                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                    </div> 
+                                                </div>
+                                            <% } %>
                                         <% } %>
-                                    <% } %>
+                                        </div>
+                                        
                                     </div>
-                                    
-                                </div>
 
-                                <!-- Laboratorios -->
-                                <div class = "botonesEdicionLocalidades">
-                                    <h2 class = "titulo-local">Laboratorios</h2>
-                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-laboratorio-<%= edificio.id_edificio %>"></i></p>
-                                </div>
-                                <div class="contenedor-localidades-laboratorio">
-                                    <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
-                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                        <% if (localidad.nombre_tipo === "Laboratorio") { %>
-                                            <div class="localidades-info">
-                                                <div class = "localidades-titulo">
-                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                </div> 
-                                            </div>
+                                    <!-- Talleres -->
+                                    <div class="contenedor-localidades-taller">
+                                        <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
+                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% if (localidad.nombre_tipo === "Taller") { %>
+                                                <div class="localidades-info">
+                                                    <div class = "localidades-titulo">
+                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                                                    </div> 
+                                                </div>
+                                            <% } %>
                                         <% } %>
-                                    <% } %>
+                                        </div>
+                                        
                                     </div>
-                                    
-                                </div>
-
-                                <!-- Talleres -->
-                                <div class = "botonesEdicionLocalidades">
-                                    <h2 class = "titulo-local">Talleres</h2>
-                                    <p><i class="fa-solid fa-caret-down flechita-local" data-target="toggle-taller-<%= edificio.id_edificio %>"></i></p>
-                                </div>
-                                <div class="contenedor-localidades-taller">
-                                    <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
-                                        <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                        <% if (localidad.nombre_tipo === "Taller") { %>
-                                            <div class="localidades-info">
-                                                <div class = "localidades-titulo">
-                                                    <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                </div> 
-                                            </div>
-                                        <% } %>
-                                    <% } %>
-                                    </div>
-                                    
-                                </div>
-
                             <% } %>
                         </div>
 
@@ -191,40 +179,24 @@
             }
         });
     });
+});
 
-    // Selecciona todos los elementos con la clase flechita-local para las secciones de localidades
-    const flechitasLocalidades = document.querySelectorAll('.flechita-local');
-    flechitasLocalidades.forEach(flechita => {
-        const targetId = flechita.getAttribute('data-target');
-        const toggleLocalidadContent = document.getElementById(targetId);
-        
-        // Leer el estado de localStorage
-        const estado = localStorage.getItem('localidad-' + targetId);
-        if (estado === 'open') {
-            toggleLocalidadContent.style.display = 'block';
-            flechita.classList.remove('fa-caret-down');
-            flechita.classList.add('fa-caret-up');
-        } else {
-            toggleLocalidadContent.style.display = 'none';
-            flechita.classList.remove('fa-caret-up');
-            flechita.classList.add('fa-caret-down');
-        }
-        
-        flechita.addEventListener('click', function() {
-            if (toggleLocalidadContent.style.display === 'none' || toggleLocalidadContent.style.display === '') {
-                toggleLocalidadContent.style.display = 'block';
-                flechita.classList.remove('fa-caret-down');
-                flechita.classList.add('fa-caret-up');
-                localStorage.setItem('localidad-' + targetId, 'open');
-            } else {
-                toggleLocalidadContent.style.display = 'none';
-                flechita.classList.remove('fa-caret-up');
-                flechita.classList.add('fa-caret-down');
-                localStorage.setItem('localidad-' + targetId, 'closed');
-            }
+const opcionesLocalidades = document.querySelectorAll('.titulo-local');
+    opcionesLocalidades.forEach(opcion => {
+        opcion.addEventListener('click', function() {
+            const tipoSeleccionado = this.getAttribute('data-tipo');
+            const todasLasLocalidades = document.querySelectorAll('.localidades-info');
+            
+            todasLasLocalidades.forEach(localidad => {
+                if (localidad.querySelector('.nombre-localidad').textContent.includes(tipoSeleccionado)) {
+                    localidad.style.display = 'block'; // Mostrar la localidad
+                } else {
+                    localidad.style.display = 'none'; // Ocultar la localidad
+                }
+            });
         });
     });
-});
+
 </script>
 
 

@@ -315,15 +315,20 @@ main {
     color: white;
 }
 
-.toggle {
-    display: none; /* Oculta el contenido por defecto */
-}
-
 
 /* LOCALIDADES */
 
 .contenedor-localidades {
-   
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
+
+.opciones-localidades {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .contenedor-localidades-aula {
@@ -397,15 +402,42 @@ main {
     font-weight: 600;
 }
 
+.menu-localidades {
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+}
 .titulo-local {
-    padding-top: 30px;
+    position: relative; /* Asegúrate de que el elemento tenga posición relativa */
+    margin: 0 20px;
     text-align: center;
     justify-content: center;
     align-items: center;
+    font-weight: 400;
+    font-size: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    list-style-type: none;
+    padding: 10px; /* Agrega un padding para mejorar el área de clic */
 }
 
-.toggle-localidades {
-    /* display: none;  */
+.titulo-local:hover {
+    cursor: pointer;
+}
+
+.titulo-local::after {
+    content: '';
+    position: absolute;
+    bottom: 0; /* Alinea al fondo del título */
+    left: 10%;
+    height: 2px;
+    width: 0; /* Inicialmente no se muestra */
+    background-color: rgb(0, 0, 0); /* Color de la línea */
+    transition: 0.3s width ease-in-out; /* Transición suave */
+}
+
+.titulo-local:hover::after {
+    width: 80%; /* Se expande al 80% en hover */
 }
 
 .botonesEdicionLocalidades {
