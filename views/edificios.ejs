@@ -21,12 +21,13 @@
                     </div>
                     <div class = "toggle" id="toggle-content-<%= edificio.id_edificio %>">
                     <form action="/agregarLocalidad" method="POST">
+                        <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
                         <input type="text" name="nuevaLocalidad" class="input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
                         <input type="text" name = "encargadoLocalidad" class = "input-encargado-localidad" placeholder="Encargado" autocomplete="off" required>
                         <select name="tipo" id="tipo" required>
                             <option value="" disabled selected>Tipo</option>
                             <% for (let tipo of tipos) { %>
-                                <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                <option value="<%= tipo.id_tipo %>" <%= tipoSeleccionado == tipo.id_tipo ? 'selected' : '' %>><%= tipo.nombre %></option>
                             <% } %>
                         </select>
                         <button type="submit" class="agregarLocalidadBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
@@ -56,9 +57,18 @@
                                                         </div> 
 
                                                         <div class = "agregar-componentes">
-                                                            <input type="text" name = "nombreComponente" class = "input-componente" placeholder="Nuevo componente" autocomplete="off" required>
-                                                            <input type="text" name = "descripcionComponente" class = "input-componente" placeholder="Descripcion" autocomplete="off" required>
-                                                            <button><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            <form action="/agregarComponentes" method="POST">
+                                                                <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
+                                                                <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                                <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                                <select name="id_tipo" class = "elemento-tipo" required>
+                                                                    <option value="">Tipo</option>
+                                                                    <% for (let tipo of tipos) { %>
+                                                                        <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                                                    <% } %>
+                                                                </select>
+                                                                <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            </form>
                                                         </div>
 
                                                         <div class = "contenedor-componentes">
@@ -79,6 +89,25 @@
                                                     <div class = "localidades-titulo">
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
+
+                                                    <div class = "agregar-componentes">
+                                                        <form action="/agregarComponentes" method="POST">
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
+                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                                <option value="">Tipo</option>
+                                                                <% for (let tipo of tipos) { %>
+                                                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                                                <% } %>
+                                                            </select>
+                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                        </form>
+                                                    </div>
+
+                                                    <div class = "contenedor-componentes">
+
+                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -95,6 +124,25 @@
                                                     <div class = "localidades-titulo">
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
+
+                                                    <div class = "agregar-componentes">
+                                                        <form action="/agregarComponentes" method="POST">
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
+                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                                <option value="">Tipo</option>
+                                                                <% for (let tipo of tipos) { %>
+                                                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                                                <% } %>
+                                                            </select>
+                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                        </form>
+                                                    </div>
+
+                                                    <div class = "contenedor-componentes">
+
+                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -111,6 +159,25 @@
                                                     <div class = "localidades-titulo">
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
+
+                                                    <div class = "agregar-componentes">
+                                                        <form action="/agregarComponentes" method="POST">
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
+                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                                <option value="">Tipo</option>
+                                                                <% for (let tipo of tipos) { %>
+                                                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                                                <% } %>
+                                                            </select>
+                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                        </form>
+                                                    </div>
+
+                                                    <div class = "contenedor-componentes">
+
+                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -127,6 +194,25 @@
                                                     <div class = "localidades-titulo">
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
+
+                                                    <div class = "agregar-componentes">
+                                                        <form action="/agregarComponentes" method="POST">
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
+                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                                <option value="">Tipo</option>
+                                                                <% for (let tipo of tipos) { %>
+                                                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                                                                <% } %>
+                                                            </select>
+                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                        </form>
+                                                    </div>
+
+                                                    <div class = "contenedor-componentes">
+
+                                                    </div>
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -135,8 +221,6 @@
                                     </div>
                             <% } %>
                         </div>
-
-                        <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
                     </form>
                 </div>
                 </div>
@@ -182,20 +266,22 @@
 });
 
 const opcionesLocalidades = document.querySelectorAll('.titulo-local');
-    opcionesLocalidades.forEach(opcion => {
-        opcion.addEventListener('click', function() {
-            const tipoSeleccionado = this.getAttribute('data-tipo');
-            const todasLasLocalidades = document.querySelectorAll('.localidades-info');
-            
-            todasLasLocalidades.forEach(localidad => {
-                if (localidad.querySelector('.nombre-localidad').textContent.includes(tipoSeleccionado)) {
-                    localidad.style.display = 'block'; // Mostrar la localidad
-                } else {
-                    localidad.style.display = 'none'; // Ocultar la localidad
-                }
-            });
+opcionesLocalidades.forEach(opcion => {
+    opcion.addEventListener('click', function() {
+        const tipoSeleccionado = this.getAttribute('data-tipo');
+        const edificioId = this.closest('.edificio-info').querySelector('.flechita').id.split('-')[1]; // Obtener el id del edificio
+        const localidadesContenedor = document.getElementById('toggle-content-' + edificioId); // Seleccionar el contenedor de localidades del edificio específico
+        const localidades = localidadesContenedor.querySelectorAll('.localidades-info'); // Seleccionar solo las localidades dentro del contenedor
+
+        localidades.forEach(localidad => {
+            if (localidad.querySelector('.nombre-localidad').textContent.includes(tipoSeleccionado)) {
+                localidad.style.display = 'block'; // Mostrar la localidad
+            } else {
+                localidad.style.display = 'none'; // Ocultar la localidad
+            }
         });
     });
+});
 
 </script>
 

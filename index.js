@@ -218,36 +218,50 @@ passport.use(
   })
 
 
-  app.get("/edificios", async(req, res) => {
-    if (req.isAuthenticated()){
-      const usuario = res.locals.user;
-      const id_departamento = usuario.id_departamento;
-      const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
-      const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
-      const tipos = await db.query("SELECT * FROM tipos");
-      const id_encargado = req.body.id_encargado;
-      const encargado = (await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado])).rows[0];      
-      const localidadesPorEdificio = {};
-      for (const edificio of edificios.rows) {
-        const localidades = await db.query(`
-          SELECT localidades.*, tipos.nombre AS nombre_tipo, encargados.nombre AS nombre_encargado 
-          FROM localidades 
-          JOIN tipos ON localidades.id_tipo = tipos.id_tipo 
-          LEFT JOIN encargados ON localidades.id_encargado = encargados.id_encargado 
-          WHERE id_edificio = $1 
-          ORDER BY localidades.nombre ASC
-        `, [edificio.id_edificio]);
+  app.get("/edificios", async (req, res) => {
+    if (req.isAuthenticated()) {
+        const usuario = res.locals.user;
+        const id_departamento = usuario.id_departamento;
+        
+        const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+        const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
+        
+        // Cambiar a tipos_elemento
+        const tipos = await db.query("SELECT * FROM tipos_elemento"); // Obtener tipos de componentes
 
-        localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
-      }
+        const id_encargado = req.body.id_encargado;
+        const encargado = (await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado])).rows[0];
 
-      res.render("edificios.ejs", {departamento: departamento.rows[0], 
-        id_departamento: id_departamento, edificios: edificios.rows, tipos: tipos.rows, localidadesPorEdificio: localidadesPorEdificio, encargado: encargado});
+        // Inicializa la variable tipoSeleccionado
+        const tipoSeleccionado = req.query.tipo || null; // Obtener el tipo de la consulta, si existe
+        const localidadesPorEdificio = {};
+
+        for (const edificio of edificios.rows) {
+            const localidades = await db.query(`
+                SELECT localidades.*, tipos.nombre AS nombre_tipo, encargados.nombre AS nombre_encargado 
+                FROM localidades 
+                JOIN tipos ON localidades.id_tipo = tipos.id_tipo 
+                LEFT JOIN encargados ON localidades.id_encargado = encargados.id_encargado 
+                WHERE id_edificio = $1 ${tipoSeleccionado ? 'AND tipos.id_tipo = $2' : ''}
+                ORDER BY localidades.nombre ASC
+            `, tipoSeleccionado ? [edificio.id_edificio, tipoSeleccionado] : [edificio.id_edificio]);
+
+            localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
+        }
+
+        res.render("edificios.ejs", { 
+            departamento: departamento.rows[0], 
+            id_departamento: id_departamento, 
+            edificios: edificios.rows, 
+            tipos: tipos.rows, // Asegúrate de pasar los tipos a la vista
+            localidadesPorEdificio: localidadesPorEdificio, 
+            encargado: encargado,
+            tipoSeleccionado // Pasar el tipo seleccionado a la vista
+        });
     } else {
-      res.redirect("/login");
+        res.redirect("/login");
     }
-  });
-
+});
 
   // EDIFICIOS
 
@@ -315,6 +329,26 @@ passport.use(
   }
 });
 
+
+app.post("/agregarComponentes", async (req, res) => {
+  const { id_localidad, nombre, descripcion, id_tipo } = req.body;
+
+  try {
+      // Verifica que los datos sean correctos
+      console.log("Datos recibidos:", req.body);
+
+      // Inserta el nuevo componente en la base de datos
+      await db.query(
+          "INSERT INTO elementos (nombre, descripcion, id_tipo, id_localidad) VALUES ($1, $2, $3, $4)",
+          [nombre, descripcion, id_tipo, id_localidad]
+      );
+
+      res.redirect("/edificios"); // Redirige a la vista de edificios después de agregar
+  } catch (error) {
+      console.error("Error al agregar componente:", error);
+      res.status(500).send("Error al agregar componente."); // Manejo de error
+  }
+});
 
 
 // USUARIOS
