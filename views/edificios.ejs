@@ -105,24 +105,37 @@
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
 
-                                                    <div class = "agregar-componentes">
+                                                    <div class="agregar-componentes">
                                                         <form action="/agregarComponentes" method="POST">
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
-                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                            <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class="elemento-tipo" required>
                                                                 <option value="">Tipo</option>
-                                                                <% for (let tipo of tipos) { %>
+                                                                <% tipos.forEach(tipo => { %>
                                                                     <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                <% } %>
+                                                                <% }); %>
                                                             </select>
-                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
                                                         </form>
                                                     </div>
 
-                                                    <div class = "contenedor-componentes">
-
+                                                    <div class="contenedor-componentes">
+                                                        <% localidad.componentes.forEach(componente => { %>
+                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                            </div>
+                                                        <% }); %>
                                                     </div>
+                                                    
+                                                    <!-- Formulario general para enviar el ticket -->
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                        </form>  
+                                                     </div>
+                                                    
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -140,24 +153,37 @@
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
 
-                                                    <div class = "agregar-componentes">
+                                                    <div class="agregar-componentes">
                                                         <form action="/agregarComponentes" method="POST">
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
-                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                            <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class="elemento-tipo" required>
                                                                 <option value="">Tipo</option>
-                                                                <% for (let tipo of tipos) { %>
+                                                                <% tipos.forEach(tipo => { %>
                                                                     <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                <% } %>
+                                                                <% }); %>
                                                             </select>
-                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
                                                         </form>
                                                     </div>
 
-                                                    <div class = "contenedor-componentes">
-
+                                                    <div class="contenedor-componentes">
+                                                        <% localidad.componentes.forEach(componente => { %>
+                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                            </div>
+                                                        <% }); %>
                                                     </div>
+                                                    
+                                                    <!-- Formulario general para enviar el ticket -->
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                        </form>  
+                                                     </div>
+                                                    
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -175,24 +201,37 @@
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
 
-                                                    <div class = "agregar-componentes">
+                                                    <div class="agregar-componentes">
                                                         <form action="/agregarComponentes" method="POST">
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
-                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                            <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class="elemento-tipo" required>
                                                                 <option value="">Tipo</option>
-                                                                <% for (let tipo of tipos) { %>
+                                                                <% tipos.forEach(tipo => { %>
                                                                     <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                <% } %>
+                                                                <% }); %>
                                                             </select>
-                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
                                                         </form>
                                                     </div>
 
-                                                    <div class = "contenedor-componentes">
-
+                                                    <div class="contenedor-componentes">
+                                                        <% localidad.componentes.forEach(componente => { %>
+                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                            </div>
+                                                        <% }); %>
                                                     </div>
+                                                    
+                                                    <!-- Formulario general para enviar el ticket -->
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                        </form>  
+                                                     </div>
+                                                    
                                                 </div>
                                             <% } %>
                                         <% } %>
@@ -210,29 +249,37 @@
                                                         <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
                                                     </div> 
 
-                                                    <div class = "agregar-componentes">
+                                                    <div class="agregar-componentes">
                                                         <form action="/agregarComponentes" method="POST">
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
-                                                            <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                            <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                            <select name="id_tipo" class = "elemento-tipo" required>
+                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                            <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                            <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                            <select name="id_tipo" class="elemento-tipo" required>
                                                                 <option value="">Tipo</option>
-                                                                <% for (let tipo of tipos) { %>
+                                                                <% tipos.forEach(tipo => { %>
                                                                     <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                <% } %>
+                                                                <% }); %>
                                                             </select>
-                                                            <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                            <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
                                                         </form>
                                                     </div>
 
-                                                    <div class = "contenedor-componentes">
+                                                    <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente">
-                                                                <p><%= componente.nombre %></p>
-                                                                <p><%= componente.descripcion %></p>
+                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                             </div>
                                                         <% }); %>
                                                     </div>
+                                                    
+                                                    <!-- Formulario general para enviar el ticket -->
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                        </form>  
+                                                     </div>
+                                                    
                                                 </div>
                                             <% } %>
                                         <% } %>
