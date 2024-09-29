@@ -95,6 +95,7 @@ div a {
 
 main {
     margin-left: 250px;
+    padding: 20px;
 }
 
 .inicio-contenedor {
@@ -319,9 +320,10 @@ main {
 /* LOCALIDADES */
 
 .contenedor-localidades {
-   display: flex;
+   display: block;
    flex-direction: column;
    justify-content: center;
+   width: 100%;
 }
 
 .opciones-localidades {
@@ -393,7 +395,7 @@ main {
 .localidades-titulo {
     display: flex;
     flex-direction: column;
-    width: 970px;
+    width: 1080px;
     border-bottom: 1px solid rgb(173, 169, 169);
 }
 
@@ -518,3 +520,64 @@ main {
     color: black;
     border: 1px solid black;
 }
+
+.contenedor-componentes {
+    margin: 20px auto; /* Centra el contenedor */
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center; /* Centra horizontalmente los elementos dentro del contenedor */
+    width: calc(100% - 140px); /* Resta los márgenes laterales */
+}
+
+.componente {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    border: 2px solid #ccc;
+    background-color: #ccc;
+    padding: 10px;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    font-size: 14px;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.componente:hover {
+    border-color: #2c2a2a;
+}
+
+.componente.seleccionado {
+    border-color: #2c2a2a;
+}
+
+.ticketBtn {
+    margin-top: 20px;
+    padding: 9px 13px;
+    border-radius: 5px;
+    background-color: #000000;
+    border: 1px solid black;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.ticketBtn:hover {
+    cursor: pointer;
+    background-color: #ffffff;
+    color: black;
+    border: 1px solid black;
+}
+
+.contenedor-ticketBtn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Asegura que los botones estén centrados */
+    margin-top: 20px;
+}
+

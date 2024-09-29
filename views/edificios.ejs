@@ -48,35 +48,50 @@
                                 <!-- Aulas -->
                                     <div class="contenedor-localidades-aula">
                                         <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
-                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
+                                            <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
                                                 <% if (localidad.nombre_tipo === "Aula") { %>
                                                     <div class="localidades-info">
+                                                        <div class="localidades-titulo">
+                                                            <p class="nombre-localidad">
+                                                                <%= localidad.nombre %> <br>
+                                                                Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                            </p>
+                                                        </div>
 
-                                                        <div class = "localidades-titulo">
-                                                            <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                        </div> 
-
-                                                        <div class = "agregar-componentes">
+                                                        <div class="agregar-componentes">
                                                             <form action="/agregarComponentes" method="POST">
-                                                                <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>"> <!-- Para identificar a qué localidad se está agregando el componente -->
-                                                                <input type="text" name="nombre" class = "input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                                <input type="text" name="descripcion" class = "input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                                <select name="id_tipo" class = "elemento-tipo" required>
+                                                                <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
+                                                                <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
+                                                                <select name="id_tipo" class="elemento-tipo" required>
                                                                     <option value="">Tipo</option>
-                                                                    <% for (let tipo of tipos) { %>
+                                                                    <% tipos.forEach(tipo => { %>
                                                                         <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                    <% } %>
+                                                                    <% }); %>
                                                                 </select>
-                                                                <button type="submit" class = "agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                                <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
                                                             </form>
                                                         </div>
 
-                                                        <div class = "contenedor-componentes">
-
+                                                        <div class="contenedor-componentes">
+                                                            <% localidad.componentes.forEach(componente => { %>
+                                                                <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                    <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                </div>
+                                                            <% }); %>
                                                         </div>
+                                                        
+                                                        <!-- Formulario general para enviar el ticket -->
+                                                         <div class = "contenedor-ticketBtn">
+                                                            <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                                <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                            </form>  
+                                                         </div>
+                                                        
                                                     </div>
                                                 <% } %>
-                                            <% } %>
+                                            <% }); %>
                                         </div>
                                     </div>
 
@@ -211,7 +226,12 @@
                                                     </div>
 
                                                     <div class = "contenedor-componentes">
-
+                                                        <% localidad.componentes.forEach(componente => { %>
+                                                            <div class="componente">
+                                                                <p><%= componente.nombre %></p>
+                                                                <p><%= componente.descripcion %></p>
+                                                            </div>
+                                                        <% }); %>
                                                     </div>
                                                 </div>
                                             <% } %>
@@ -281,6 +301,30 @@ opcionesLocalidades.forEach(opcion => {
             }
         });
     });
+});
+
+function seleccionarComponente(componente) {
+    // Remover la clase 'seleccionado' de todos los componentes
+    document.querySelectorAll('.componente').forEach(el => {
+        el.classList.remove('seleccionado');
+    });
+
+    // Agregar la clase 'seleccionado' al componente clicado
+    componente.classList.add('seleccionado');
+
+    // Obtener el ID del componente seleccionado y ponerlo en el input oculto
+    const componenteId = componente.getAttribute('data-id');
+    document.getElementById('componenteSeleccionado').value = componenteId;
+}
+
+// Validar que un componente esté seleccionado antes de enviar el formulario
+document.getElementById('form-generar-ticket').addEventListener('submit', function(e) {
+    const componenteSeleccionado = document.getElementById('componenteSeleccionado').value;
+    
+    if (!componenteSeleccionado) {
+        e.preventDefault(); // Detener el envío del formulario
+        alert('Por favor, selecciona un componente antes de generar un ticket.');
+    }
 });
 
 </script>
