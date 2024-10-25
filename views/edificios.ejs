@@ -70,9 +70,8 @@
                                                                     <% }); %>
                                                                 </select>
                                                                 <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
-                                                                <button id = "modal" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
                                                             </form>
-                                                            
+                                                                <button type = "submit" id = "modal" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
                                                         </div>
 
                                                         <div class="contenedor-componentes">
@@ -379,18 +378,24 @@ document.getElementById('form-generar-ticket').addEventListener('submit', functi
 // MODAL
 var abrirModal = document.getElementById("modal");
 
-// Abrir la nueva ventana cuando se haga clic en el botón
 abrirModal.onclick = function() {
-    var popupWidth = 800;
-    var popupHeight = 600;
+    const idLocalidad = document.querySelector('input[name="id_localidad"]').value;
+    const nombreLocalidad = document.querySelector('input[name="nuevaLocalidad"]').value;
+    const encargadoLocalidad = document.querySelector('input[name="encargadoLocalidad"]').value;
 
-    // Calcular la posición para centrar la ventana
-    var left = (window.screen.width / 2) - (popupWidth / 2);
-    var top = (window.screen.height / 2) - (popupHeight / 2);
+    const popupWidth = 800;
+    const popupHeight = 600;
 
-    // Abrir la ventana emergente con la posición calculada
-    window.open('/modal', 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);}
+    // Prepare URL with query parameters
+    const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}&encargadoLocalidad=${encodeURIComponent(encargadoLocalidad)}`;
 
+    // Calculate position to center the popup
+    const left = (window.screen.width / 2) - (popupWidth / 2);
+    const top = (window.screen.height / 2) - (popupHeight / 2);
+
+    // Open the modal popup with the URL and parameters
+    window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+};
 </script>
 
 

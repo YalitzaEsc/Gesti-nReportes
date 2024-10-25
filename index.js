@@ -99,13 +99,59 @@ app.get("/cerrar-sesion", (req, res) => {
   });
 });
 
-app.get("/modal", (req, res) => {
-  if (req.isAuthenticated()){
-    res.render("modal.ejs");
-  }else{
-    res.redirect("/login");
-  }
+app.get('/modal', async(req, res) => {
+
+  const usuario = res.locals.user;
+  const id_departamento = usuario.id_departamento;
+
+  const { id_localidad, nombreLocalidad, encargadoLocalidad } = req.query;
+        
+  const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+  const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
+        
+  // Cambiar a tipos_elemento
+  const tipos = await db.query("SELECT * FROM tipos_elemento");
+
+  const id_encargado = req.body.id_encargado;
+  const encargado = (await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado])).rows[0];
+
+  // Inicializa la variable tipoSeleccionado
+  const tipoSeleccionado = req.query.tipo || null; 
+  const localidadesPorEdificio = {};
+
+        for (const edificio of edificios.rows) {
+            const localidades = await db.query(`
+                SELECT localidades.*, tipos.nombre AS nombre_tipo, encargados.nombre AS nombre_encargado 
+                FROM localidades 
+                JOIN tipos ON localidades.id_tipo = tipos.id_tipo 
+                LEFT JOIN encargados ON localidades.id_encargado = encargados.id_encargado 
+                WHERE id_edificio = $1 ${tipoSeleccionado ? 'AND tipos.id_tipo = $2' : ''}
+                ORDER BY localidades.nombre ASC
+            `, tipoSeleccionado ? [edificio.id_edificio, tipoSeleccionado] : [edificio.id_edificio]);
+
+            // Obtener componentes para cada localidad
+            for (const localidad of localidades.rows) {
+                const componentes = await db.query(`
+                    SELECT * FROM elementos 
+                    WHERE id_localidad = $1 
+                    ORDER BY nombre ASC
+                `, [localidad.id_localidad]);
+
+                localidad.componentes = componentes.rows; // Agregar los componentes a la localidad
+            }
+            localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
+        }
+
+  res.render('modal', { id_localidad, nombreLocalidad, encargadoLocalidad, departamento: departamento.rows[0], 
+    id_departamento: id_departamento, 
+    edificios: edificios.rows, 
+    tipos: tipos.rows, 
+    localidadesPorEdificio: localidadesPorEdificio, 
+    encargado: encargado,
+    tipoSeleccionado, });
 });
+
+
 
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {
