@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Elemento</title>
+</head>
+<body>    
+    <h2>Formulario para agregar elementos</h2>
+    <form id="elementForm">
+        <label for="elementType">Tipo de Elemento:</label>
+        <select id="elementType" name="elementType">
+            <option value="computadora">Computadora</option>
+            <option value="proyector">Proyector</option>
+            <option value="impresora">Impresora</option>
+        </select>
+        <br><br>
+        <!-- Campos adicionales dinámicos dependiendo del tipo -->
+        <div id="dynamicFields"></div>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        // Manejo de campos dinámicos en el formulario
+        document.getElementById('elementType').addEventListener('change', function() {
+            var dynamicFields = document.getElementById('dynamicFields');
+            dynamicFields.innerHTML = ''; // Limpiar campos anteriores
+
+            // Obtener el valor seleccionado
+            var selectedType = this.value;
+
+            if (selectedType === 'computadora') {
+                dynamicFields.innerHTML = `
+                    <label for="ram">RAM:</label>
+                    <input type="text" id="ram" name="ram"><br>
+                    <label for="procesador">Procesador:</label>
+                    <input type="text" id="procesador" name="procesador"><br>
+                `;
+            } else if (selectedType === 'proyector') {
+                dynamicFields.innerHTML = `
+                    <label for="resolucion">Resolución:</label>
+                    <input type="text" id="resolucion" name="resolucion"><br>
+                `;
+            } else if (selectedType === 'impresora') {
+                dynamicFields.innerHTML = `
+                    <label for="tipoTinta">Tipo de Tinta:</label>
+                    <input type="text" id="tipoTinta" name="tipoTinta"><br>
+                `;
+            }
+        });
+    </script>
+<%- include("partials/footer.ejs") %>

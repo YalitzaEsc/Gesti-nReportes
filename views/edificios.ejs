@@ -70,7 +70,9 @@
                                                                     <% }); %>
                                                                 </select>
                                                                 <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                                                                <button id = "modal" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
                                                             </form>
+                                                            
                                                         </div>
 
                                                         <div class="contenedor-componentes">
@@ -373,6 +375,21 @@ document.getElementById('form-generar-ticket').addEventListener('submit', functi
         alert('Por favor, selecciona un componente antes de generar un ticket.');
     }
 });
+
+// MODAL
+var abrirModal = document.getElementById("modal");
+
+// Abrir la nueva ventana cuando se haga clic en el botón
+abrirModal.onclick = function() {
+    var popupWidth = 800;
+    var popupHeight = 600;
+
+    // Calcular la posición para centrar la ventana
+    var left = (window.screen.width / 2) - (popupWidth / 2);
+    var top = (window.screen.height / 2) - (popupHeight / 2);
+
+    // Abrir la ventana emergente con la posición calculada
+    window.open('/modal', 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);}
 
 </script>
 

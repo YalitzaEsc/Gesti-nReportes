@@ -99,6 +99,14 @@ app.get("/cerrar-sesion", (req, res) => {
   });
 });
 
+app.get("/modal", (req, res) => {
+  if (req.isAuthenticated()){
+    res.render("modal.ejs");
+  }else{
+    res.redirect("/login");
+  }
+});
+
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
