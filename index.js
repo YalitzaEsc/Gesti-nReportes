@@ -26,7 +26,6 @@ app.use(
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -142,7 +141,7 @@ app.get('/modal', async(req, res) => {
             localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
         }
 
-  res.render('modal', { id_localidad, nombreLocalidad, encargadoLocalidad, departamento: departamento.rows[0], 
+  res.render('modal.ejs', { id_localidad, nombreLocalidad, encargadoLocalidad, departamento: departamento.rows[0], 
     id_departamento: id_departamento, 
     edificios: edificios.rows, 
     tipos: tipos.rows, 

@@ -59,19 +59,9 @@
                                                         </div>
 
                                                         <div class="agregar-componentes">
-                                                            <form action="/agregarComponentes" method="POST">
+                                                            <form>
                                                                 <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                                <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                                <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                                <select name="id_tipo" class="elemento-tipo" required>
-                                                                    <option value="">Tipo</option>
-                                                                    <% tipos.forEach(tipo => { %>
-                                                                        <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                    <% }); %>
-                                                                </select>
-                                                                <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
-                                                            </form>
-                                                                <button type = "submit" id = "modal" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
+                                                                <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>                                                            </form>
                                                         </div>
 
                                                         <div class="contenedor-componentes">
@@ -107,20 +97,10 @@
                                                     </div> 
 
                                                     <div class="agregar-componentes">
-                                                        <form action="/agregarComponentes" method="POST">
+                                                        <form>
                                                             <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <input type="text" name="nombre" class="input-componente-nombre" placeholder="Nombre" autocomplete="off" required>
-                                                            <input type="text" name="descripcion" class="input-componente-nombre" placeholder="Descripción" autocomplete="off" required>
-                                                            <select name="id_tipo" class="elemento-tipo" required>
-                                                                <option value="">Tipo</option>
-                                                                <% tipos.forEach(tipo => { %>
-                                                                    <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-                                                                <% }); %>
-                                                            </select>
-                                                            <button type="submit" class="agregarComponentesBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
-                                                        </form>
-                                                    </div>
-
+                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
+                                                                                                                </form>                                                    </div>
                                                     <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
                                                             <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
@@ -376,26 +356,32 @@ document.getElementById('form-generar-ticket').addEventListener('submit', functi
 });
 
 // MODAL
-var abrirModal = document.getElementById("modal");
+document.addEventListener('DOMContentLoaded', function() {
+    const modalButtons = document.querySelectorAll('.modal-button');
 
-abrirModal.onclick = function() {
-    const idLocalidad = document.querySelector('input[name="id_localidad"]').value;
-    const nombreLocalidad = document.querySelector('input[name="nuevaLocalidad"]').value;
-    const encargadoLocalidad = document.querySelector('input[name="encargadoLocalidad"]').value;
+    modalButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
 
-    const popupWidth = 800;
-    const popupHeight = 600;
+            // Obtiene el id_localidad del atributo data-id del botón
+            const idLocalidad = button.getAttribute('data-id');
+            const nombreLocalidad = button.closest('.localidades-info').querySelector('.nombre-localidad').textContent.trim();
 
-    // Prepare URL with query parameters
-    const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}&encargadoLocalidad=${encodeURIComponent(encargadoLocalidad)}`;
+            const popupWidth = 800;
+            const popupHeight = 600;
 
-    // Calculate position to center the popup
-    const left = (window.screen.width / 2) - (popupWidth / 2);
-    const top = (window.screen.height / 2) - (popupHeight / 2);
+            // Prepara la URL con los parámetros
+            const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}`;
 
-    // Open the modal popup with the URL and parameters
-    window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
-};
+            // Calcula la posición para centrar el popup
+            const left = (window.screen.width / 2) - (popupWidth / 2);
+            const top = (window.screen.height / 2) - (popupHeight / 2);
+
+            // Abre el modal popup con la URL y parámetros
+            window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+        });
+    });
+});
 </script>
 
 
