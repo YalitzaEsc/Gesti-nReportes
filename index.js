@@ -141,7 +141,7 @@ app.get('/modal', async(req, res) => {
             localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
         }
 
-  res.render('modal.ejs', { id_localidad, nombreLocalidad, encargadoLocalidad, departamento: departamento.rows[0], 
+  res.render('modal', { id_localidad, nombreLocalidad, encargadoLocalidad, departamento: departamento.rows[0], 
     id_departamento: id_departamento, 
     edificios: edificios.rows, 
     tipos: tipos.rows, 
@@ -394,19 +394,83 @@ passport.use(
 
 
 app.post("/agregarComponentes", async (req, res) => {
-  const { id_localidad, nombre, descripcion, id_tipo } = req.body;
+  const { id_localidad, id_tipo, modelo, marca, procesador, ram, sistema_operativo, tipo_disco, espacio_disco, tarjeta_grafica, fecha_compra, fecha_garantia, direccion_ip, numero_serie, resolucion, tipo_tinta, nombre_servidor, puertos } = req.body;
 
   try {
       // Verifica que los datos sean correctos
       console.log("Datos recibidos:", req.body);
 
-      // Inserta el nuevo componente en la base de datos
-      await db.query(
-          "INSERT INTO elementos (nombre, descripcion, id_tipo, id_localidad) VALUES ($1, $2, $3, $4)",
-          [nombre, descripcion, id_tipo, id_localidad]
+      // Paso 1: Obtener el nombre del tipo de elemento basado en el `id_tipo`
+      const tipoResult = await db.query(
+          "SELECT nombre FROM tipos_elemento WHERE id_tipo = $1",
+          [id_tipo]
       );
 
-      res.redirect("/edificios"); // Redirige a la vista de edificios después de agregar
+      if (tipoResult.rows.length === 0) {
+          throw new Error("Tipo de elemento no encontrado");
+      }
+
+      const nombreTipo = tipoResult.rows[0].nombre;
+
+      // Paso 2: Insertar el nuevo elemento en la tabla `elementos`, usando el `nombreTipo` como `nombre`
+      const elementoResult = await db.query(
+          "INSERT INTO elementos (nombre, id_tipo, id_localidad) VALUES ($1, $2, $3) RETURNING id_elemento",
+          [nombreTipo, id_tipo, id_localidad]
+      );
+      const id_elemento = elementoResult.rows[0].id_elemento;
+
+      // Paso 3: Insertar en la tabla específica según el tipo de elemento
+      switch (parseInt(id_tipo)) {
+          case 1: // Computadora
+              await db.query(
+                  "INSERT INTO computadoras (id_elemento, modelo, marca, procesador, ram, sistema_operativo, tipo_disco, espacio_disco, tarjeta_grafica, fecha_compra, fecha_garantia) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
+                  [id_elemento, modelo, marca, procesador, ram, sistema_operativo, tipo_disco, espacio_disco, tarjeta_grafica, fecha_compra, fecha_garantia]
+              );
+              break;
+
+          case 2: // Proyector
+              await db.query(
+                  "INSERT INTO proyectores (id_elemento, marca, fecha_compra, fecha_garantia, modelo, resolucion) VALUES ($1, $2, $3, $4, $5, $6)",
+                  [id_elemento, marca, fecha_compra, fecha_garantia, modelo, resolucion]
+              );
+              break;
+
+          case 3: // Impresora
+              await db.query(
+                  "INSERT INTO impresoras (id_elemento, modelo, marca, fecha_compra, fecha_garantia, tipo_tinta) VALUES ($1, $2, $3, $4, $5, $6)",
+                  [id_elemento, modelo, marca, fecha_compra, fecha_garantia, tipo_tinta]
+              );
+              break;
+
+          case 4: // Access Point
+              await db.query(
+                  "INSERT INTO access_points (id_elemento, direccion_ip, marca, modelo, numero_serie, fecha_compra, fecha_garantia) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+                  [id_elemento, direccion_ip, marca, modelo, numero_serie, fecha_compra, fecha_garantia]
+              );
+              break;
+
+          case 5: // Switch
+              await db.query(
+                  "INSERT INTO switches (id_elemento, marca, fecha_compra, fecha_garantia, puertos, numero_serie, modelo) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+                  [id_elemento, marca, fecha_compra, fecha_garantia, puertos, numero_serie, modelo]
+              );
+              break;
+
+          case 6: // Servidor
+              await db.query(
+                  "INSERT INTO servidores (id_elemento, fecha_compra, fecha_garantia, nombre_servidor, marca, modelo) VALUES ($1, $2, $3, $4, $5, $6)",
+                  [id_elemento, fecha_compra, fecha_garantia, nombre_servidor, marca, modelo]
+              );
+              break;
+
+          default:
+              console.log("Tipo de elemento no reconocido.");
+              res.status(400).send("Tipo de elemento no reconocido.");
+              return;
+      }
+
+      // Redirigir o enviar respuesta de éxito
+      res.redirect("/modal"); // O usar `res.json({ success: true })` si es una llamada AJAX
   } catch (error) {
       console.error("Error al agregar componente:", error);
       res.status(500).send("Error al agregar componente."); // Manejo de error

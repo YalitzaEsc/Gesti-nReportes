@@ -9,7 +9,8 @@
     <h2>Formulario para agregar elementos</h2>
     <h3> <%= locals.id_localidad %> </h3>
     <h3> <%= locals.id_departamento %> </h3>
-    <form id="elementForm">
+    <form action="/agregarComponentes" id="elementForm" method="POST">
+        <input type="hidden" name = "id_localidad" value = "<%= locals.id_localidad %>">
         <select name="id_tipo" class="elemento-tipo" required>
             <option value="">Tipo</option>
             <% tipos.forEach(tipo => { %>
@@ -23,32 +24,115 @@
     </form>
 
     <script>
-        // Manejo de campos dinámicos en el formulario
-        document.getElementById('elementType').addEventListener('change', function() {
-            var dynamicFields = document.getElementById('dynamicFields');
-            dynamicFields.innerHTML = ''; // Limpiar campos anteriores
+        document.addEventListener("DOMContentLoaded", function() {
+            const selectElement = document.querySelector('.elemento-tipo');
+            console.log("Select element found:", selectElement);
 
-            // Obtener el valor seleccionado
-            var selectedType = this.value;
+            selectElement.addEventListener('change', function() {
+                console.log("Change event detected!");
 
-            if (selectedType === 'computadora') {
-                dynamicFields.innerHTML = `
-                    <label for="ram">RAM:</label>
-                    <input type="text" id="ram" name="ram"><br>
-                    <label for="procesador">Procesador:</label>
-                    <input type="text" id="procesador" name="procesador"><br>
-                `;
-            } else if (selectedType === 'proyector') {
-                dynamicFields.innerHTML = `
-                    <label for="resolucion">Resolución:</label>
-                    <input type="text" id="resolucion" name="resolucion"><br>
-                `;
-            } else if (selectedType === 'impresora') {
-                dynamicFields.innerHTML = `
-                    <label for="tipoTinta">Tipo de Tinta:</label>
-                    <input type="text" id="tipoTinta" name="tipoTinta"><br>
-                `;
-            }
+                var dynamicFields = document.getElementById('dynamicFields');
+                console.log("Dynamic fields div found:", dynamicFields);
+                dynamicFields.innerHTML = ''; // Limpiar campos anteriores
+
+                // Obtener el valor seleccionado
+                var selectedType = selectElement.value;
+                console.log("Selected type:", selectedType);
+
+                if (selectedType === '1') {
+                    dynamicFields.innerHTML = `
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="procesador">Procesador:</label>
+                        <input type="text" id="procesador" name="procesador"><br>
+                        <label for="ram">RAM:</label>
+                        <input type="text" id="ram" name="ram"><br>
+                        <label for="sistemaOperativo">Sistema Operativo:</label>
+                        <input type="text" id="sistemaOperativo" name="sistemaOperativo"><br>
+                        <label for="tipoDisco">Tipo de Disco:</label>
+                        <input type="text" id="tipoDisco" name="tipoDisco"><br>
+                        <label for="capacidadDisco">Capacidad de Disco:</label>
+                        <input type="text" id="capacidadDisco" name="capacidadDisco"><br>
+                        <label for="tarjetaGrafica">Tarjeta Gráfica:</label>
+                        <input type="text" id="tarjetaGrafica" name="tarjetaGrafica"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label>
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                } else if (selectedType === '3') {
+                    dynamicFields.innerHTML = `
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="resolucion">Resolución:</label> <!-- Corregido el atributo for -->
+                        <input type="text" id="resolucion" name="resolucion"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label> <!-- Corregido el atributo for y id -->
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                } else if (selectedType === '2') {
+                    dynamicFields.innerHTML = `
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="tipoTinta">Tipo de Tinta:</label>
+                        <input type="text" id="tipoTinta" name="tipoTinta"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label>
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                } else if (selectedType === '6') {
+                    dynamicFields.innerHTML = `
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="numeroSerie">Número de Serie:</label>
+                        <input type="text" id="numeroSerie" name="numeroSerie"><br>
+                        <label for="direccionIP">Dirección IP:</label> <!-- Corregido -->
+                        <input type="text" id="direccionIP" name="direccionIP"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label>
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                } else if (selectedType === '4') {
+                    dynamicFields.innerHTML = `
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="numeroSerie">Número de Serie:</label>
+                        <input type="text" id="numeroSerie" name="numeroSerie"><br>
+                        <label for="puertos">Puertos:</label>
+                        <input type="text" id="puertos" name="puertos"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label>
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                } else if (selectedType === '5') {
+                    dynamicFields.innerHTML = `
+                        <label for="nombreServidor">Nombre del Servidor:</label>
+                        <input type="text" id="nombreServidor" name="nombreServidor"><br>
+                        <label for="marca">Marca:</label>
+                        <input type="text" id="marca" name="marca"><br>
+                        <label for="modelo">Modelo:</label>
+                        <input type="text" id="modelo" name="modelo"><br>
+                        <label for="fechaCompra">Fecha de Compra:</label>
+                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
+                        <label for="fechaGarantia">Fecha de Garantía:</label>
+                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                    `;
+                }
+            });
         });
     </script>
 <%- include("partials/footer.ejs") %>
