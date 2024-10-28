@@ -469,12 +469,21 @@ app.post("/agregarComponentes", async (req, res) => {
               return;
       }
 
-      // Redirigir o enviar respuesta de éxito
-      res.redirect("/modal"); // O usar `res.json({ success: true })` si es una llamada AJAX
-  } catch (error) {
-      console.error("Error al agregar componente:", error);
-      res.status(500).send("Error al agregar componente."); // Manejo de error
-  }
+      res.send(`
+        <script>
+            alert("Componente agregado exitosamente.");
+            window.close();
+        </script>
+    `);
+} catch (error) {
+    console.error("Error al agregar componente:", error);
+    res.status(500).send(`
+        <script>
+            alert("Error al agregar componente.");
+            window.close();
+        </script>
+    `);
+}
 });
 
 

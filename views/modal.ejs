@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Elemento</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Agregar Elementos</title>
 </head>
 <body>    
-    <h2>Formulario para agregar elementos</h2>
-    <h3> <%= locals.id_localidad %> </h3>
-    <h3> <%= locals.id_departamento %> </h3>
-    <form action="/agregarComponentes" id="elementForm" method="POST">
-        <input type="hidden" name = "id_localidad" value = "<%= locals.id_localidad %>">
-        <select name="id_tipo" class="elemento-tipo" required>
-            <option value="">Tipo</option>
-            <% tipos.forEach(tipo => { %>
-                <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
-            <% }); %>
-        </select>
-        <br><br>
-        <!-- Campos adicionales dinámicos dependiendo del tipo -->
-        <div id="dynamicFields"></div>
-        <button type="submit">Guardar</button>
-    </form>
+
+    <div class = "formulario-elementos">
+        <h2>Agregar Elementos</h2>
+        <form action="/agregarComponentes" id="elementForm" method="POST">
+                <input type="hidden" name = "id_localidad" value = "<%= locals.id_localidad %>">
+                <div class = "tipo-contenedor">
+                    <select name="id_tipo" class="elemento-tipo" required>
+                        <option value="">Tipo</option>
+                        <% tipos.forEach(tipo => { %>
+                            <option value="<%= tipo.id_tipo %>"><%= tipo.nombre %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                
+                <br><br>
+                <!-- Campos adicionales dinámicos dependiendo del tipo -->
+                <div id="dynamicFields"></div>
+                <div class = "agregar-componentes-but">
+                     <button type="submit" class="agregarComponenteBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i> Agregar</button>
+                </div>
+        </form>
+    </div>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -41,95 +54,103 @@
 
                 if (selectedType === '1') {
                     dynamicFields.innerHTML = `
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="procesador">Procesador:</label>
-                        <input type="text" id="procesador" name="procesador"><br>
-                        <label for="ram">RAM:</label>
-                        <input type="text" id="ram" name="ram"><br>
-                        <label for="sistemaOperativo">Sistema Operativo:</label>
-                        <input type="text" id="sistemaOperativo" name="sistemaOperativo"><br>
-                        <label for="tipoDisco">Tipo de Disco:</label>
-                        <input type="text" id="tipoDisco" name="tipoDisco"><br>
-                        <label for="capacidadDisco">Capacidad de Disco:</label>
-                        <input type="text" id="capacidadDisco" name="capacidadDisco"><br>
-                        <label for="tarjetaGrafica">Tarjeta Gráfica:</label>
-                        <input type="text" id="tarjetaGrafica" name="tarjetaGrafica"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label>
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class="izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra"><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder="Modelo" requiered><br>
+                            <input type="text" class="input-elemento" id="procesador" name="procesador" placeholder="Procesador" requiered><br>
+                            <input type="text" class="input-elemento" id="ram" name="ram" placeholder="RAM" requiered><br>
+                            
+                        </div>
+                        <div class="derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia"><br>
+                            <input type="text" class="input-elemento" id="sistemaOperativo" name="sistemaOperativo" placeholder="Sistema Operativo" requiered><br>
+                            <input type="text" class="input-elemento" id="tipoDisco" name="tipoDisco" placeholder="Tipo de Disco" requiered><br>
+                            <input type="text" class="input-elemento" id="capacidadDisco" name="capacidadDisco" placeholder="Capacidad de Disco" requiered><br>
+                            <input type="text" class="input-elemento" id="tarjetaGrafica" name="tarjetaGrafica" placeholder="Tarjeta Gráfica" requiered><br>
+                            
+                        </div>
                     `;
                 } else if (selectedType === '3') {
                     dynamicFields.innerHTML = `
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="resolucion">Resolución:</label> <!-- Corregido el atributo for -->
-                        <input type="text" id="resolucion" name="resolucion"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label> <!-- Corregido el atributo for y id -->
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class = "izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra" requiered><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder = "Modelo" requiered><br>
+                        </div>
+                        <div class = "derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia" requiered><br>
+                            <input type="text" class="input-elemento" id="resolucion" name="resolucion" placeholder = "Resolución" requiered><br>
+                            <input type="text" class="input-elemento" id="puert" name="puert" placeholder = "No. Puertos"><br>
+                        </div>
                     `;
                 } else if (selectedType === '2') {
                     dynamicFields.innerHTML = `
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="tipoTinta">Tipo de Tinta:</label>
-                        <input type="text" id="tipoTinta" name="tipoTinta"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label>
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class = "izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder="Modelo" requiered><br>
+                            <input type="text" class="input-elemento" id="tipoImpresora" name="tipoImpresora" placeholder="Tipo de Impresora"><br>
+                        </div>
+                    
+                        <div class = "derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia" requiered><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="tipoTinta" name="tipoTinta" placeholder="Tipo de Tinta" requiered><br>
+                        </div>
                     `;
                 } else if (selectedType === '6') {
                     dynamicFields.innerHTML = `
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="numeroSerie">Número de Serie:</label>
-                        <input type="text" id="numeroSerie" name="numeroSerie"><br>
-                        <label for="direccionIP">Dirección IP:</label> <!-- Corregido -->
-                        <input type="text" id="direccionIP" name="direccionIP"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label>
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class = "izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra" requiered><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="numeroSerie" name="numeroSerie" placeholder = "No. se serie" requiered><br>
+
+                           
+                        </div>
+                        <div class = "derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder = "Modelo" requiered><br>
+                            <input type="text" class="input-elemento" id="direccionIP" name="direccionIP" placeholder = "Dirección IP" requiered><br>
+                        </div>
                     `;
                 } else if (selectedType === '4') {
                     dynamicFields.innerHTML = `
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="numeroSerie">Número de Serie:</label>
-                        <input type="text" id="numeroSerie" name="numeroSerie"><br>
-                        <label for="puertos">Puertos:</label>
-                        <input type="text" id="puertos" name="puertos"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label>
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class = "izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra" requiered><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="numeroSerie" name="numeroSerie" placeholder = "No. de serie" requiered><br>
+
+                        </div>
+                        <div class = "derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder="Modelo" requiered><br>
+                            <input type="text" class="input-elemento" id="puertos" name="puertos" placeholder="Puertos" requiered><br>
+                        </div>
                     `;
                 } else if (selectedType === '5') {
                     dynamicFields.innerHTML = `
-                        <label for="nombreServidor">Nombre del Servidor:</label>
-                        <input type="text" id="nombreServidor" name="nombreServidor"><br>
-                        <label for="marca">Marca:</label>
-                        <input type="text" id="marca" name="marca"><br>
-                        <label for="modelo">Modelo:</label>
-                        <input type="text" id="modelo" name="modelo"><br>
-                        <label for="fechaCompra">Fecha de Compra:</label>
-                        <input type="date" id="fechaCompra" name="fechaCompra"><br>
-                        <label for="fechaGarantia">Fecha de Garantía:</label>
-                        <input type="date" id="fechaGarantia" name="fechaGarantia"><br>
+                        <div class = "izquierda">
+                            <label for="fechaCompra" class = "label-elementos">Fecha de Compra</label>
+                            <input type="date" class="input-elemento" id="fechaCompra" name="fechaCompra" requiered><br>
+                            <input type="text" class="input-elemento" id="marca" name="marca" placeholder="Marca" requiered><br>
+                            <input type="text" class="input-elemento" id="modelo" name="modelo" placeholder="Modelo" requiered><br>
+                        </div>
+                        <div class = "derecha">
+                            <label for="fechaGarantia" class = "label-elementos">Fecha de Garantía</label>
+                            <input type="date" class="input-elemento" id="fechaGarantia" name="fechaGarantia" requiered><br>
+                            <input type="text" class="input-elemento" id="capacidad" name="capacidad" placeholder="Capacidad" requiered><br>
+                            <input type="text" class="input-elemento" id="proc" name="proc" placeholder="Procesador"><br>
+                        </div>
                     `;
                 }
             });
