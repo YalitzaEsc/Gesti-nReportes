@@ -428,35 +428,35 @@ app.post("/agregarComponentes", async (req, res) => {
               );
               break;
 
-          case 2: // Proyector
+          case 3: // Proyector
               await db.query(
                   "INSERT INTO proyectores (id_elemento, marca, fecha_compra, fecha_garantia, modelo, resolucion) VALUES ($1, $2, $3, $4, $5, $6)",
                   [id_elemento, marca, fecha_compra, fecha_garantia, modelo, resolucion]
               );
               break;
 
-          case 3: // Impresora
+          case 2: // Impresora
               await db.query(
                   "INSERT INTO impresoras (id_elemento, modelo, marca, fecha_compra, fecha_garantia, tipo_tinta) VALUES ($1, $2, $3, $4, $5, $6)",
                   [id_elemento, modelo, marca, fecha_compra, fecha_garantia, tipo_tinta]
               );
               break;
 
-          case 4: // Access Point
+          case 6: // Access Point
               await db.query(
                   "INSERT INTO access_points (id_elemento, direccion_ip, marca, modelo, numero_serie, fecha_compra, fecha_garantia) VALUES ($1, $2, $3, $4, $5, $6, $7)",
                   [id_elemento, direccion_ip, marca, modelo, numero_serie, fecha_compra, fecha_garantia]
               );
               break;
 
-          case 5: // Switch
+          case 4: // Switch
               await db.query(
                   "INSERT INTO switches (id_elemento, marca, fecha_compra, fecha_garantia, puertos, numero_serie, modelo) VALUES ($1, $2, $3, $4, $5, $6, $7)",
                   [id_elemento, marca, fecha_compra, fecha_garantia, puertos, numero_serie, modelo]
               );
               break;
 
-          case 6: // Servidor
+          case 5: // Servidor
               await db.query(
                   "INSERT INTO servidores (id_elemento, fecha_compra, fecha_garantia, nombre_servidor, marca, modelo) VALUES ($1, $2, $3, $4, $5, $6)",
                   [id_elemento, fecha_compra, fecha_garantia, nombre_servidor, marca, modelo]
@@ -485,6 +485,7 @@ app.post("/agregarComponentes", async (req, res) => {
     `);
 }
 });
+
 
 
 // USUARIOS
