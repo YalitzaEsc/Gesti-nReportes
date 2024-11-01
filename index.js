@@ -151,6 +151,15 @@ app.get('/modal', async(req, res) => {
 });
 
 
+// Modal incidencias
+
+app.get('/modalIncidencias', async (req, res) => {
+  const usuario = res.locals.user;
+  const id_departamento = usuario.id_departamento;
+
+  res.render('modalIncidencias');
+});
+
 
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {

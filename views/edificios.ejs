@@ -75,9 +75,9 @@
                     
                                                         <!-- Formulario general para enviar el ticket -->
                                                          <div class = "contenedor-ticketBtn">
-                                                            <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                            <form id="form-generar-ticket">
                                                                 <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                                <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                                <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
                                                             </form>  
                                                          </div>
                                                         
@@ -113,10 +113,10 @@
                                                     </div>
                                                     
                                                     <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                    <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -152,10 +152,10 @@
                                                     </div>
                                                     
                                                     <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                    <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -191,10 +191,10 @@
                                                     </div>
                                                     
                                                     <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                    <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -230,10 +230,10 @@
                                                     </div>
                                                     
                                                     <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generar-ticket" method="POST"></form>
+                                                    <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Generar Ticket</button>
+                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -321,15 +321,15 @@ function seleccionarComponente(componente) {
     document.getElementById('componenteSeleccionado').value = componenteId;
 }
 
-// Validar que un componente esté seleccionado antes de enviar el formulario
-document.getElementById('form-generar-ticket').addEventListener('submit', function(e) {
-    const componenteSeleccionado = document.getElementById('componenteSeleccionado').value;
+// // Validar que un componente esté seleccionado antes de enviar el formulario
+// document.getElementById('form-generar-ticket').addEventListener('submit', function(e) {
+//     const componenteSeleccionado = document.getElementById('componenteSeleccionado').value;
     
-    if (!componenteSeleccionado) {
-        e.preventDefault(); // Detener el envío del formulario
-        alert('Por favor, selecciona un componente antes de generar un ticket.');
-    }
-});
+//     if (!componenteSeleccionado) {
+//         e.preventDefault(); // Detener el envío del formulario
+//         alert('Por favor, selecciona un componente antes de generar un ticket.');
+//     }
+// });
 
 // MODAL
 document.addEventListener('DOMContentLoaded', function() {
@@ -348,6 +348,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Prepara la URL con los parámetros
             const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}`;
+
+            // Calcula la posición para centrar el popup
+            const left = (window.screen.width / 2) - (popupWidth / 2);
+            const top = (window.screen.height / 2) - (popupHeight / 2);
+
+            // Abre el modal popup con la URL y parámetros
+            window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+        });
+    });
+});
+
+// MODAL INCIDENCIAS
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modalIncidenciaButtons = document.querySelectorAll('.ticketBtn');
+
+    modalIncidenciaButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Obtiene el id del elemento seleccionado
+            const id_elemento = document.getElementById('componenteSeleccionado').value;
+
+            const popupWidth = 800;
+            const popupHeight = 600;
+
+            // Prepara la URL con los parámetros
+            const url = `/modalIncidencias?id_elemento=${idElemento}`;
 
             // Calcula la posición para centrar el popup
             const left = (window.screen.width / 2) - (popupWidth / 2);
