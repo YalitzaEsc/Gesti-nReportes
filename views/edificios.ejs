@@ -61,12 +61,13 @@
                                                         <div class="agregar-componentes">
                                                             <form>
                                                                 <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                                <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
+                                                                <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                            </form>
                                                         </div>
 
                                                         <div class="contenedor-componentes">
                                                             <% localidad.componentes.forEach(componente => { %>
-                                                                <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                                <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
                                                                     <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                                 </div>
                                                             <% }); %>
@@ -75,9 +76,9 @@
                     
                                                         <!-- Formulario general para enviar el ticket -->
                                                          <div class = "contenedor-ticketBtn">
-                                                            <form id="form-generar-ticket">
+                                                            <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
                                                                 <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                                <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
+                                                                <button class = "ticketBtn">Reportar Incidencia</button>
                                                             </form>  
                                                          </div>
                                                         
@@ -100,7 +101,7 @@
                                                     <div class="agregar-componentes">
                                                         <form>
                                                             <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>
+                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>
                                                         </form>                                                    
                                                     </div>
                                                     
@@ -140,7 +141,7 @@
                                                     <div class="agregar-componentes">
                                                         <form>
                                                             <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>                                                            </form>
+                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
                                                     </div>
 
                                                     <div class="contenedor-componentes">
@@ -179,7 +180,7 @@
                                                     <div class="agregar-componentes">
                                                         <form>
                                                             <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>                                                            </form>
+                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
                                                     </div>
 
                                                     <div class="contenedor-componentes">
@@ -218,7 +219,7 @@
                                                     <div class="agregar-componentes">
                                                         <form>
                                                             <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Modal</button>                                                            </form>
+                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
                                                     </div>
 
                                                     <div class="contenedor-componentes">
@@ -321,16 +322,6 @@ function seleccionarComponente(componente) {
     document.getElementById('componenteSeleccionado').value = componenteId;
 }
 
-// // Validar que un componente esté seleccionado antes de enviar el formulario
-// document.getElementById('form-generar-ticket').addEventListener('submit', function(e) {
-//     const componenteSeleccionado = document.getElementById('componenteSeleccionado').value;
-    
-//     if (!componenteSeleccionado) {
-//         e.preventDefault(); // Detener el envío del formulario
-//         alert('Por favor, selecciona un componente antes de generar un ticket.');
-//     }
-// });
-
 // MODAL
 document.addEventListener('DOMContentLoaded', function() {
     const modalButtons = document.querySelectorAll('.modal-button');
@@ -368,14 +359,20 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(event) {
             event.preventDefault();
 
-            // Obtiene el id del elemento seleccionado
+            // Obtiene el id del componente seleccionado
             const id_elemento = document.getElementById('componenteSeleccionado').value;
+
+            // Verifica si hay un componente seleccionado
+            if (!id_elemento) {
+                alert('Por favor, selecciona un componente antes de generar la incidencia.');
+                return; // Detiene la ejecución si no hay selección
+            }
 
             const popupWidth = 800;
             const popupHeight = 600;
 
             // Prepara la URL con los parámetros
-            const url = `/modalIncidencias?id_elemento=${idElemento}`;
+            const url = `/vistaIncidencias?id_elemento=${id_elemento}`;
 
             // Calcula la posición para centrar el popup
             const left = (window.screen.width / 2) - (popupWidth / 2);

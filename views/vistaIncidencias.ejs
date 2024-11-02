@@ -16,6 +16,9 @@
     <div id="modal-incidencia">
         <div class="modal-content">
             <h2>Reportar Incidencia</h2>
+            <h3> <%= user.nombre %> </h3>
+            <h4> <%= departamento.nombre %> </h4>
+            <h4> <%= id_elemento %> </h4>
             <form action="/generarIncidencia" method="POST" id="form-incidencia">
                 <input type="hidden" name="id_elemento" id="id_elemento">
                 <div>

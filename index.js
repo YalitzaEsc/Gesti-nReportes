@@ -153,11 +153,13 @@ app.get('/modal', async(req, res) => {
 
 // Modal incidencias
 
-app.get('/modalIncidencias', async (req, res) => {
+app.get('/vistaIncidencias', async (req, res) => {
   const usuario = res.locals.user;
   const id_departamento = usuario.id_departamento;
+  const id_elemento = req.query.id_elemento;
+  const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
 
-  res.render('modalIncidencias');
+  res.render('vistaIncidencias', {departamento: departamento.rows[0], id_elemento: id_elemento});
 });
 
 
@@ -484,6 +486,7 @@ app.post("/agregarComponentes", async (req, res) => {
             window.close();
         </script>
     `);
+        
 } catch (error) {
     console.error("Error al agregar componente:", error);
     res.status(500).send(`
