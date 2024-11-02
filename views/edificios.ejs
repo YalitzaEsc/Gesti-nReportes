@@ -107,21 +107,20 @@
                                                     
                                                     <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
                                                                 <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                             </div>
                                                         <% }); %>
                                                     </div>
                                                     
+                
                                                     <!-- Formulario general para enviar el ticket -->
-                                                    <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
+                                                            <button class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
-                                                    
-                                                </div>
                                             <% } %>
                                         <% } %>
                                         </div>
@@ -146,17 +145,18 @@
 
                                                     <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
                                                                 <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                             </div>
                                                         <% }); %>
                                                     </div>
                                                     
+                
                                                     <!-- Formulario general para enviar el ticket -->
-                                                    <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
+                                                            <button class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -185,17 +185,18 @@
 
                                                     <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
                                                                 <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                             </div>
                                                         <% }); %>
                                                     </div>
                                                     
+                
                                                     <!-- Formulario general para enviar el ticket -->
-                                                    <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
+                                                            <button class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     
@@ -224,17 +225,18 @@
 
                                                     <div class="contenedor-componentes">
                                                         <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id %>" onclick="seleccionarComponente(this)">
+                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
                                                                 <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
                                                             </div>
                                                         <% }); %>
                                                     </div>
                                                     
+                
                                                     <!-- Formulario general para enviar el ticket -->
-                                                    <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/generarIncidencia" method="POST">
+                                                     <div class = "contenedor-ticketBtn">
+                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
                                                             <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button type="submit" class = "ticketBtn">Reportar Incidencia</button>
+                                                            <button class = "ticketBtn">Reportar Incidencia</button>
                                                         </form>  
                                                      </div>
                                                     

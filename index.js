@@ -155,11 +155,52 @@ app.get('/modal', async(req, res) => {
 
 app.get('/vistaIncidencias', async (req, res) => {
   const usuario = res.locals.user;
+  const nombre_usuario = usuario.nombre + " " + usuario.apellidos;
   const id_departamento = usuario.id_departamento;
   const id_elemento = req.query.id_elemento;
   const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+  const id_localidad = await db.query("SELECT id_localidad FROM elementos WHERE id_elemento = $1", [id_elemento]);
+  const localidad = await db.query("SELECT nombre FROM localidades WHERE id_localidad = $1", [id_localidad.rows[0].id_localidad]);
+  const id_encargado = await db.query("SELECT id_encargado FROM localidades WHERE id_localidad = $1", [id_localidad.rows[0].id_localidad]);
+  const encargado = await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado.rows[0].id_encargado]);
+  const edificio = await db.query("SELECT id_edificio FROM localidades WHERE id_localidad = $1", [id_localidad.rows[0].id_localidad]);
+  const nombre_edificio = await db.query("SELECT nombre FROM edificios WHERE id_edificio = $1", [edificio.rows[0].id_edificio]);
+  const componente = await db.query("SELECT * FROM elementos WHERE id_elemento = $1", [id_elemento]);
 
-  res.render('vistaIncidencias', {departamento: departamento.rows[0], id_elemento: id_elemento});
+  res.render('vistaIncidencias', {
+    nombre_usuario: encargado.rows[0].nombre,
+    id_encargado: id_encargado.rows[0].id_encargado,
+    departamento: departamento.rows[0], 
+    id_departamento: id_departamento,
+    id_elemento: id_elemento,
+    localidad: localidad.rows[0],
+    edificio: nombre_edificio.rows[0],
+    componente: componente.rows[0]});
+});
+
+app.post('/agregarIncidencia', async (req, res) => {
+  const { id_elemento, id_encargado, descripcion, id_departamento} = req.body;
+
+  console.log(id_elemento, id_encargado, descripcion, id_departamento);
+  await db.query("INSERT INTO incidentes(id_elemento, id_encargado, descripcion, id_departamento) VALUES($1, $2, $3, $4)", [id_elemento, id_encargado, descripcion, id_departamento]);
+
+  res.send(`
+    <script>
+        alert("Incidencia enviada exitosamente.");
+        window.close();
+    </script>
+`);
+  
+});
+
+app.get('/incidencias', async (req, res) => {
+
+  const usuario = res.locals.user;
+  const id_departamento = usuario.id_departamento;
+  const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
+  const incidencias = await db.query("SELECT * FROM incidentes WHERE id_departamento = $1", [id_departamento]);
+
+  res.render('incidencias', {departamento: departamento.rows[0], incidencias: incidencias.rows, encargados: encargados.rows});
 });
 
 
