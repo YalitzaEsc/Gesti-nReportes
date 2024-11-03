@@ -12,381 +12,401 @@
     </div>
 
     <div class="contenedor-edificios-info">
+
         <% if (edificios && edificios.length > 0) { %>
             <% for (let edificio of edificios) { %>
                 <div class="edificio-info">
-                    <div class = "botonesEdicion">
+
+                    <div class="botonesEdicion">
                         <h2 class="nombre-edificio"><i class="fa-solid fa-building icon-agregar-local"></i> <%= edificio.nombre %></h2>
                         <p><i class="fa-solid fa-caret-down flechita" id="flechita-<%= edificio.id_edificio %>"></i></p>
                     </div>
-                    <div class = "toggle" id="toggle-content-<%= edificio.id_edificio %>">
-                    <form action="/agregarLocalidad" method="POST">
-                        <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
-                        <input type="text" name="nuevaLocalidad" class="input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
-                        <input type="text" name = "encargadoLocalidad" class = "input-encargado-localidad" placeholder="Encargado" autocomplete="off" required>
-                        <select name="tipo" id="tipo" required>
-                            <option value="" disabled selected>Tipo</option>
-                            <% for (let tipo of tipos) { %>
-                                <option value="<%= tipo.id_tipo %>" <%= tipoSeleccionado == tipo.id_tipo ? 'selected' : '' %>><%= tipo.nombre %></option>
-                            <% } %>
-                        </select>
-                        <button type="submit" class="agregarLocalidadBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+
+                    <div class="toggle" id="toggle-content-<%= edificio.id_edificio %>">
+                        <form action="/agregarLocalidad" method="POST">
+                            <input type="hidden" name="id_edificio" value="<%= edificio.id_edificio %>">
+                            <input type="text" name="nuevaLocalidad" class="input-localidad" placeholder="Nueva localidad" autocomplete="off" required>
+                            <input type="text" name="encargadoLocalidad" class="input-encargado-localidad" placeholder="Encargado" autocomplete="off" required>
+                            <select name="tipo" id="tipo" required>
+                                <option value="" disabled selected>Tipo</option>
+                                <% for (let tipo of tipos) { %>
+                                    <option value="<%= tipo.id_tipo %>" <%= tipoSeleccionado == tipo.id_tipo ? 'selected' : '' %>><%= tipo.nombre %></option>
+                                <% } %>
+                            </select>
+                            <button type="submit" class="agregarLocalidadBtn"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar</button>
+                            
+                            <div class="contenedor-localidades">
+                                <% if (localidadesPorEdificio[edificio.id_edificio] && localidadesPorEdificio[edificio.id_edificio].length > 0) { %>
+                                    <div class="opciones-localidades">
+                                        <ul class="menu-localidades">
+                                            <li class = "titulo-local" data-tipo="Aula">Aulas</li>
+                                            <li class = "titulo-local" data-tipo="Oficina">Oficinas</li>
+                                            <li class = "titulo-local" data-tipo="Cubiculo">Cubículos</li>
+                                            <li class = "titulo-local" data-tipo="Laboratorio">Laboratorios</li>
+                                            <li class = "titulo-local" data-tipo="Taller">Talleres</li>
+                                        </ul>
+                                    </div>
+
+                                            <!-- Aulas -->
+                                        <div class="contenedor-localidades-aula">
+                                            <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
+                                                <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                                                    <% if (localidad.nombre_tipo === "Aula") { %>
+                                                        <div class="localidades-info">
+                                                            <div class="localidades-titulo">
+                                                                <p class="nombre-localidad">
+                                                                    <%= localidad.nombre %> <br>
+                                                                    Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                                </p>
+                                                                
+                                                            </div>
+
+                                                            <div class="agregar-componentes">
+                                                                <form>
+                                                                    <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                    <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                                </form>
+                                                            </div>
+
+                                                            <div class="contenedor-componentes">
+                                                                <% localidad.componentes.forEach(componente => { %>
+                                                                    <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
+                                                                        <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                    </div>
+                                                                <% }); %>
+                                                            </div>
+                                                            
                         
-                        <div class="contenedor-localidades">
-                            <% if (localidadesPorEdificio[edificio.id_edificio] && localidadesPorEdificio[edificio.id_edificio].length > 0) { %>
-                                <div class = "opciones-localidades"> 
-                                    
-                                    <ul class = "menu-localidades">
-                                        <li class = "titulo-local" data-tipo="Aula">Aulas</li>
-                                        <li class = "titulo-local" data-tipo="Oficina">Oficinas</li>
-                                        <li class = "titulo-local" data-tipo="Cubiculo">Cubículos</li>
-                                        <li class = "titulo-local" data-tipo="Laboratorio">Laboratorios</li>
-                                        <li class = "titulo-local" data-tipo="Taller">Talleres</li>
-                                    </ul> 
-                                    </form>
-                                </div>
-                                <!-- Aulas -->
-                                    <div class="contenedor-localidades-aula">
-                                        <div class="toggle-localidades" id="toggle-aula-<%= edificio.id_edificio %>">
-                                            <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
-                                                <% if (localidad.nombre_tipo === "Aula") { %>
-                                                    <div class="localidades-info">
-                                                        <div class="localidades-titulo">
-                                                            <p class="nombre-localidad">
-                                                                <%= localidad.nombre %> <br>
-                                                                Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
-                                                            </p>
-                                                        </div>
+                                                            <!-- Formulario general para enviar el ticket -->
+                                                            <div class = "contenedor-ticketBtn">
+                                                                <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
+                                                                    <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                    <button class = "ticketBtn">Reportar Incidencia</button>
+                                                                </form>  
+                                                            </div>
+                                                            
 
-                                                        <div class="agregar-componentes">
-                                                            <form>
-                                                                <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                                <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
-                                                            </form>
-                                                        </div>
 
-                                                        <div class="contenedor-componentes">
-                                                            <% localidad.componentes.forEach(componente => { %>
-                                                                <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
-                                                                    <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+
+                                                        </div>
+                                                    <% } %>
+                                                <% }); %>
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                        <!-- Oficinas -->
+                                        <div class="contenedor-localidades-oficina">
+                                            <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
+                                                <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                                                    <% if (localidad.nombre_tipo === "Oficina") { %>
+                                                        <div class="localidades-info">
+                                                            <div class="localidades-titulo">
+                                                                <p class="nombre-localidad">
+                                                                    <%= localidad.nombre %> <br>
+                                                                    Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                                </p>
+                                                            </div>
+
+                                                            <div class="agregar-componentes">
+                                                                <form>
+                                                                    <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                    <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                                </form>
+                                                            </div>
+
+                                                            <div class="contenedor-componentes">
+                                                                <% localidad.componentes.forEach(componente => { %>
+                                                                    <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
+                                                                        <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                    </div>
+                                                                <% }); %>
+
+                                                            </div>
+
+                                                            <!-- Formulario general para enviar el ticket -->
+
+                                                            <div class = "contenedor-ticketBtn">
+                                                                <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
+                                                                    <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                    <button class = "ticketBtn">Reportar Incidencia</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
+                                                    <% }); %>
+                                                </div>
+                                            </div>
+
+                                            <!-- Cubículos -->
+                                            <div class="contenedor-localidades-cubiculo">
+                                                <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
+                                                    <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                                                        <% if (localidad.nombre_tipo === "Cubículo") { %>
+                                                            <div class="localidades-info">
+                                                                <div class="localidades-titulo">
+                                                                    <p class="nombre-localidad">
+                                                                        <%= localidad.nombre %> <br>
+                                                                        Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                                    </p>
                                                                 </div>
+
+                                                                <div class="agregar-componentes">
+                                                                    <form>
+                                                                        <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                        <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                                    </form>
+                                                                </div>
+
+                                                                <div class="contenedor-componentes">
+                                                                    <% localidad.componentes.forEach(componente => { %>
+                                                                        <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
+                                                                            <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                        </div>
+                                                                    <% }); %>
+                                                                </div>  
+                                                                
+                                                                <!-- Formulario general para enviar el ticket -->
+                                                                <div class = "contenedor-ticketBtn">
+                                                                    <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
+                                                                        <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                        <button class = "ticketBtn">Reportar Incidencia</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            <% } %>
+                                                        <% }); %>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Laboratorios -->
+
+                                                <div class="contenedor-localidades-laboratorio">
+                                                    <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
+                                                        <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                                                            <% if (localidad.nombre_tipo === "Laboratorio") { %>
+                                                                <div class="localidades-info">
+                                                                    <div class="localidades-titulo">
+                                                                        <p class="nombre-localidad">
+                                                                            <%= localidad.nombre %> <br>
+                                                                            Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="agregar-componentes">
+                                                                        <form>
+                                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                                        </form>
+                                                                    </div>
+
+                                                                    <div class="contenedor-componentes">
+                                                                        <% localidad.componentes.forEach(componente => { %>
+                                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
+                                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                            </div>
+                                                                        <% }); %>
+                                                                    </div>
+
+                                                                    <!-- Formulario general para enviar el ticket -->
+                                                                    <div class = "contenedor-ticketBtn">
+                                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
+                                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                            <button class = "ticketBtn">Reportar Incidencia</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                                <% } %>
                                                             <% }); %>
                                                         </div>
+                                                    </div>
+
+                                                    <!-- Talleres -->
+                                                    <div class="contenedor-localidades-taller">
+                                                        <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
+                                                            <% localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                                                                <% if (localidad.nombre_tipo === "Taller") { %>
+                                                                    <div class="localidades-info">
+                                                                        <div class="localidades-titulo">
+                                                                            <p class="nombre-localidad">
+                                                                                <%= localidad.nombre %> <br>
+                                                                                Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %>
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <div class="agregar-componentes">
+                                                                            <form>
+                                                                                <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
+                                                                                <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            
+                                                                            </form>
+                                                                        </div>
+
+                                                                        <div class="contenedor-componentes">
+                                                                            <% localidad.componentes.forEach(componente => { %>
+                                                                                <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
+                                                                                    <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
+                                                                                </div>
+                                                                            <% }); %>
+                                                                        </div>
+
+                                                                        <!-- Formulario general para enviar el ticket -->
+                                                                        <div class = "contenedor-ticketBtn">
+                                                                            <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
+                                                                                <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
+                                                                                <button class = "ticketBtn">Reportar Incidencia</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                    <% } %>
+                                                                <% }); %>
+                                                            </div>
+                                                        </div>
+
                                                         
-                    
-                                                        <!-- Formulario general para enviar el ticket -->
-                                                         <div class = "contenedor-ticketBtn">
-                                                            <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
-                                                                <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                                <button class = "ticketBtn">Reportar Incidencia</button>
-                                                            </form>  
-                                                         </div>
-                                                        
-                                                    </div>
-                                                <% } %>
-                                            <% }); %>
-                                        </div>
-                                    </div>
-
-                                    <!-- Oficinas -->
-                                    <div class="contenedor-localidades-oficina">
-                                        <div class="toggle-localidades" id="toggle-oficina-<%= edificio.id_edificio %>">
-                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                            <% if (localidad.nombre_tipo === "Oficina") { %>
-                                                <div class="localidades-info">
-                                                    <div class = "localidades-titulo">
-                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                    </div> 
-
-                                                    <div class="agregar-componentes">
-                                                        <form>
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>
-                                                        </form>                                                    
-                                                    </div>
                                                     
-                                                    <div class="contenedor-componentes">
-                                                        <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
-                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
-                                                            </div>
-                                                        <% }); %>
-                                                    </div>
-                                                    
-                
-                                                    <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
-                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button class = "ticketBtn">Reportar Incidencia</button>
-                                                        </form>  
-                                                     </div>
-                                            <% } %>
-                                        <% } %>
-                                        </div>
-                                        
-                                    </div>
 
-                                    <!-- Cubículos -->
-                                    <div class="contenedor-localidades-cubiculo">
-                                        <div class="toggle-localidades" id="toggle-cubiculo-<%= edificio.id_edificio %>">
-                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                            <% if (localidad.nombre_tipo === "Cubículo") { %>
-                                                <div class="localidades-info">
-                                                    <div class = "localidades-titulo">
-                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                    </div> 
-
-                                                    <div class="agregar-componentes">
-                                                        <form>
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
-                                                    </div>
-
-                                                    <div class="contenedor-componentes">
-                                                        <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
-                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
-                                                            </div>
-                                                        <% }); %>
-                                                    </div>
-                                                    
-                
-                                                    <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
-                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button class = "ticketBtn">Reportar Incidencia</button>
-                                                        </form>  
-                                                     </div>
-                                                    
-                                                </div>
-                                            <% } %>
-                                        <% } %>
-                                        </div>
-                                        
-                                    </div>
-
-                                    <!-- Laboratorios -->
-                                    <div class="contenedor-localidades-laboratorio">
-                                        <div class="toggle-localidades" id="toggle-laboratorio-<%= edificio.id_edificio %>">
-                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                            <% if (localidad.nombre_tipo === "Laboratorio") { %>
-                                                <div class="localidades-info">
-                                                    <div class = "localidades-titulo">
-                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                    </div> 
-
-                                                    <div class="agregar-componentes">
-                                                        <form>
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
-                                                    </div>
-
-                                                    <div class="contenedor-componentes">
-                                                        <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
-                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
-                                                            </div>
-                                                        <% }); %>
-                                                    </div>
-                                                    
-                
-                                                    <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
-                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button class = "ticketBtn">Reportar Incidencia</button>
-                                                        </form>  
-                                                     </div>
-                                                    
-                                                </div>
-                                            <% } %>
-                                        <% } %>
-                                        </div>
-                                        
-                                    </div>
-
-                                    <!-- Talleres -->
-                                    <div class="contenedor-localidades-taller">
-                                        <div class="toggle-localidades" id="toggle-taller-<%= edificio.id_edificio %>">
-                                            <% for (let localidad of localidadesPorEdificio[edificio.id_edificio]) { %>
-                                            <% if (localidad.nombre_tipo === "Taller") { %>
-                                                <div class="localidades-info">
-                                                    <div class = "localidades-titulo">
-                                                        <p class="nombre-localidad"> <%= localidad.nombre %> <br>Encargado: <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
-                                                    </div> 
-
-                                                    <div class="agregar-componentes">
-                                                        <form>
-                                                            <input type="hidden" name="id_localidad" value="<%= localidad.id_localidad %>">
-                                                            <button class="modal-button agregarComponentesBtn" data-id="<%= localidad.id_localidad %>"><i class="fa-solid fa-circle-plus icon-agregar"></i>Agregar Elemento</button>                                                            </form>
-                                                    </div>
-
-                                                    <div class="contenedor-componentes">
-                                                        <% localidad.componentes.forEach(componente => { %>
-                                                            <div class="componente" data-id="<%= componente.id_elemento %>" onclick="seleccionarComponente(this)">
-                                                                <p><%= componente.nombre %> <br> <%= componente.codigo %> </p>
-                                                            </div>
-                                                        <% }); %>
-                                                    </div>
-                                                    
-                
-                                                    <!-- Formulario general para enviar el ticket -->
-                                                     <div class = "contenedor-ticketBtn">
-                                                        <form id="form-generar-ticket" action="/vistaIncidencias" method="POST">
-                                                            <input type="hidden" name="componenteSeleccionado" id="componenteSeleccionado">
-                                                            <button class = "ticketBtn">Reportar Incidencia</button>
-                                                        </form>  
-                                                     </div>
-                                                    
-                                                </div>
-                                            <% } %>
-                                        <% } %>
-                                        </div>
-                                        
-                                    </div>
-                            <% } %>
-                        </div>
-                    </form>
-                </div>
-                </div>
+                                <% } %>
+                            </div>
+                        </form>
+                    </div> <!-- Cierre del div con class="toggle" -->
+                </div> <!-- Cierre del div con class="edificio-info" -->
             <% } %>
         <% } %>
-    </div>
-</div>
+    </div> <!-- Cierre del div con class="contenedor-edificios-info" -->
+</div> <!-- Cierre del div con class="contenedor-edificios" -->
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Selecciona todos los elementos con la clase flechita para los edificios
-    const flechitas = document.querySelectorAll('.flechita');
-    flechitas.forEach(flechita => {
-        const edificioId = flechita.id.split('-')[1];
-        const toggleContent = document.getElementById('toggle-content-' + edificioId);
-        
-        // Leer el estado de localStorage
-        const estado = localStorage.getItem('edificio-' + edificioId);
-        if (estado === 'open') {
-            toggleContent.style.display = 'block';
-            flechita.classList.remove('fa-caret-down');
-            flechita.classList.add('fa-caret-up');
-        } else {
-            toggleContent.style.display = 'none';
-            flechita.classList.remove('fa-caret-up');
-            flechita.classList.add('fa-caret-down');
-        }
-        
-        flechita.addEventListener('click', function() {
-            if (toggleContent.style.display === 'none' || toggleContent.style.display === '') {
+        // Selecciona todos los elementos con la clase flechita para los edificios
+        const flechitas = document.querySelectorAll('.flechita');
+        flechitas.forEach(flechita => {
+            const edificioId = flechita.id.split('-')[1];
+            const toggleContent = document.getElementById('toggle-content-' + edificioId);
+            
+            // Leer el estado de localStorage
+            const estado = localStorage.getItem('edificio-' + edificioId);
+            if (estado === 'open') {
                 toggleContent.style.display = 'block';
                 flechita.classList.remove('fa-caret-down');
                 flechita.classList.add('fa-caret-up');
-                localStorage.setItem('edificio-' + edificioId, 'open');
             } else {
                 toggleContent.style.display = 'none';
                 flechita.classList.remove('fa-caret-up');
                 flechita.classList.add('fa-caret-down');
-                localStorage.setItem('edificio-' + edificioId, 'closed');
             }
+            
+            flechita.addEventListener('click', function() {
+                if (toggleContent.style.display === 'none' || toggleContent.style.display === '') {
+                    toggleContent.style.display = 'block';
+                    flechita.classList.remove('fa-caret-down');
+                    flechita.classList.add('fa-caret-up');
+                    localStorage.setItem('edificio-' + edificioId, 'open');
+                } else {
+                    toggleContent.style.display = 'none';
+                    flechita.classList.remove('fa-caret-up');
+                    flechita.classList.add('fa-caret-down');
+                    localStorage.setItem('edificio-' + edificioId, 'closed');
+                }
+            });
         });
     });
-});
 
-const opcionesLocalidades = document.querySelectorAll('.titulo-local');
-opcionesLocalidades.forEach(opcion => {
-    opcion.addEventListener('click', function() {
-        const tipoSeleccionado = this.getAttribute('data-tipo');
-        const edificioId = this.closest('.edificio-info').querySelector('.flechita').id.split('-')[1]; // Obtener el id del edificio
-        const localidadesContenedor = document.getElementById('toggle-content-' + edificioId); // Seleccionar el contenedor de localidades del edificio específico
-        const localidades = localidadesContenedor.querySelectorAll('.localidades-info'); // Seleccionar solo las localidades dentro del contenedor
+    const opcionesLocalidades = document.querySelectorAll('.titulo-local');
+    opcionesLocalidades.forEach(opcion => {
+        opcion.addEventListener('click', function() {
+            const tipoSeleccionado = this.getAttribute('data-tipo');
+            const edificioId = this.closest('.edificio-info').querySelector('.flechita').id.split('-')[1]; // Obtener el id del edificio
+            const localidadesContenedor = document.getElementById('toggle-content-' + edificioId); // Seleccionar el contenedor de localidades del edificio específico
+            const localidades = localidadesContenedor.querySelectorAll('.localidades-info'); // Seleccionar solo las localidades dentro del contenedor
 
-        localidades.forEach(localidad => {
-            if (localidad.querySelector('.nombre-localidad').textContent.includes(tipoSeleccionado)) {
-                localidad.style.display = 'block'; // Mostrar la localidad
-            } else {
-                localidad.style.display = 'none'; // Ocultar la localidad
-            }
+            localidades.forEach(localidad => {
+                if (localidad.querySelector('.nombre-localidad').textContent.includes(tipoSeleccionado)) {
+                    localidad.style.display = 'block'; // Mostrar la localidad
+                } else {
+                    localidad.style.display = 'none'; // Ocultar la localidad
+                }
+            });
         });
     });
-});
 
-function seleccionarComponente(componente) {
-    // Remover la clase 'seleccionado' de todos los componentes
-    document.querySelectorAll('.componente').forEach(el => {
-        el.classList.remove('seleccionado');
-    });
+    function seleccionarComponente(componente) {
+        // Remover la clase 'seleccionado' de todos los componentes
+        document.querySelectorAll('.componente').forEach(el => {
+            el.classList.remove('seleccionado');
+        });
 
-    // Agregar la clase 'seleccionado' al componente clicado
-    componente.classList.add('seleccionado');
+        // Agregar la clase 'seleccionado' al componente clicado
+        componente.classList.add('seleccionado');
 
-    // Obtener el ID del componente seleccionado y ponerlo en el input oculto
-    const componenteId = componente.getAttribute('data-id');
-    document.getElementById('componenteSeleccionado').value = componenteId;
-}
+        // Obtener el ID del componente seleccionado y ponerlo en el input oculto
+        const componenteId = componente.getAttribute('data-id');
+        document.getElementById('componenteSeleccionado').value = componenteId;
+    }
 
-// MODAL
-document.addEventListener('DOMContentLoaded', function() {
-    const modalButtons = document.querySelectorAll('.modal-button');
+    // MODAL
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalButtons = document.querySelectorAll('.modal-button');
 
-    modalButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
+        modalButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
 
-            // Obtiene el id_localidad del atributo data-id del botón
-            const idLocalidad = button.getAttribute('data-id');
-            const nombreLocalidad = button.closest('.localidades-info').querySelector('.nombre-localidad').textContent.trim();
+                // Obtiene el id_localidad del atributo data-id del botón
+                const idLocalidad = button.getAttribute('data-id');
+                const nombreLocalidad = button.closest('.localidades-info').querySelector('.nombre-localidad').textContent.trim();
 
-            const popupWidth = 800;
-            const popupHeight = 600;
+                const popupWidth = 800;
+                const popupHeight = 600;
 
-            // Prepara la URL con los parámetros
-            const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}`;
+                // Prepara la URL con los parámetros
+                const url = `/modal?id_localidad=${idLocalidad}&nombreLocalidad=${encodeURIComponent(nombreLocalidad)}`;
 
-            // Calcula la posición para centrar el popup
-            const left = (window.screen.width / 2) - (popupWidth / 2);
-            const top = (window.screen.height / 2) - (popupHeight / 2);
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
 
-            // Abre el modal popup con la URL y parámetros
-            window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+                // Abre el modal popup con la URL y parámetros
+                window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
         });
     });
-});
 
-// MODAL INCIDENCIAS
+    // MODAL INCIDENCIAS
 
-document.addEventListener('DOMContentLoaded', function() {
-    const modalIncidenciaButtons = document.querySelectorAll('.ticketBtn');
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalIncidenciaButtons = document.querySelectorAll('.ticketBtn');
 
-    modalIncidenciaButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
+        modalIncidenciaButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
 
-            // Obtiene el id del componente seleccionado
-            const id_elemento = document.getElementById('componenteSeleccionado').value;
+                // Obtiene el id del componente seleccionado
+                const id_elemento = document.getElementById('componenteSeleccionado').value;
 
-            // Verifica si hay un componente seleccionado
-            if (!id_elemento) {
-                alert('Por favor, selecciona un componente antes de generar la incidencia.');
-                return; // Detiene la ejecución si no hay selección
-            }
+                // Verifica si hay un componente seleccionado
+                if (!id_elemento) {
+                    alert('Por favor, selecciona un componente antes de generar la incidencia.');
+                    return; // Detiene la ejecución si no hay selección
+                }
 
-            const popupWidth = 800;
-            const popupHeight = 600;
+                const popupWidth = 800;
+                const popupHeight = 600;
 
-            // Prepara la URL con los parámetros
-            const url = `/vistaIncidencias?id_elemento=${id_elemento}`;
+                // Prepara la URL con los parámetros
+                const url = `/vistaIncidencias?id_elemento=${id_elemento}`;
 
-            // Calcula la posición para centrar el popup
-            const left = (window.screen.width / 2) - (popupWidth / 2);
-            const top = (window.screen.height / 2) - (popupHeight / 2);
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
 
-            // Abre el modal popup con la URL y parámetros
-            window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+                // Abre el modal popup con la URL y parámetros
+                window.open(url, 'Formulario', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
         });
     });
-});
-
 </script>
-
 
 <%- include("partials/footer.ejs") %>

@@ -194,13 +194,37 @@ app.post('/agregarIncidencia', async (req, res) => {
 });
 
 app.get('/incidencias', async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+          // Obtener el ID del departamento del usuario que inició sesión
+          const usuario = res.locals.user;
+          const id_departamento = usuario.id_departamento;
 
-  const usuario = res.locals.user;
-  const id_departamento = usuario.id_departamento;
-  const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
-  const incidencias = await db.query("SELECT * FROM incidentes WHERE id_departamento = $1", [id_departamento]);
+          // Consulta para obtener los incidentes del departamento del usuario
+          const incidentes = await db.query(`
+              SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+                     e.nombre AS nombre_elemento, e.codigo, 
+                     l.nombre AS nombre_localidad,
+                     d.nombre AS nombre_departamento,
+                     u.nombre AS nombre_tecnico
+              FROM incidentes i
+              JOIN elementos e ON i.id_elemento = e.id_elemento
+              LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+              LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+              LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+              WHERE i.id_departamento = $1
+              ORDER BY i.fecha_creacion DESC
+          `, [id_departamento]);
 
-  res.render('incidencias', {departamento: departamento.rows[0], incidencias: incidencias.rows, encargados: encargados.rows});
+          // Renderizar la vista con los datos obtenidos
+          res.render('incidencias', { incidentes: incidentes.rows });
+      } catch (error) {
+          console.error('Error al obtener los incidentes:', error);
+          res.status(500).send('Error al obtener los incidentes');
+      }
+  } else {
+      res.redirect('/login');
+  }
 });
 
 
@@ -327,18 +351,17 @@ passport.use(
     if (req.isAuthenticated()) {
         const usuario = res.locals.user;
         const id_departamento = usuario.id_departamento;
-        
+
         const departamento = await db.query("SELECT nombre FROM departamentos WHERE id_departamento = $1", [id_departamento]);
         const edificios = await db.query("SELECT * FROM edificios WHERE id_departamento = $1 ORDER BY nombre ASC", [id_departamento]);
-        
-        // Cambiar a tipos_elemento
-        const tipos = await db.query("SELECT * FROM tipos_elemento");
+
+        // Cambia esta consulta para obtener los tipos de localidad en lugar de los tipos de elementos
+        const tiposLocalidad = await db.query("SELECT * FROM tipos");
 
         const id_encargado = req.body.id_encargado;
         const encargado = (await db.query("SELECT nombre FROM encargados WHERE id_encargado = $1", [id_encargado])).rows[0];
 
-        // Inicializa la variable tipoSeleccionado
-        const tipoSeleccionado = req.query.tipo || null; 
+        const tipoSeleccionado = req.query.tipo || null;
         const localidadesPorEdificio = {};
 
         for (const edificio of edificios.rows) {
@@ -351,7 +374,6 @@ passport.use(
                 ORDER BY localidades.nombre ASC
             `, tipoSeleccionado ? [edificio.id_edificio, tipoSeleccionado] : [edificio.id_edificio]);
 
-            // Obtener componentes para cada localidad
             for (const localidad of localidades.rows) {
                 const componentes = await db.query(`
                     SELECT * FROM elementos 
@@ -359,7 +381,7 @@ passport.use(
                     ORDER BY nombre ASC
                 `, [localidad.id_localidad]);
 
-                localidad.componentes = componentes.rows; // Agregar los componentes a la localidad
+                localidad.componentes = componentes.rows;
             }
 
             localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
@@ -369,7 +391,7 @@ passport.use(
             departamento: departamento.rows[0], 
             id_departamento: id_departamento, 
             edificios: edificios.rows, 
-            tipos: tipos.rows, 
+            tipos: tiposLocalidad.rows, // Cambia aquí la variable para enviar los tipos de localidad
             localidadesPorEdificio: localidadesPorEdificio, 
             encargado: encargado,
             tipoSeleccionado,

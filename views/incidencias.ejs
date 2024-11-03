@@ -1,5 +1,34 @@
 <%- include("partials/header.ejs") %>
 
-
+<table class = "tabla-incidencias">
+    <thead>
+        <tr>
+            <th>ID Incidente</th>
+            <th>Elemento</th>
+            <th>Localidad</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Fecha de Creación</th>
+            <th>Fecha de Resolución</th>
+            <th>Técnico Asignado</th>
+            <th>Resolución</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% incidentes.forEach(incidente => { %>
+            <tr>
+                <td><%= incidente.id_incidente %></td>
+                <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
+                <td><%= incidente.nombre_localidad || 'N/A' %></td>
+                <td><%= incidente.descripcion %></td>
+                <td><%= incidente.estado %></td>
+                <td><%= incidente.fecha_creacion.toLocaleString() %></td>
+                <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
+                <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
+                <td><%= incidente.resolucion || 'Pendiente' %></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
 
 <%- include("partials/footer.ejs") %>
