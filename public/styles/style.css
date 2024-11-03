@@ -745,3 +745,28 @@ main {
     padding-left: 10px;
     margin: 0 10px;
 }
+
+.tabla-incidencias {
+    font-family: "Inter Tight", sans-serif;
+}
+
+.columnas-incidencias {
+    font-weight: lighter;
+    text-align: center;
+    padding: 5px;
+}
+
+.filas-incidencias {
+    text-align: center;
+    padding: 5px;
+}
+
+td {
+    padding: 15px;
+}
+
+.titulos-inc {
+    font-family: "Inter Tight", sans-serif;
+    text-align: center;
+    margin-bottom: 60px;
+}
