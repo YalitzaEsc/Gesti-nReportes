@@ -903,3 +903,78 @@ main {
     background-color: rgba(231, 59, 148, 0);
     border: none;
 }
+
+.vermas-btn {
+    background-color: rgb(147, 66, 204);
+    color: white;
+}
+
+.vermas-btn:hover {
+    cursor: pointer;
+    background-color: rgb(88, 16, 139);
+    color: white;
+}
+
+
+
+/* TERMINAR INCIDENCIAS */
+
+.contenedor-incidencias {
+    max-height: 80vh; /* Limita la altura del modal al 80% de la altura de la ventana */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.incidencias-terminar {
+    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.contenedor-incidencias {
+    display: flex;
+    flex-direction: column;
+    font-family: "Inter Tight", sans-serif;
+}
+
+.centrar-texto {
+    text-align: center;
+}
+
+.form-resolucion {
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 20px;
+}
+
+.enviaresuBtn {
+    margin-left: 5px;
+    margin-top: 15px;
+    padding: 9.5px 50px;
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+}
+
+.enviaresuBtn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+
+}

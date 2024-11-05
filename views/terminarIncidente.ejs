@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Más información</title>
+</head>
+<body>
+
+
+<div class = "contenedor-incidencias">
+
+    <h2 class = "titulos-inc">Información del equipo reportado</h2>
+
+    <div class = "incidencias-terminar">
+
+        <div class = "incidencia-izquierda">
+            <% if (incidente.modelo_computadora) { %>
+                <label class = "etiqueta" for="marca"> Marca </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Marca" value="<%= incidente.marca_computadora %>" disabled>
+                <label class = "etiqueta" for="procesador"> Procesador </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Procesador" value="<%= incidente.procesador_computadora %>" disabled>
+                <label class = "etiqueta" for="sistema operativo"> Sistema Operativo </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Sistema Operativo" value="<%= incidente.so_computadora %>" disabled>
+                <label class = "etiqueta" for="capacidad disco"> Capacidad del Disco </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Capacidad Disco" value="<%= incidente.espacio_disco_computadora %>" disabled>
+                <label class = "etiqueta" for="fecha compra"> Fecha de Compra </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Fecha Compra" value="<%= incidente.fecha_compra_computadora %>" disabled>
+            <% } %>
+        </div>
+
+        <div class = "incidencia-derecha">
+            <% if (incidente.marca_computadora) { %>
+                <label class = "etiqueta" for="modelo"> Modelo </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Modelo" value="<%= incidente.modelo_computadora %>" disabled>
+                <label class = "etiqueta" for="ram"> RAM </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="RAM" value="<%= incidente.ram_computadora %>" disabled>
+                <label class = "etiqueta" for="tipo disco"> Tipo de Disco </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Tipo Disco" value="<%= incidente.tipo_disco_computadora %>" disabled>
+                <label class = "etiqueta" for="tarjeta grafica"> Tarjeta Gráfica </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Tarjeta Grafica" value="<%= incidente.tarjeta_grafica_computadora %>" disabled>
+                <label class = "etiqueta" for="fecha garantia"> Fecha de Garantía </label>
+                <input class = "input-incidencia centrar-texto" type="text" name ="Fecha Garantia" value="<%= incidente.fecha_garantia_computadora %>" disabled>
+
+            <% } %>
+        </div>
+
+    </div>
+
+    <div class = "contenedor-descripcion">
+        <label class = "etiqueta" for="Descripcion">Descripción del incidente</label>
+        <textarea class = "input-incidencia descripcion" type="text" name="Descripcion" disabled><%= incidente.descripcion %></textarea>
+    </div>
+
+    <div class = "form-resolucion">
+        <form action="/resolucion" method="POST">
+            <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+            <label class = "etiqueta" for="Descripcion" name = "resolucion">Resolución</label>
+            <textarea class = "input-incidencia descripcion" name="resolucion" id="resolucion"></textarea>
+            <button class = "enviaresuBtn" type="submit">Enviar</button>
+        </form>
+    </div>
+
+
+</div>
+
+</body>
+</html>

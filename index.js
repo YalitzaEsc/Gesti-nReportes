@@ -291,6 +291,8 @@ app.get('/administrarIncidencias', async (req, res) => {
   }
 });
 
+
+
 app.get('/asignar', async (req, res) => {
   if (req.isAuthenticated()) {
       try {
@@ -308,6 +310,9 @@ app.get('/asignar', async (req, res) => {
       res.redirect('/login');
   }
 });
+
+
+
 
 app.post('/asignarIncidente', async (req, res) => {
   const { id_incidente, tecnico } = req.body;
@@ -336,14 +341,142 @@ app.post('/liberarIncidencia', async (req, res) => {
       // Liberar el incidente asignado
       await db.query("UPDATE incidentes SET estado = 'Liberado' WHERE id_incidente = $1", [id_incidente]);
 
-      res.send(`
-          <script>
-              alert("Incidente liberado exitosamente.");
-          </script>
-      `);
+      // Redirigir a /administrarIncidencia después de liberar
+      res.redirect('/administrarIncidencias');
   } catch (error) {
       console.error('Error al liberar incidente:', error);
       res.status(500).send('Error al liberar incidente');
+  }
+});
+
+// ÓRDENES DE TRABAJO
+
+app.get('/orden-trabajo', async (req, res) => {
+  const usuario = res.locals.user;
+  const id_usuario = usuario.id_usuario;
+
+  if (req.isAuthenticated()) {
+    try {
+        // Obtener el estado del filtro
+        const { estado } = req.query;
+
+        // Crear la consulta base, asegurando que i.id_elemento esté en el SELECT
+        let query = `
+            SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+                   e.id_elemento, e.nombre AS nombre_elemento, e.codigo, 
+                   l.nombre AS nombre_localidad,
+                   d.nombre AS nombre_departamento,
+                   u.nombre AS nombre_tecnico,
+                   enc.nombre AS nombre_encargado,
+                   edif.nombre AS nombre_edificio
+            FROM incidentes i
+            JOIN elementos e ON i.id_elemento = e.id_elemento
+            LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+            LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+            LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+            LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+            LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+            WHERE i.id_tecnico = $1
+        `;
+
+        // Configurar los parámetros de la consulta
+        const params = [id_usuario];
+        
+        // Agregar filtro de estado si está presente
+        if (estado) {
+            query += ` AND i.estado = $2`;
+            params.push(estado);
+        }
+
+        // Ordenar por fecha de creación
+        query += ` ORDER BY i.fecha_creacion DESC`;
+
+        // Ejecutar la consulta
+        const incidentes = await db.query(query, params);
+
+        // Renderizar la vista con los incidentes filtrados
+        res.render('orden-trabajo', { incidentes: incidentes.rows, estadoSeleccionado: estado });
+    } catch (error) {
+        console.error('Error al obtener los incidentes:', error);
+        res.status(500).send('Error al obtener los incidentes');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.get('/terminarIncidente', async (req, res) => {
+  if(req.isAuthenticated()){
+    try {
+      const id_incidente = req.query.id_incidente;
+
+      // Consulta para obtener todos los detalles del incidente y el elemento reportado
+      const incidenteQuery = `
+          SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+                 e.nombre AS nombre_elemento, e.codigo, 
+                 l.nombre AS nombre_localidad,
+                 d.nombre AS nombre_departamento,
+                 u.nombre AS nombre_tecnico,
+                 enc.nombre AS nombre_encargado,
+                 edif.nombre AS nombre_edificio,
+                 
+                 -- Campos adicionales para los detalles específicos del elemento
+                 comp.modelo AS modelo_computadora, comp.marca AS marca_computadora, comp.ram AS ram_computadora,
+                 comp.procesador AS procesador_computadora, comp.sistema_operativo AS so_computadora,
+                  comp.tipo_disco AS tipo_disco_computadora, comp.espacio_disco AS espacio_disco_computadora,
+                  comp.tarjeta_grafica AS tarjeta_grafica_computadora, comp.fecha_compra AS fecha_compra_computadora,
+                  comp.fecha_garantia AS fecha_garantia_computadora,
+                 imp.modelo AS modelo_impresora, imp.tipo_tinta AS tinta_impresora,
+                 proy.modelo AS modelo_proyector, proy.resolucion AS resolucion_proyector
+
+          FROM incidentes i
+          JOIN elementos e ON i.id_elemento = e.id_elemento
+          LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+          LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+          LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+          LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+          LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+
+          -- Uniones adicionales para cada tipo de elemento
+          LEFT JOIN computadoras comp ON e.id_elemento = comp.id_elemento
+          LEFT JOIN impresoras imp ON e.id_elemento = imp.id_elemento
+          LEFT JOIN proyectores proy ON e.id_elemento = proy.id_elemento
+
+          WHERE i.id_incidente = $1
+      `;
+
+      const incidenteResult = await db.query(incidenteQuery, [id_incidente]);
+
+      if (incidenteResult.rows.length === 0) {
+        return res.status(404).send("Incidente no encontrado");
+      }
+
+      res.render('terminarIncidente', { incidente: incidenteResult.rows[0] });
+    } catch (error) {
+      console.error('Error al cargar la vista de terminar incidente:', error);
+      res.status(500).send('Error al cargar la vista de terminar incidente');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.post('/resolucion', async (req, res) => {
+  const { id_incidente, resolucion } = req.body;
+
+  try {
+      // Actualizar el incidente con la resolución y la fecha de resolución
+      await db.query("UPDATE incidentes SET estado = 'Terminado', resolucion = $1 WHERE id_incidente = $2", [resolucion, id_incidente]);
+
+      res.send(`
+          <script>
+              alert("Incidente concluido exitosamente.");
+              window.close();
+          </script>
+      `);
+  } catch (error) {
+      console.error('Error al resolver incidente:', error);
+      res.status(500).send('Error al resolver incidente');
   }
 });
 

@@ -1,0 +1,89 @@
+<%- include("partials/header.ejs") %>
+
+<h1 class="titulos-inc">Órdenes de trabajo</h1>
+
+
+<div class="tabla-contenedor">
+    <table class="tabla-incidencias">
+        <thead>
+            <tr class="columnas-incidencias">
+                <th>ID</th>
+                <th>Fecha de Creación</th>
+                <th>Departamento</th>
+                <th>Edificio</th>
+                <th>Localidad</th>
+                <th>Equipo</th>
+                <th>Encargado</th>
+                <th>Descripción</th>
+                <th>Técnico Asignado</th>
+                <th>Resolución</th>
+                <th>Fecha de Resolución</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% incidentes.forEach(incidente => { %>
+                <tr class="filas-incidencias">
+                    <td><%= incidente.id_incidente %></td>
+                    <td><%= incidente.fecha_creacion.toLocaleString() %></td>
+                    <td><%= incidente.nombre_departamento %></td>
+                    <td><%= incidente.nombre_edificio %></td>
+                    <td><%= incidente.nombre_localidad || 'N/A' %></td>
+                    <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
+                    <td><%= incidente.nombre_encargado %></td>
+                    <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
+                    <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
+                    <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>
+                    <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
+                    <td><%= incidente.estado %></td>
+                    <td>
+                        <% if (incidente.estado === 'En proceso') { %>
+                            <form action="/terminarIncidente" method="POST">
+                                <input type="hidden" name="id_elemento" value="<%= incidente.id_elemento %>">
+                                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                                <button type="submit" class="orden-trabajo-btn vermas-btn">Ver más</button>
+                            </form>
+                        <% } else if (incidente.estado === 'Terminado') { %>
+                            <button class="orden-trabajo-btn terminado-btn" disabled>Terminado</button>
+                        <% } else if (incidente.estado === 'Liberado') { %>
+                            <button class="liberado-btn"><i class="fa-solid fa-check"></i></button>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const vermasButtons = document.querySelectorAll('.vermas-btn');
+
+        vermasButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // Obtiene el id_elemento y el id_incidente desde el formulario
+                const idElemento = button.closest('form').querySelector('input[name="id_elemento"]').value;
+                const idIncidente = button.closest('form').querySelector('input[name="id_incidente"]').value;
+
+                // Configuración del tamaño del popup
+                const popupWidth = 800;
+                const popupHeight = 600;
+
+                // URL con ambos parámetros
+                const url = `/terminarIncidente?id_elemento=${idElemento}&id_incidente=${idIncidente}`;
+
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
+
+                // Abre el modal en una nueva ventana
+                window.open(url, 'Terminar Incidente', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
+        });
+    });
+</script>
+
+<%- include("partials/footer.ejs") %>
