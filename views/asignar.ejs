@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Técnico</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body class = "contenedor-asignacion">
+
+    <h2 class ="titulos-asig"> Asignar Orden de Trabajo</h2>
+
+    <form action="/asignarIncidente" method="POST" class = "form-asignar">
+        <input type="hidden" name="id_incidente" value="<%= id_incidente %>">
+        <select name="tecnico" id="tecnico" class="elemento-tipo" required>
+            <option value="" disabled selected>Seleccione un técnico</option>
+            <% tecnicos.forEach(tecnico => { %>
+                <option value="<%= tecnico.id_usuario %>"><%= tecnico.nombre %></option>
+            <% }) %>
+        </select>
+        <button type="submit" class = "agregarComponentesBtn asignarBtn">Asignar</button>
+    </form>
+
+
+<%- include("partials/footer.ejs") %>

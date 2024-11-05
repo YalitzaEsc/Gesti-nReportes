@@ -2,35 +2,56 @@
 
 <h1 class = "titulos-inc">Incidencias generadas</h1>
 
-<table class = "tabla-incidencias">
-    <thead>
-        <tr class = "columnas-incidencias">
-            <th>ID Incidente</th>
-            <th>Elemento</th>
-            <th>Localidad</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Fecha de Creación</th>
-            <th>Fecha de Resolución</th>
-            <th>Técnico Asignado</th>
-            <th>Resolución</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% incidentes.forEach(incidente => { %>
-            <tr class = "filas-incidencias">
-                <td><%= incidente.id_incidente %></td>
-                <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
-                <td><%= incidente.nombre_localidad || 'N/A' %></td>
-                <td><%= incidente.descripcion %></td>
-                <td><%= incidente.estado %></td>
-                <td><%= incidente.fecha_creacion.toLocaleString() %></td>
-                <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
-                <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
-                <td><%= incidente.resolucion || 'Pendiente' %></td>
+<div class="busqueda-filtros">
+    <form action="/incidencias" method="GET">
+        <select name="estado" id="estado" onchange="this.form.submit()">
+            <option value="">Filtrar por estado</option>
+            <option value="Enviado" <%= estadoSeleccionado === 'Enviado' ? 'selected' : '' %>>Enviado</option>
+            <option value="En proceso" <%= estadoSeleccionado === 'En proceso' ? 'selected' : '' %>>En proceso</option>
+            <option value="Terminado" <%= estadoSeleccionado === 'Terminado' ? 'selected' : '' %>>Terminado</option>
+            <option value="Liberado" <%= estadoSeleccionado === 'Liberado' ? 'selected' : '' %>>Liberado</option>
+        </select>
+    </form>
+</div>
+
+<div class  = "tabla-contenedor">
+    <table class = "tabla-incidencias">
+        <thead>
+            <tr class = "columnas-incidencias">
+                <th>ID</th>
+                <th>Departamento</th>
+                <th>Edificio</th>
+                <th>Localidad</th>
+                <th>Elemento</th>
+                <th>Encargado</th>
+                <th class="col-descripcion">Descripción</th>
+                <th>Estado</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha de Resolución</th>
+                <th>Técnico Asignado</th>
+                <th>Resolución</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% incidentes.forEach(incidente => { %>
+                <tr class = "filas-incidencias">
+                    <td><%= incidente.id_incidente %></td>
+                    <td><%= incidente.nombre_departamento %></td>
+                    <td><%= incidente.nombre_edificio %></td>
+                    <td><%= incidente.nombre_localidad || 'N/A' %></td>
+                    <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
+                    <td><%= incidente.nombre_encargado %></td>
+                    <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
+                    <td><%= incidente.estado %></td>
+                    <td><%= incidente.fecha_creacion.toLocaleString() %></td>
+                    <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
+                    <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
+                    <td><%= incidente.resolucion || 'Pendiente' %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+   
+</div>
 
 <%- include("partials/footer.ejs") %>

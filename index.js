@@ -199,31 +199,133 @@ app.get('/incidencias', async (req, res) => {
           // Obtener el ID del departamento del usuario que inició sesión
           const usuario = res.locals.user;
           const id_departamento = usuario.id_departamento;
+          const { estado } = req.query;
 
-          // Consulta para obtener los incidentes del departamento del usuario
-          const incidentes = await db.query(`
+          // Crear la consulta base para obtener los incidentes del departamento del usuario
+          let query = `
               SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
                      e.nombre AS nombre_elemento, e.codigo, 
                      l.nombre AS nombre_localidad,
                      d.nombre AS nombre_departamento,
+                     ed.nombre AS nombre_edificio,
+                     enc.nombre AS nombre_encargado,
                      u.nombre AS nombre_tecnico
               FROM incidentes i
               JOIN elementos e ON i.id_elemento = e.id_elemento
               LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+              LEFT JOIN edificios ed ON l.id_edificio = ed.id_edificio
               LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+              LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
               LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
               WHERE i.id_departamento = $1
-              ORDER BY i.fecha_creacion DESC
-          `, [id_departamento]);
+          `;
 
-          // Renderizar la vista con los datos obtenidos
-          res.render('incidencias', { incidentes: incidentes.rows });
+          // Añadir condición de estado si está presente en la consulta
+          const params = [id_departamento];
+          if (estado) {
+              query += ` AND i.estado = $2`;
+              params.push(estado);
+          }
+
+          // Ordenar los incidentes por fecha de creación
+          query += ` ORDER BY i.fecha_creacion DESC`;
+
+          // Ejecutar la consulta con los parámetros correspondientes
+          const incidentes = await db.query(query, params);
+
+          // Renderizar la vista con los datos obtenidos y el estado seleccionado
+          res.render('incidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
       } catch (error) {
           console.error('Error al obtener los incidentes:', error);
           res.status(500).send('Error al obtener los incidentes');
       }
   } else {
       res.redirect('/login');
+  }
+});
+
+app.get('/administrarIncidencias', async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+          // Obtener el estado de los filtros
+          const { estado } = req.query;
+
+          // Crear la consulta base
+          let query = `
+              SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+                     e.nombre AS nombre_elemento, e.codigo, 
+                     l.nombre AS nombre_localidad,
+                     d.nombre AS nombre_departamento,
+                     u.nombre AS nombre_tecnico,
+                     enc.nombre AS nombre_encargado,
+                     edif.nombre AS nombre_edificio
+              FROM incidentes i
+              JOIN elementos e ON i.id_elemento = e.id_elemento
+              LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+              LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+              LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+              LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+              LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+          `;
+
+          // Aplicar filtro de estado si está presente
+          const params = [];
+          if (estado) {
+              query += ` WHERE i.estado = $1`;
+              params.push(estado);
+          }
+
+          query += ` ORDER BY i.fecha_creacion DESC`;
+
+          // Ejecutar la consulta
+          const incidentes = await db.query(query, params);
+
+          // Renderizar la vista con los incidentes filtrados y el estado seleccionado
+          res.render('administrarIncidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
+      } catch (error) {
+          console.error('Error al obtener los incidentes:', error);
+          res.status(500).send('Error al obtener los incidentes');
+      }
+  } else {
+      res.redirect('/login');
+  }
+});
+
+app.get('/asignar', async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+          const { id_incidente } = req.query;
+
+          // Obtener la lista de técnicos
+          const tecnicos = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico'");
+
+          res.render('asignar', { id_incidente, tecnicos: tecnicos.rows });
+      } catch (error) {
+          console.error('Error al cargar la vista de asignación:', error);
+          res.status(500).send('Error al cargar la vista de asignación');
+      }
+  } else {
+      res.redirect('/login');
+  }
+});
+
+app.post('/asignarIncidente', async (req, res) => {
+  const { id_incidente, tecnico } = req.body;
+
+  try {
+      // Actualizar el técnico asignado al incidente
+      await db.query("UPDATE incidentes SET id_tecnico = $1, estado = 'En proceso' WHERE id_incidente = $2", [tecnico, id_incidente]);
+
+      // Enviar un mensaje de éxito y cerrar el modal
+      res.send(`
+          <script>
+              alert("Técnico asignado exitosamente.");
+              window.close();
+          </script>
+      `);
+  } catch (error) {
+      console.error('Error al asignar técnico:', error);
+      res.status(500).send('Error al asignar técnico');
   }
 });
 
