@@ -821,22 +821,15 @@ main {
 /* Estilo para el botón de Orden de trabajo */
 .orden-trabajo-btn {
     font-family: "Inter Tight", sans-serif;
-    background-color: #000000; /* Color de fondo */
-    color: white; /* Color del texto */
-    padding: 8px 12px;
+    padding: 8px 0; /* Ajusta el padding horizontal a 0 */
+    width: 100px; /* Define un ancho fijo para todos los botones */
+    text-align: center; /* Centra el texto dentro del botón */
     border: none;
     border-radius: 4px;
-    cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s ease;
 }
 
-/* Hover para el botón */
-.orden-trabajo-btn:hover {
-    background-color: #ffffff;
-    color: #000000;
-    border: 1px solid #000000;
-}
 
 .busqueda-filtros {
     font-family: "Inter Tight", sans-serif;
@@ -876,10 +869,37 @@ main {
 }
 
 .asignarBtn {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .titulo-asig {
     text-align: center;
     font-family: "Inter Tight", sans-serif;
+}
+
+.asignar-btn {
+    background-color: rgb(147, 66, 204);
+    color: white;
+}
+
+.asignar-btn:hover {
+    cursor: pointer;
+    background-color: rgb(88, 16, 139);
+    color: white;
+}
+
+.liberar-btn {
+    background-color: rgb(231, 59, 148);
+    color: white;
+}
+
+.liberar-btn:hover {
+    cursor: pointer;
+    background-color: rgb(119, 22, 72);
+}
+
+.liberado-btn {
+    color: black;
+    background-color: rgba(231, 59, 148, 0);
+    border: none;
 }

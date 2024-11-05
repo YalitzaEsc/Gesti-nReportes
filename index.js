@@ -329,6 +329,24 @@ app.post('/asignarIncidente', async (req, res) => {
   }
 });
 
+app.post('/liberarIncidencia', async (req, res) => {
+  const { id_incidente } = req.body;
+
+  try {
+      // Liberar el incidente asignado
+      await db.query("UPDATE incidentes SET estado = 'Liberado' WHERE id_incidente = $1", [id_incidente]);
+
+      res.send(`
+          <script>
+              alert("Incidente liberado exitosamente.");
+          </script>
+      `);
+  } catch (error) {
+      console.error('Error al liberar incidente:', error);
+      res.status(500).send('Error al liberar incidente');
+  }
+});
+
 
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {
