@@ -315,11 +315,14 @@ app.get('/asignar', async (req, res) => {
 
 
 app.post('/asignarIncidente', async (req, res) => {
-  const { id_incidente, tecnico } = req.body;
+  const { id_incidente, tecnico, clasificacion, prioridad } = req.body;
 
   try {
       // Actualizar el técnico asignado al incidente
-      await db.query("UPDATE incidentes SET id_tecnico = $1, estado = 'En proceso' WHERE id_incidente = $2", [tecnico, id_incidente]);
+      await db.query(
+        "UPDATE incidentes SET id_tecnico = $1, estado = 'En proceso', clasificacion = $2, prioridad = $3 WHERE id_incidente = $4",
+        [tecnico, clasificacion, prioridad, id_incidente]
+      );
 
       // Enviar un mensaje de éxito y cerrar el modal
       res.send(`
@@ -356,52 +359,55 @@ app.get('/orden-trabajo', async (req, res) => {
   const id_usuario = usuario.id_usuario;
 
   if (req.isAuthenticated()) {
-    try {
-        // Obtener el estado del filtro
-        const { estado } = req.query;
+      try {
+          const { estado, prioridad } = req.query;
 
-        // Crear la consulta base, asegurando que i.id_elemento esté en el SELECT
-        let query = `
-            SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
-                   e.id_elemento, e.nombre AS nombre_elemento, e.codigo, 
-                   l.nombre AS nombre_localidad,
-                   d.nombre AS nombre_departamento,
-                   u.nombre AS nombre_tecnico,
-                   enc.nombre AS nombre_encargado,
-                   edif.nombre AS nombre_edificio
-            FROM incidentes i
-            JOIN elementos e ON i.id_elemento = e.id_elemento
-            LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
-            LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
-            LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
-            LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
-            LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
-            WHERE i.id_tecnico = $1
-        `;
+          let query = `
+              SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion, i.clasificacion, i.prioridad,
+                     e.nombre AS nombre_elemento, e.codigo, 
+                     l.nombre AS nombre_localidad,
+                     d.nombre AS nombre_departamento,
+                     u.nombre AS nombre_tecnico,
+                     enc.nombre AS nombre_encargado,
+                     edif.nombre AS nombre_edificio,
+                     i.clasificacion, i.prioridad
+              FROM incidentes i
+              JOIN elementos e ON i.id_elemento = e.id_elemento
+              LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+              LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+              LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+              LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+              LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+              WHERE i.id_tecnico = $1
+          `;
 
-        // Configurar los parámetros de la consulta
-        const params = [id_usuario];
-        
-        // Agregar filtro de estado si está presente
-        if (estado) {
-            query += ` AND i.estado = $2`;
-            params.push(estado);
-        }
+          const params = [id_usuario];
+          
+          if (estado) {
+              query += ` AND i.estado = $${params.length + 1}`;
+              params.push(estado);
+          }
+          
+          if (prioridad) {
+              query += ` AND i.prioridad = $${params.length + 1}`;
+              params.push(prioridad);
+          }
 
-        // Ordenar por fecha de creación
-        query += ` ORDER BY i.fecha_creacion DESC`;
+          query += ` ORDER BY i.fecha_creacion DESC`;
 
-        // Ejecutar la consulta
-        const incidentes = await db.query(query, params);
+          const incidentes = await db.query(query, params);
 
-        // Renderizar la vista con los incidentes filtrados
-        res.render('orden-trabajo', { incidentes: incidentes.rows, estadoSeleccionado: estado });
-    } catch (error) {
-        console.error('Error al obtener los incidentes:', error);
-        res.status(500).send('Error al obtener los incidentes');
-    }
+          res.render('orden-trabajo', { 
+              incidentes: incidentes.rows,
+              estadoSeleccionado: estado,
+              prioridadSeleccionada: prioridad 
+          });
+      } catch (error) {
+          console.error('Error al obtener los incidentes:', error);
+          res.status(500).send('Error al obtener los incidentes');
+      }
   } else {
-    res.redirect('/login');
+      res.redirect('/login');
   }
 });
 
@@ -412,38 +418,64 @@ app.get('/terminarIncidente', async (req, res) => {
 
       // Consulta para obtener todos los detalles del incidente y el elemento reportado
       const incidenteQuery = `
-          SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
-                 e.nombre AS nombre_elemento, e.codigo, 
-                 l.nombre AS nombre_localidad,
-                 d.nombre AS nombre_departamento,
-                 u.nombre AS nombre_tecnico,
-                 enc.nombre AS nombre_encargado,
-                 edif.nombre AS nombre_edificio,
-                 
-                 -- Campos adicionales para los detalles específicos del elemento
-                 comp.modelo AS modelo_computadora, comp.marca AS marca_computadora, comp.ram AS ram_computadora,
-                 comp.procesador AS procesador_computadora, comp.sistema_operativo AS so_computadora,
-                  comp.tipo_disco AS tipo_disco_computadora, comp.espacio_disco AS espacio_disco_computadora,
-                  comp.tarjeta_grafica AS tarjeta_grafica_computadora, comp.fecha_compra AS fecha_compra_computadora,
-                  comp.fecha_garantia AS fecha_garantia_computadora,
-                 imp.modelo AS modelo_impresora, imp.tipo_tinta AS tinta_impresora,
-                 proy.modelo AS modelo_proyector, proy.resolucion AS resolucion_proyector
+    SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+           e.nombre AS nombre_elemento, e.codigo, 
+           l.nombre AS nombre_localidad,
+           d.nombre AS nombre_departamento,
+           u.nombre AS nombre_tecnico,
+           enc.nombre AS nombre_encargado,
+           edif.nombre AS nombre_edificio,
+           
+           -- Campos para detalles de computadoras
+           comp.modelo AS modelo_computadora, comp.marca AS marca_computadora, comp.ram AS ram_computadora,
+           comp.procesador AS procesador_computadora, comp.sistema_operativo AS so_computadora,
+           comp.tipo_disco AS tipo_disco_computadora, comp.espacio_disco AS espacio_disco_computadora,
+           comp.tarjeta_grafica AS tarjeta_grafica_computadora, comp.fecha_compra AS fecha_compra_computadora,
+           comp.fecha_garantia AS fecha_garantia_computadora,
 
-          FROM incidentes i
-          JOIN elementos e ON i.id_elemento = e.id_elemento
-          LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
-          LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
-          LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
-          LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
-          LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+           -- Campos para detalles de impresoras
+           imp.modelo AS modelo_impresora, imp.tipo_tinta AS tinta_impresora,
+           imp.marca AS marca_impresora, imp.fecha_compra AS fecha_compra_impresora,
+           imp.fecha_garantia AS fecha_garantia_impresora,
 
-          -- Uniones adicionales para cada tipo de elemento
-          LEFT JOIN computadoras comp ON e.id_elemento = comp.id_elemento
-          LEFT JOIN impresoras imp ON e.id_elemento = imp.id_elemento
-          LEFT JOIN proyectores proy ON e.id_elemento = proy.id_elemento
+           -- Campos para detalles de proyectores
+           proy.marca AS marca_proyector, proy.fecha_compra AS fecha_compra_proyector,
+           proy.fecha_garantia AS fecha_garantia_proyector, proy.modelo AS modelo_proyector,
+           proy.resolucion AS resolucion_proyector,
 
-          WHERE i.id_incidente = $1
-      `;
+           -- Campos para detalles de access points
+           access.direccion_ip AS direccion_ip_access, access.marca AS marca_access,
+           access.modelo AS modelo_access, access.numero_serie AS numero_serie_access,
+           access.fecha_compra AS fecha_compra_access, access.fecha_garantia AS fecha_garantia_access,
+
+           -- Campos para detalles de servidores
+           serv.nombre_servidor AS nombre_servidor_servidor, serv.fecha_compra AS fecha_compra_servidor,
+           serv.fecha_garantia AS fecha_garantia_servidor, serv.marca AS marca_servidor,
+           serv.modelo AS modelo_servidor,
+
+           -- Campos para detalles de switches
+           sw.marca AS marca_switch, sw.fecha_compra AS fecha_compra_switch,
+           sw.fecha_garantia AS fecha_garantia_switch, sw.puertos AS puertos_switch,
+           sw.numero_serie AS numero_serie_switch, sw.modelo AS modelo_switch
+           
+    FROM incidentes i
+    JOIN elementos e ON i.id_elemento = e.id_elemento
+    LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+    LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+    LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+    LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+    LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+
+    -- Uniones adicionales para cada tipo de elemento
+    LEFT JOIN computadoras comp ON e.id_elemento = comp.id_elemento
+    LEFT JOIN impresoras imp ON e.id_elemento = imp.id_elemento
+    LEFT JOIN proyectores proy ON e.id_elemento = proy.id_elemento
+    LEFT JOIN access_points access ON e.id_elemento = access.id_elemento
+    LEFT JOIN servidores serv ON e.id_elemento = serv.id_elemento
+    LEFT JOIN switches sw ON e.id_elemento = sw.id_elemento
+
+    WHERE i.id_incidente = $1
+`;
 
       const incidenteResult = await db.query(incidenteQuery, [id_incidente]);
 

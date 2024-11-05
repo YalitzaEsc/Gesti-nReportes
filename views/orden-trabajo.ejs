@@ -2,6 +2,16 @@
 
 <h1 class="titulos-inc">Órdenes de trabajo</h1>
 
+<div class="busqueda-filtros">
+    <form action="/orden-trabajo" method="GET">
+        <select name="prioridad" id="estado" onchange="this.form.submit()">
+            <option value="">Filtrar por prioridad</option>
+            <option value="Alta" <%= prioridadSeleccionada === 'Alta' ? 'selected' : '' %>>Alta</option>
+            <option value="Media" <%= prioridadSeleccionada === 'Media' ? 'selected' : '' %>>Media</option>
+            <option value="Baja" <%= prioridadSeleccionada === 'Baja' ? 'selected' : '' %>>Baja</option>
+        </select>
+    </form>
+</div>
 
 <div class="tabla-contenedor">
     <table class="tabla-incidencias">
@@ -15,10 +25,12 @@
                 <th>Equipo</th>
                 <th>Encargado</th>
                 <th>Descripción</th>
+                <th>Clasificación</th>
                 <th>Técnico Asignado</th>
                 <th>Resolución</th>
                 <th>Fecha de Resolución</th>
                 <th>Estado</th>
+                <th>Prioridad</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -33,10 +45,16 @@
                     <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
                     <td><%= incidente.nombre_encargado %></td>
                     <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
+                    <td><%= incidente.clasificacion %></td>
                     <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
                     <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>
                     <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
+                    <td>
+                        <span class="<%= incidente.prioridad === 'Alta' ? 'prioridad-alta' : incidente.prioridad === 'Media' ? 'prioridad-media' : 'prioridad-baja' %>">
+                            <%= incidente.prioridad %>
+                        </span>
+                    </td>
                     <td>
                         <% if (incidente.estado === 'En proceso') { %>
                             <form action="/terminarIncidente" method="POST">
@@ -47,7 +65,7 @@
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <button class="orden-trabajo-btn terminado-btn" disabled>Terminado</button>
                         <% } else if (incidente.estado === 'Liberado') { %>
-                            <button class="liberado-btn"><i class="fa-solid fa-check"></i></button>
+                            <button class="liberado-btn"><i class="fa-solid fa-circle-check"></i></button>
                         <% } %>
                     </td>
                 </tr>
@@ -55,6 +73,7 @@
         </tbody>
     </table>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -64,22 +83,16 @@
             button.addEventListener('click', function(event) {
                 event.preventDefault();
 
-                // Obtiene el id_elemento y el id_incidente desde el formulario
                 const idElemento = button.closest('form').querySelector('input[name="id_elemento"]').value;
                 const idIncidente = button.closest('form').querySelector('input[name="id_incidente"]').value;
 
-                // Configuración del tamaño del popup
                 const popupWidth = 800;
                 const popupHeight = 600;
 
-                // URL con ambos parámetros
                 const url = `/terminarIncidente?id_elemento=${idElemento}&id_incidente=${idIncidente}`;
-
-                // Calcula la posición para centrar el popup
                 const left = (window.screen.width / 2) - (popupWidth / 2);
                 const top = (window.screen.height / 2) - (popupHeight / 2);
 
-                // Abre el modal en una nueva ventana
                 window.open(url, 'Terminar Incidente', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
             });
         });

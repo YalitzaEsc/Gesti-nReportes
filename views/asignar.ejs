@@ -12,12 +12,27 @@
 
     <form action="/asignarIncidente" method="POST" class = "form-asignar">
         <input type="hidden" name="id_incidente" value="<%= id_incidente %>">
-        <select name="tecnico" id="tecnico" class="elemento-tipo" required>
+        
+        <select name="tecnico" id="tecnico" class="select-orden" required>
             <option value="" disabled selected>Seleccione un técnico</option>
             <% tecnicos.forEach(tecnico => { %>
-                <option value="<%= tecnico.id_usuario %>"><%= tecnico.nombre %></option>
+                <option value="<%= tecnico.id_usuario %>"><%= tecnico.nombre%></option>
             <% }) %>
         </select>
+
+        <select name="clasificacion" id="clasificacion" class="select-orden" required>
+            <option value="">Clasificacion</option>
+            <option value="Hardware">Hardware</option>
+            <option value="Software">Software</option>
+        </select>
+
+        <select name="prioridad" id="prioridad" class ="select-orden" required>
+            <option value="">Prioridad</option>
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+        </select>
+
         <button type="submit" class = "agregarComponentesBtn asignarBtn">Asignar</button>
     </form>
 
