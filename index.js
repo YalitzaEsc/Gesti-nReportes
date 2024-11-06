@@ -512,6 +512,81 @@ app.post('/resolucion', async (req, res) => {
   }
 });
 
+app.get("/edificiosVista", async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+          const searchQuery = req.query.search || '';
+          const selectedDepartamento = req.query.departamento || null;
+
+          // Obtener todos los departamentos excepto "Acceso General"
+          const departamentos = await db.query("SELECT * FROM departamentos WHERE nombre != 'Acceso General' ORDER BY nombre ASC");
+
+          let edificiosPorDepartamento = {};
+
+          if (selectedDepartamento) {
+              // Obtener edificios y localidades solo para el departamento seleccionado
+              const edificios = await db.query(`
+                  SELECT * 
+                  FROM edificios 
+                  WHERE id_departamento = $1 
+                  AND (nombre ILIKE $2 OR EXISTS (
+                      SELECT 1 FROM localidades 
+                      WHERE localidades.id_edificio = edificios.id_edificio 
+                      AND (localidades.nombre ILIKE $2 OR EXISTS (
+                          SELECT 1 FROM elementos 
+                          WHERE elementos.id_localidad = localidades.id_localidad 
+                          AND elementos.nombre ILIKE $2
+                      ))
+                  ))
+                  ORDER BY nombre ASC
+              `, [selectedDepartamento, `%${searchQuery}%`]);
+
+              const localidadesPorEdificio = {};
+
+              for (const edificio of edificios.rows) {
+                  const localidades = await db.query(`
+                      SELECT localidades.*, tipos.nombre AS nombre_tipo, encargados.nombre AS nombre_encargado 
+                      FROM localidades 
+                      JOIN tipos ON localidades.id_tipo = tipos.id_tipo 
+                      LEFT JOIN encargados ON localidades.id_encargado = encargados.id_encargado 
+                      WHERE id_edificio = $1
+                      ORDER BY localidades.nombre ASC
+                  `, [edificio.id_edificio]);
+
+                  for (const localidad of localidades.rows) {
+                      const componentes = await db.query(`
+                          SELECT * FROM elementos 
+                          WHERE id_localidad = $1 
+                          ORDER BY nombre ASC
+                      `, [localidad.id_localidad]);
+
+                      localidad.componentes = componentes.rows;
+                  }
+
+                  localidadesPorEdificio[edificio.id_edificio] = localidades.rows;
+              }
+
+              edificiosPorDepartamento[departamentos.rows.find(dep => dep.id_departamento == selectedDepartamento).nombre] = {
+                  edificios: edificios.rows,
+                  localidadesPorEdificio: localidadesPorEdificio
+              };
+          }
+
+          res.render("edificiosVista.ejs", { 
+              departamentos: departamentos.rows,
+              edificiosPorDepartamento,
+              selectedDepartamento,
+              searchQuery
+          });
+      } catch (error) {
+          console.error("Error al cargar la vista de edificios:", error);
+          res.status(500).send("Error al cargar la vista de edificios");
+      }
+  } else {
+      res.redirect("/login");
+  }
+});
+
 
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {

@@ -29,19 +29,26 @@
                     <a href="/perfil" class="tituloOpciones">Perfil</a>
                 </div>
 
-                <div id = "edificios">
-                    <i class="fa-solid fa-building icon-sidebar"></i>
-                    <a href="/edificios" class="tituloOpciones">Edificios</a>
-                </div>
 
                 <% if (user.nombre_usuario != "Administrador" && user.puesto != "Tecnico") { %>
                     <div id="incidencias">
                         <i class="fa-solid fa-flag icon-sidebar"></i>
                         <a href="/incidencias" class="tituloOpciones">Incidencias</a>
                     </div>
+
+                    <div id = "edificios">
+                        <i class="fa-solid fa-building icon-sidebar"></i>
+                        <a href="/edificios" class="tituloOpciones">Edificios</a>
+                    </div>
                 <% } %>
 
                 <% if (user.nombre_usuario == "Administrador") { %>
+
+                    <div id = "edificios">
+                        <i class="fa-solid fa-building icon-sidebar"></i>
+                        <a href="/edificiosVista" class="tituloOpciones">Edificios</a>
+                    </div>
+
                     <div id = "registro">
                         <i class="fa-solid fa-clipboard icon-sidebar"></i>
                         <a href="/registro" class="tituloOpciones">Registro</a>
@@ -55,6 +62,12 @@
                     <% } %>
 
                 <% if (user.nombre_usuario == "Tecnico Uno" || user.nombre_usuario == "Tecnico Dos" || user.nombre_usuario == "Tecnico Tres") { %>
+                    
+                    <div id = "edificios">
+                        <i class="fa-solid fa-building icon-sidebar"></i>
+                        <a href="/edificiosVista" class="tituloOpciones">Edificios</a>
+                    </div>
+                    
                     <div id = "orden-trabajo">
                         <i class="fa-solid fa-wrench icon-sidebar"></i>
                         <a href="/orden-trabajo" class="tituloOpciones">Órdenes</a>

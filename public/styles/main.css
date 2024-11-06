@@ -92,6 +92,29 @@ form {
     background-color: rgba(255, 255, 255, 0);
 }
 
+.etiqueta {
+    color: white;
+    font-size: 13px;
+    font-family: "Reddit Sans Condensed", sans-serif;
+}
+
+.input-inicio {
+    font-family: "Reddit Sans Condensed", sans-serif;
+    padding: 14px 32px;
+    border-radius: 5px;
+    border: none;
+    width: 310px;
+    height: 20px;
+    background-color: #A7A7A7;
+    outline: none;
+}
+
+.input-inicio::placeholder {
+    color: white;
+    font-family: "Reddit Sans Condensed", sans-serif;
+    opacity: 0.7;
+}
+
 .input-r {
     padding: 15px 32px;
     margin: 5px;
@@ -166,16 +189,17 @@ input::placeholder {
 }
 
 
-#input-usuario, #input-contraseña{
-    border-bottom: 1.5px solid rgb(0, 0, 0);
-    margin: 15px 0;
+#input-usuario{
+    margin: 20px 0 15px 0;
 }
 
 
 #recuerdame-container {
     display: flex;
     justify-content: center;
+    font-family: "Reddit Sans Condensed", sans-serif;
     margin: 10px 10px;
+    padding-top: 20px;
     width: 405px;
 }
 
@@ -185,7 +209,7 @@ input::placeholder {
 }
 
 .error-login {
-    color: rgb(112, 17, 17);
+    color: rgb(255, 255, 255);
 }
 
 .error-registro {
@@ -267,6 +291,25 @@ input.registrobtn {
     background-color: rgba(0, 0, 0, 0.9);  
     cursor: pointer;
     color: rgb(255, 255, 255);
+}
+
+.loginBtn {
+    margin-top: 30px;
+    width: 120px;
+    height: 45px;
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-family: "Reddit Sans Condensed", sans-serif;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.loginBtn:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid white;
 }
 
 input[type=checkbox] {

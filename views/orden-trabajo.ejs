@@ -51,9 +51,7 @@
                     <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
                     <td>
-                        <span class="<%= incidente.prioridad === 'Alta' ? 'prioridad-alta' : incidente.prioridad === 'Media' ? 'prioridad-media' : 'prioridad-baja' %>">
-                            <%= incidente.prioridad %>
-                        </span>
+                        <i class="fa-solid fa-circle <%= incidente.prioridad === 'Alta' ? 'prioridad-alta' : incidente.prioridad === 'Media' ? 'prioridad-media' : 'prioridad-baja' %>"></i>
                     </td>
                     <td>
                         <% if (incidente.estado === 'En proceso') { %>

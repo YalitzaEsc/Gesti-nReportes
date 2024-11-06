@@ -1,0 +1,48 @@
+<%- include("partials/header.ejs") %>
+
+<h1 class="titulos-inc">Vista de Edificios</h1>
+
+<div class="busqueda-edificios">
+    <form action="/edificiosVista" method="GET">
+        <select name="departamento" class="estado" onchange="this.form.submit()">
+            <option value="">Seleccione un departamento</option>
+            <% departamentos.forEach(departamento => { %>
+                <option value="<%= departamento.id_departamento %>" <%= selectedDepartamento == departamento.id_departamento ? 'selected' : '' %>>
+                    <%= departamento.nombre %>
+                </option>
+            <% }) %>
+        </select>
+    </form>
+</div>
+
+<% if (selectedDepartamento && Object.keys(edificiosPorDepartamento).length > 0) { %>
+    <div class="contenedor-edificios vista">
+        <% Object.keys(edificiosPorDepartamento).forEach(departamento => { %>
+            <h2 class="nombre-departamento"><%= departamento %></h2>
+            
+            <% edificiosPorDepartamento[departamento].edificios.forEach(edificio => { %>
+                <div class="edificio-info">
+                    <h3 class="nombre-edificio"><i class="fa-solid fa-building"></i> <%= edificio.nombre %></h3>
+                    
+                    <% edificiosPorDepartamento[departamento].localidadesPorEdificio[edificio.id_edificio].forEach(localidad => { %>
+                        <div class="localidades-info">
+                            <p class="aula-encargado"><strong><%= localidad.nombre %></strong> <br> <strong>Encargado:</strong> <%= localidad.nombre_encargado || 'Sin encargado' %> </p>
+                            
+                            <div class="contenedor-componentes">
+                                <% localidad.componentes.forEach(componente => { %>
+                                    <div class="componente-vista">
+                                        <p><%= componente.nombre %> (<%= componente.codigo %>)</p>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% }) %>
+        <% }) %>
+    </div>
+<% } else if (selectedDepartamento) { %>
+    <p>No hay edificios registrados para el departamento seleccionado.</p>
+<% } %>
+
+<%- include("partials/footer.ejs") %>

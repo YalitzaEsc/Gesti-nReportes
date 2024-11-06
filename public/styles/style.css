@@ -119,6 +119,7 @@ main {
 
 
 
+
 /* PERFIL */
 
 .contenedor-perfil {
@@ -178,6 +179,14 @@ main {
     flex-direction: column;
     justify-content: center;
     font-family: "Inter Tight", sans-serif;
+}
+
+.vista {
+    margin-top: 50px;
+}
+
+.nombre-departamento {
+    text-align: center;
 }
 
 .nombre-edificio {
@@ -252,6 +261,24 @@ main {
     color: rgb(255, 255, 255);
     font-family: "Inter Tight", sans-serif;
     font-size: 14px;
+}
+
+.buscarEdificioBtn {
+    margin: 0;
+    padding: 7px 50px;
+    border-radius: 5px;
+    background-color: black;
+    border: 0.5px solid black;
+    color: rgb(255, 255, 255);
+    font-family: "Inter Tight", sans-serif;
+    font-size: 14px;
+}
+
+.buscarEdificioBtn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 0.5px solid black;
 }
 
 .agregarLocalidadBtn:hover {
@@ -533,6 +560,7 @@ main {
     width: calc(100% - 140px); /* Resta los márgenes laterales */
 }
 
+
 .componente {
     display: flex;
     flex-direction: column;
@@ -546,6 +574,21 @@ main {
     font-size: 14px;
     justify-content: center;
     cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.componente-vista {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    border: 2px solid #ccc;
+    background-color: #ccc;
+    padding: 10px;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    font-size: 14px;
+    justify-content: center;
     transition: border-color 0.3s, background-color 0.3s;
 }
 
@@ -756,6 +799,7 @@ main {
     margin-bottom: 50px;
 }
 
+
 /* Contenedor con scroll horizontal y límite de ancho */
 .tabla-contenedor {
     overflow-x: auto; /* Habilita el scroll horizontal si es necesario */
@@ -765,6 +809,10 @@ main {
     margin: 0 auto;
     padding: 10px;
     box-sizing: border-box; /* Incluye padding en el cálculo del ancho total */
+}
+
+.aula-encargado {
+    text-align: center;
 }
 
 /* Estilo para la tabla */
@@ -849,6 +897,25 @@ main {
     text-align: center;
     font-family: "Inter Tight", sans-serif;
     padding: 6px 50px;
+    font-size: 14px;
+    background-color: white;
+    color: black;
+    border: 1px solid rgba(100, 94, 94, 0.446);
+    border-radius: 5px;
+}
+
+.busqueda-edificios {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.estado {
+    text-align: center;
+    font-family: "Inter Tight", sans-serif;
+    padding: 6px 0;
+    width: 600px;
     font-size: 14px;
     background-color: white;
     color: black;
