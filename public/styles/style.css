@@ -1052,7 +1052,8 @@ main {
 .enviaresuBtn {
     margin-left: 5px;
     margin-top: 15px;
-    padding: 9.5px 50px;
+    padding: 9.5px;
+    width: 170px;
     border-radius: 5px;
     background-color: black;
     border: 1px solid black;
@@ -1067,4 +1068,11 @@ main {
     color: black;
     border: 1px solid black;
 
+}
+
+.botones-resolucion {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
