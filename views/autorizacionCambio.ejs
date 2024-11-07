@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autorizar Cambio</title>
+</head>
+<body>
+
+    <div class="contenedor-incidencias">
+        <h2 class="titulos-inc">Información del equipo reportado</h2>
+    
+        <div class="incidencias-terminar">
+            <!-- Detalles de Computadora -->
+            <% if (id_incidente.modelo_computadora) { %>
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_computadora %>" disabled>
+                    <label class="etiqueta" for="procesador">Procesador</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Procesador" value="<%= incidente.procesador_computadora %>" disabled>
+                    <label class="etiqueta" for="sistema operativo">Sistema Operativo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Sistema Operativo" value="<%= incidente.so_computadora %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_computadora %>" disabled>
+                    <label class="etiqueta" for="ram">RAM</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="RAM" value="<%= incidente.ram_computadora %>" disabled>
+                    <label class="etiqueta" for="tipo disco">Tipo de Disco</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Tipo Disco" value="<%= incidente.tipo_disco_computadora %>" disabled>
+                </div>
+            <% } else if (incidente.modelo_impresora) { %>
+                <!-- Detalles de Impresora -->
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_impresora %>" disabled>
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_impresora %>" disabled>
+                    <label class="etiqueta" for="fecha garantia">Fecha de Garantía</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Garantía" value="<%= incidente.fecha_garantia_impresora %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="tipo tinta">Tipo de Tinta</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Tipo Tinta" value="<%= incidente.tinta_impresora %>" disabled>
+                    <label class="etiqueta" for="fecha compra">Fecha de Compra</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Compra" value="<%= incidente.fecha_compra_impresora %>" disabled>
+                   
+                </div>
+            <% } else if (incidente.modelo_proyector) { %>
+                <!-- Detalles de Proyector -->
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_proyector %>" disabled>
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_proyector %>" disabled>
+                    <label class="etiqueta" for="fecha garantia">Fecha de Garantía</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Garantía" value="<%= incidente.fecha_garantia_proyector %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="resolucion">Resolución</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Resolucion" value="<%= incidente.resolucion_proyector %>" disabled>
+                    <label class="etiqueta" for="fecha compra">Fecha de Compra</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Compra" value="<%= incidente.fecha_compra_proyector %>" disabled>
+                   
+                </div>
+            <% } else if (incidente.modelo_access) { %>
+                <!-- Detalles de Access Point -->
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="direccion_ip">Dirección IP</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Direccion IP" value="<%= incidente.direccion_ip_access %>" disabled>
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_access %>" disabled>
+                    <label class="etiqueta" for="fecha compra">Fecha de Compra</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Compra" value="<%= incidente.fecha_compra_access %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_access %>" disabled>
+                    <label class="etiqueta" for="numero serie">Número de Serie</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Numero Serie" value="<%= incidente.numero_serie_access %>" disabled>
+                   
+                </div>
+            <% } else if (incidente.nombre_servidor_servidor) { %>
+                <!-- Detalles de Servidor -->
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="nombre servidor">Nombre del Servidor</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Nombre Servidor" value="<%= incidente.nombre_servidor_servidor %>" disabled>
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_servidor %>" disabled>
+                    <label class="etiqueta" for="fecha garantia">Fecha de Garantía</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Garantía" value="<%= incidente.fecha_garantia_servidor %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_servidor %>" disabled>
+                    <label class="etiqueta" for="fecha compra">Fecha de Compra</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Compra" value="<%= incidente.fecha_compra_servidor %>" disabled>
+                   
+                </div>
+            <% } else if (incidente.modelo_switch) { %>
+                <!-- Detalles de Switch -->
+                <div class="incidencia-izquierda">
+                    <label class="etiqueta" for="marca">Marca</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_switch %>" disabled>
+                    <label class="etiqueta" for="puertos">Puertos</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Puertos" value="<%= incidente.puertos_switch %>" disabled>
+                    <label class="etiqueta" for="fecha garantia">Fecha de Garantía</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Fecha Garantía" value="<%= incidente.fecha_garantia_switch %>" disabled>
+                </div>
+                <div class="incidencia-derecha">
+                    <label class="etiqueta" for="numero serie">Número de Serie</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Numero Serie" value="<%= incidente.numero_serie_switch %>" disabled>
+                    <label class="etiqueta" for="modelo">Modelo</label>
+                    <input class="input-incidencia centrar-texto" type="text" name="Modelo" value="<%= incidente.modelo_switch %>" disabled>
+                    
+                </div>
+            <% } %>
+        </div>
+    
+        <div class="contenedor-descripcion">
+            <label class="etiqueta" for="Descripcion">Descripción del incidente</label>
+            <textarea class="input-incidencia descripcion" type="text" name="Descripcion" disabled><%= incidente.descripcion %></textarea>
+            <label class="etiqueta" for="Descripcion" name="resolucion">Resolución</label>
+                <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion"></textarea>
+        </div>
+    </div>
+
+    <form action="/autorizarCambio" method="POST">
+        <input type="hidden" name="id_incidente" value ="<%= id_incidente %>">
+    </form>
+    
+</body>
+</html>

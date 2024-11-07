@@ -55,7 +55,7 @@
                         <% } else if (incidente.estado === 'En proceso') { %>
                             <button class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } else if (incidente.estado === 'En autorización') { %>
-                                <button class="orden-trabajo-btn autorizacion-btn">Autorización</button>
+                            <button class="orden-trabajo-btn autorizacion-btn" data-id="<%= incidente.id_incidente %>">Autorización</button>
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <form action="/liberarIncidencia" method="POST">
                                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
@@ -63,7 +63,10 @@
                             </form>
                         <% } else if (incidente.estado === 'Liberado') { %>
                                 <button class= "liberado-btn"><i class="fa-solid fa-circle-check"></i></i></button>
+                        <% } else if (incidente.estado === 'En autorización') { %>
+                                <button type= "submit" class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } %>
+
                     </td>
                 </tr>
             <% }) %>
@@ -98,6 +101,36 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const asignarButtons = document.querySelectorAll('.autorizacion-btn');
+
+        asignarButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // Obtiene el id del incidente desde el atributo data-id del botón
+                const idIncidente = button.getAttribute('data-id');
+
+                // Configuración del tamaño del popup
+                const popupWidth = 600;
+                const popupHeight = 800;
+
+                // URL con el parámetro id_incidente
+                const url = `/autorizacionCambio?id_incidente=${idIncidente}`;
+
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
+
+                // Abre el modal en una nueva ventana
+                window.open(url, 'Autorizar Cambio', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
+        });
+    });
+
+
+
 </script>
 
 <%- include("partials/footer.ejs") %>

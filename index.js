@@ -631,6 +631,18 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+app.get('/autorizacionCambio', async (req, res) => {
+  const usuario =  res.locals.user;
+  const id_incidente = req.body.id_incidente;
+
+  if (req.isAuthenticated()) {
+    res.render("autorizacionCambio.ejs");
+  } else {
+    res.redirect("/login");
+  }
+
+});
+
 
 app.post("/registro", async (req, res) =>{
 
@@ -728,7 +740,7 @@ passport.use(
       res.redirect("/login");
     }
     
-  })
+  });
 
 
   app.get("/edificios", async (req, res) => {

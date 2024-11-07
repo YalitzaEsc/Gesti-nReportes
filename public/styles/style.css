@@ -900,6 +900,12 @@ main {
     color: white;
 }
 
+.autorizacion-btn:hover {
+    cursor: pointer;
+    background-color: #0056b3;
+    
+}
+
 .prioridad-alta {
     color: red;
 }
