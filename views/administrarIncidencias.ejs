@@ -10,6 +10,7 @@
             <option value="En proceso" <%= estadoSeleccionado === 'En proceso' ? 'selected' : '' %>>En proceso</option>
             <option value="Terminado" <%= estadoSeleccionado === 'Terminado' ? 'selected' : '' %>>Terminado</option>
             <option value="Liberado" <%= estadoSeleccionado === 'Liberado' ? 'selected' : '' %>>Liberado</option>
+            <option value="En autorización" <%= estadoSeleccionado === 'En autorización' ? 'selected' : '' %>>En autorización</option>        
         </select>
     </form>
 </div>
@@ -53,6 +54,8 @@
                             <button class="orden-trabajo-btn asignar-btn" data-id="<%= incidente.id_incidente %>">Asignar</button>
                         <% } else if (incidente.estado === 'En proceso') { %>
                             <button class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
+                        <% } else if (incidente.estado === 'En autorización') { %>
+                                <button class="orden-trabajo-btn autorizacion-btn">Autorización</button>
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <form action="/liberarIncidencia" method="POST">
                                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">

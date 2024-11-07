@@ -895,6 +895,11 @@ main {
     transition: background-color 0.3s ease;
 }
 
+.autorizacion-btn {
+    background-color: #007bff;
+    color: white;
+}
+
 .prioridad-alta {
     color: red;
 }
