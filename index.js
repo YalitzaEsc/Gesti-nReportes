@@ -494,11 +494,35 @@ app.get('/terminarIncidente', async (req, res) => {
 });
 
 app.post('/resolucion', async (req, res) => {
-  const { id_incidente, resolucion } = req.body;
+  const { id_incidente, id_elemento, resolucion, piezaSolicitada, costo } = req.body;
+  const solicitarCambio = req.body.solicitarCambio === 'true'; // Verifica si se envió como "true"
 
   try {
-      // Actualizar el incidente con la resolución y la fecha de resolución
-      await db.query("UPDATE incidentes SET estado = 'Terminado', resolucion = $1 WHERE id_incidente = $2", [resolucion, id_incidente]);
+      if (solicitarCambio && piezaSolicitada && costo) {
+          const costoNumerico = parseFloat(costo) || 0;
+
+          // Cambiar el estado del incidente y establecer solicitud_cambio en true
+          await db.query(
+              "UPDATE incidentes SET estado = 'En autorización', resolucion = $1, solicitud_cambio = true WHERE id_incidente = $2",
+              [resolucion, id_incidente]
+          );
+
+          // Insertar la solicitud de cambio en solicitudes_cambio
+          await db.query(
+              `INSERT INTO solicitudes_cambio (id_incidente, pieza_solicitada, costo)
+               VALUES ($1, $2, $3)`,
+              [
+                  parseInt(id_incidente),
+                  piezaSolicitada,
+                  costoNumerico
+              ]
+          );
+      } else {
+          await db.query(
+              "UPDATE incidentes SET estado = 'Terminado', resolucion = $1 WHERE id_incidente = $2",
+              [resolucion, id_incidente]
+          );
+      }
 
       res.send(`
           <script>

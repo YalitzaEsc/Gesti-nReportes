@@ -62,6 +62,8 @@
                             </form>
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <button class="orden-trabajo-btn terminado-btn" disabled>Terminado</button>
+                            <% } else if (incidente.estado === 'En autorización') { %>
+                                <button class="orden-trabajo-btn" disabled><i class="fa-solid fa-ellipsis"></i></button>
                         <% } else if (incidente.estado === 'Liberado') { %>
                             <button class="liberado-btn"><i class="fa-solid fa-circle-check"></i></button>
                         <% } %>

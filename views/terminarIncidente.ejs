@@ -132,15 +132,34 @@
         <div class="form-resolucion">
             <form action="/resolucion" method="POST">
                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                <input type="hidden" name = "id_elemento" value="<%= incidente.id_elemento %>">
                 <label class="etiqueta" for="Descripcion" name="resolucion">Resolución</label>
                 <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion"></textarea>
-                <button class = "enviaresuBtn">Solicitar Cambio</button>
+                
+                <!-- Toggle para solicitud de cambio de pieza -->
+                <div class="solicitud-cambio">
+                    <label class="etiqueta" for="toggleCambio">¿Solicitar cambio de pieza?</label>
+                    <input type="checkbox" id="toggleCambio" name="solicitarCambio" value="true" onchange="toggleCambioForm()">                
+                </div>
+
+                <!-- Formulario de cambio de pieza (oculto inicialmente) -->
+                <div id="cambioForm" style="display: none;">
+                    <input class="input-incidencia-cambio" type="text" name="piezaSolicitada" id="piezaSolicitada" placeholder="Nombre de la pieza">
+                    <input class="input-incidencia-cambio" type="number" name="costo" id="costo" placeholder="Monto en pesos" min="0">
+                </div>
+
                 <button class="enviaresuBtn" type="submit">Enviar</button>
             </form>
-
         </div>
-        
     </div>
+
+    <script>
+        // Función para mostrar u ocultar el formulario de cambio de pieza
+        function toggleCambioForm() {
+            const cambioForm = document.getElementById('cambioForm');
+            cambioForm.style.display = cambioForm.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
 
 </body>
 </html>
