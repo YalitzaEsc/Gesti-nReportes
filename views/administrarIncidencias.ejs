@@ -56,6 +56,10 @@
                             <button class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } else if (incidente.estado === 'En autorización') { %>
                             <button class="orden-trabajo-btn autorizacion-btn" data-id="<%= incidente.id_incidente %>">Autorización</button>
+                        <% } else if(incidente.estado === "Rechazado")  { %>
+                            <button disabled class= "liberado-btn"><i class="fa-solid fa-ban"></i></button>
+                        <% } else if(incidente.estado === "Cambio")  { %>
+                            <button class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <form action="/liberarIncidencia" method="POST">
                                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
@@ -63,8 +67,6 @@
                             </form>
                         <% } else if (incidente.estado === 'Liberado') { %>
                                 <button class= "liberado-btn"><i class="fa-solid fa-circle-check"></i></i></button>
-                        <% } else if (incidente.estado === 'En autorización') { %>
-                                <button type= "submit" class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } %>
 
                     </td>
@@ -113,8 +115,8 @@
                 const idIncidente = button.getAttribute('data-id');
 
                 // Configuración del tamaño del popup
-                const popupWidth = 600;
-                const popupHeight = 800;
+                const popupWidth = 800;
+                const popupHeight = 600;
 
                 // URL con el parámetro id_incidente
                 const url = `/autorizacionCambio?id_incidente=${idIncidente}`;

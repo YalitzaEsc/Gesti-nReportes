@@ -758,6 +758,21 @@ main {
     margin-top: 20px;
 }
 
+.contenedor-reso {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.enviarContenedor {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 .etiqueta {
     font-family: "Inter Tight", sans-serif;
     font-size: 16px;
@@ -779,6 +794,17 @@ main {
     outline: none;
     padding-left: 10px;
     margin: 0 10px;
+}
+
+.input-incidencia-reso {
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+    width: 300px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid rgba(100, 94, 94, 0.446);
+    outline: none;
+    padding-left: 10px;
 }
 
 .input-incidencia-cambio {
@@ -804,6 +830,17 @@ main {
     outline: none;
     padding-left: 10px;
     margin: 0 10px;
+}
+
+.descripcion-reso {
+    padding-top: 10px;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+    width: 680px;
+    height: 100px;
+    border-radius: 5px;
+    border: 1px solid rgba(100, 94, 94, 0.446);
+    outline: none;
 }
 
 
@@ -998,6 +1035,11 @@ main {
     color: white;
 }
 
+.rechazado-btn {
+    background-color: rgb(141, 16, 16);
+    color: white;
+}
+
 .liberar-btn:hover {
     cursor: pointer;
     background-color: rgb(119, 22, 72);
@@ -1018,6 +1060,17 @@ main {
 .vermas-btn:hover {
     cursor: pointer;
     background-color: rgb(88, 16, 139);
+    color: white;
+}
+
+.confirmarCambio-btn {
+    background-color: rgb(137, 222, 81);
+    color: white;
+}
+
+.confirmarCambio-btn:hover {
+    cursor: pointer;
+    background-color: rgb(89, 170, 36);
     color: white;
 }
 
@@ -1044,6 +1097,15 @@ main {
     padding: 20px;
     width: 100%;
     box-sizing: border-box;
+}
+
+.contenedor-cambio {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter Tight", sans-serif;
 }
 
 .incidencias-terminar {
@@ -1091,6 +1153,26 @@ main {
     font-size: 16px;
 }
 
+.enviarConfirCambioBtn {
+    margin-left: 5px;
+    margin-top: 15px;
+    padding: 9.5px;
+    width: 300px;
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 16px;
+}
+
+.enviarConfirCambioBtn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
 .enviaresuBtn:hover {
     cursor: pointer;
     background-color: white;
@@ -1104,4 +1186,27 @@ main {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.rechazarCambio-btn {
+    border-radius: 5px;
+    background-color: rgb(141, 16, 16);
+    border: 1px solid rgb(255, 255, 255);
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 14px;
+}
+
+.rechazarCambio-btn:hover {
+    cursor: pointer;
+    background-color: rgb(212, 39, 39);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.form-cambio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Autorizar Cambio</title>
 </head>
 <body>
 
     <div class="contenedor-incidencias">
-        <h2 class="titulos-inc">Información del equipo reportado</h2>
+        <h2 class="titulos-inc">Resumen del incidente</h2>
     
         <div class="incidencias-terminar">
             <!-- Detalles de Computadora -->
-            <% if (id_incidente.modelo_computadora) { %>
+            <% if (incidente.modelo_computadora) { %>
                 <div class="incidencia-izquierda">
                     <label class="etiqueta" for="marca">Marca</label>
                     <input class="input-incidencia centrar-texto" type="text" name="Marca" value="<%= incidente.marca_computadora %>" disabled>
@@ -120,14 +126,46 @@
         <div class="contenedor-descripcion">
             <label class="etiqueta" for="Descripcion">Descripción del incidente</label>
             <textarea class="input-incidencia descripcion" type="text" name="Descripcion" disabled><%= incidente.descripcion %></textarea>
-            <label class="etiqueta" for="Descripcion" name="resolucion">Resolución</label>
-                <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion"></textarea>
+            <label class="etiqueta" for="Descripcion" name="resolucion">Resultado del Análisis</label>
+                <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion" disabled><%= incidente.resolucion %></textarea>
         </div>
+
+        <div class="incidencias-terminar">
+
+            <div class = "incidencia-izquierda">
+                <label class="etiqueta" for="piezaSolicitada">Pieza Solicitada</label>
+                <input class="input-incidencia centrar-texto" type="text" name="piezaSolicitada" id="piezaSolicitada" value ="<%= solicitudCambio.pieza_solicitada %>"disabled>
+            </div>
+
+            <div class = "incidencia-derecha">
+                <label class="etiqueta" for="costo">Costo</label>
+                <input class="input-incidencia centrar-texto" type="text" name="costo" id="costo" value ="$<%= solicitudCambio.costo %>MXN" disabled>
+            </div>
+
+        </div>
+
+        <div class="form-cambio">
+            <form action="/autorizarCambio" method="POST">
+                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                <input type="hidden" name="id_solicitud" value="<%= solicitudCambio.id_solicitud %>">
+                <input type="hidden" name="accion" id="accion" value="">
+        
+                <!-- Botón para rechazar -->
+                <button type="submit" class="rechazarCambio-btn asignarBtn" onclick="document.getElementById('accion').value='rechazar'">
+                    Rechazar
+                </button>
+        
+                <!-- Botón para autorizar -->
+                <button type="submit" class="agregarComponentesBtn asignarBtn" onclick="document.getElementById('accion').value='autorizar'">
+                    Autorizar
+                </button>
+            </form>
+        </div>
+        
+
     </div>
 
-    <form action="/autorizarCambio" method="POST">
-        <input type="hidden" name="id_incidente" value ="<%= id_incidente %>">
-    </form>
+    
     
 </body>
 </html>

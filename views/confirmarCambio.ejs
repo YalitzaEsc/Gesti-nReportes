@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Confirmar Cambio</title>
+</head>
+<body>
+
+    <h2 class="titulos-inc">Confirmar Cambio de Pieza</h2>
+
+    <div class = "contenedor-cambio">
+        <form action="/confirmarCambio" method="POST">
+            <h3>¿El cambio de la pieza fue exitoso?</h3>
+        
+            <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+        
+            <RadioGroup>
+                <RadioGroupItem>
+                    <input type="radio" name="cambio" value="exitoso" id="exitoso">
+                    <label for="exitoso">Sí</label>
+                </RadioGroupItem>
+                <RadioGroupItem>
+                    <input type="radio" name="cambio" value="fallido" id="fallido">
+                    <label for="fallido">No</label>
+                </RadioGroupItem>
+            </RadioGroup>
+        
+            <div class="contenedor-reso">
+                <label for="resolucion" class="etiqueta" style="font-weight: 600; font-size: 18px;">Resolución Final</label>
+                <textarea name="resolucion" class="input-incidencia-reso descripcion-reso" id="resolucion" placeholder="Explique los detalles..."></textarea>
+            </div>
+        
+            <div class="enviarContenedor">
+                <button type="submit" class="enviarConfirCambioBtn">Enviar</button> 
+            </div>
+        </form>
+    </div>
+
+    
+    
+</body>
+</html>

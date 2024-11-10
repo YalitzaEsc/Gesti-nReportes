@@ -60,10 +60,17 @@
                                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
                                 <button type="submit" class="orden-trabajo-btn vermas-btn">Ver más</button>
                             </form>
+                        <% } else if (incidente.estado === 'Cambio') { %>
+                            <form action="/confirmarCambio" method="POST">
+                                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                                <button type="submit" class="orden-trabajo-btn confirmarCambio-btn">Finalizar</button>
+                            </form>
                         <% } else if (incidente.estado === 'Terminado') { %>
                             <button class="orden-trabajo-btn terminado-btn" disabled>Terminado</button>
-                            <% } else if (incidente.estado === 'En autorización') { %>
-                                <button class="orden-trabajo-btn" disabled><i class="fa-solid fa-ellipsis"></i></button>
+                        <% } else if (incidente.estado === 'Rechazado') { %>
+                            <button disabled class= "liberado-btn"><i class="fa-solid fa-ban"></i></button>
+                        <% } else if (incidente.estado === 'En autorización') { %>
+                            <button class="orden-trabajo-btn" disabled><i class="fa-solid fa-ellipsis"></i></button>
                         <% } else if (incidente.estado === 'Liberado') { %>
                             <button class="liberado-btn"><i class="fa-solid fa-circle-check"></i></button>
                         <% } %>
@@ -97,6 +104,27 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const confirmarCambioButtons = document.querySelectorAll('.confirmarCambio-btn');
+
+    confirmarCambioButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const idIncidente = button.closest('form').querySelector('input[name="id_incidente"]').value;
+
+            const popupWidth = 800;
+            const popupHeight = 600;
+
+            const url = `/confirmarCambio?id_incidente=${idIncidente}`;
+            const left = (window.screen.width / 2) - (popupWidth / 2);
+            const top = (window.screen.height / 2) - (popupHeight / 2);
+
+            window.open(url, 'Confirmar Cambio', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+        });
+    });
+});
 </script>
 
 <%- include("partials/footer.ejs") %>
