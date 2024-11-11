@@ -71,7 +71,7 @@ const departamentos = await db.query("SELECT * FROM departamentos");
 
 app.get("/registro", (req, res) => {
   if (req.isAuthenticated()) {
-    if (req.user.nombre_usuario === 'Administrador') {
+    if (req.user.nombre_usuario === 'Jefe') {
       res.render("registro.ejs", {departamentos: departamentos.rows});
     } else {
       res.redirect("/inicio");  
@@ -196,12 +196,10 @@ app.post('/agregarIncidencia', async (req, res) => {
 app.get('/incidencias', async (req, res) => {
   if (req.isAuthenticated()) {
       try {
-          // Obtener el ID del departamento del usuario que inició sesión
           const usuario = res.locals.user;
           const id_departamento = usuario.id_departamento;
           const { estado } = req.query;
 
-          // Crear la consulta base para obtener los incidentes del departamento del usuario
           let query = `
               SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
                      e.nombre AS nombre_elemento, e.codigo, 
@@ -209,7 +207,8 @@ app.get('/incidencias', async (req, res) => {
                      d.nombre AS nombre_departamento,
                      ed.nombre AS nombre_edificio,
                      enc.nombre AS nombre_encargado,
-                     u.nombre AS nombre_tecnico
+                     u.nombre AS nombre_tecnico,
+                     (SELECT COUNT(*) FROM calificaciones c WHERE c.id_incidente = i.id_incidente) AS tiene_calificacion
               FROM incidentes i
               JOIN elementos e ON i.id_elemento = e.id_elemento
               LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
@@ -220,20 +219,16 @@ app.get('/incidencias', async (req, res) => {
               WHERE i.id_departamento = $1
           `;
 
-          // Añadir condición de estado si está presente en la consulta
           const params = [id_departamento];
           if (estado) {
               query += ` AND i.estado = $2`;
               params.push(estado);
           }
 
-          // Ordenar los incidentes por fecha de creación
           query += ` ORDER BY i.fecha_creacion DESC`;
 
-          // Ejecutar la consulta con los parámetros correspondientes
           const incidentes = await db.query(query, params);
 
-          // Renderizar la vista con los datos obtenidos y el estado seleccionado
           res.render('incidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
       } catch (error) {
           console.error('Error al obtener los incidentes:', error);
@@ -246,48 +241,49 @@ app.get('/incidencias', async (req, res) => {
 
 app.get('/administrarIncidencias', async (req, res) => {
   if (req.isAuthenticated()) {
-      try {
-          // Obtener el estado de los filtros
-          const { estado } = req.query;
+    try {
+      const { estado } = req.query;
 
-          // Crear la consulta base
-          let query = `
-              SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
-                     e.nombre AS nombre_elemento, e.codigo, 
-                     l.nombre AS nombre_localidad,
-                     d.nombre AS nombre_departamento,
-                     u.nombre AS nombre_tecnico,
-                     enc.nombre AS nombre_encargado,
-                     edif.nombre AS nombre_edificio
-              FROM incidentes i
-              JOIN elementos e ON i.id_elemento = e.id_elemento
-              LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
-              LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
-              LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
-              LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
-              LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
-          `;
+      // Crear la consulta base con un LEFT JOIN para obtener el costo de la solicitud de cambio si el estado es "En autorización"
+      let query = `
+        SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+               e.nombre AS nombre_elemento, e.codigo, 
+               l.nombre AS nombre_localidad,
+               d.nombre AS nombre_departamento,
+               u.nombre AS nombre_tecnico,
+               enc.nombre AS nombre_encargado,
+               edif.nombre AS nombre_edificio,
+               sc.costo
+        FROM incidentes i
+        JOIN elementos e ON i.id_elemento = e.id_elemento
+        LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+        LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+        LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+        LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+        LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+        LEFT JOIN solicitudes_cambio sc ON i.id_incidente = sc.id_incidente AND i.estado = 'En autorización'
+      `;
 
-          // Aplicar filtro de estado si está presente
-          const params = [];
-          if (estado) {
-              query += ` WHERE i.estado = $1`;
-              params.push(estado);
-          }
-
-          query += ` ORDER BY i.fecha_creacion DESC`;
-
-          // Ejecutar la consulta
-          const incidentes = await db.query(query, params);
-
-          // Renderizar la vista con los incidentes filtrados y el estado seleccionado
-          res.render('administrarIncidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
-      } catch (error) {
-          console.error('Error al obtener los incidentes:', error);
-          res.status(500).send('Error al obtener los incidentes');
+      // Aplicar filtro de estado si está presente
+      const params = [];
+      if (estado) {
+        query += ` WHERE i.estado = $1`;
+        params.push(estado);
       }
+
+      query += ` ORDER BY i.fecha_creacion DESC`;
+
+      // Ejecutar la consulta
+      const incidentes = await db.query(query, params);
+
+      // Renderizar la vista con los incidentes filtrados y el estado seleccionado
+      res.render('administrarIncidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
+    } catch (error) {
+      console.error('Error al obtener los incidentes:', error);
+      res.status(500).send('Error al obtener los incidentes');
+    }
   } else {
-      res.redirect('/login');
+    res.redirect('/login');
   }
 });
 
@@ -585,6 +581,61 @@ app.post('/confirmarCambio', async (req, res) => {
   } catch (error) {
       console.error('Error al confirmar cambio:', error);
       res.status(500).send('Error al confirmar cambio');
+  }
+});
+
+
+
+app.get('/solicitudes', async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+
+        const solicitudes = await db.query("SELECT * FROM solicitudes_cambio WHERE costo > 1000"); 
+        console.log(solicitudes.rows);
+
+        const incicentes = await db.query("SELECT * FROM incidentes WHERE solicitud_cambio = true");
+          res.render('solicitudes', { solicitudes: solicitudes.rows });
+
+      } catch (error) { 
+          console.error('Error al cargar la vista de solicitudes:', error);
+          res.status(500).send('Error al cargar la vista de solicitudes');
+      }
+  } else {
+      res.redirect('/login');
+  }
+});
+
+app.get('/calificar', async (req, res) => {
+
+  const id_incidente = req.query.id_incidente;
+  const incidente = await db.query("SELECT * FROM incidentes WHERE id_incidente = $1", [id_incidente]);
+  const id_tecnico = await db.query("SELECT id_tecnico FROM incidentes WHERE id_incidente = $1", [id_incidente]);
+  const nombre_tecnico = await db.query("SELECT nombre FROM usuarios WHERE id_usuario = $1", [id_tecnico.rows[0].id_tecnico]);
+
+  res.render('calificar', { incidente: incidente.rows[0], 
+    nombre_tecnico: nombre_tecnico.rows[0].nombre });
+});
+
+app.post('/calificar', async (req, res) => {
+  const { id_incidente, id_tecnico, calificacion } = req.body;
+
+  try {
+      // Insertar la calificación en la tabla `calificaciones`
+      await db.query(
+          `INSERT INTO calificaciones (id_tecnico, id_incidente, calificacion)
+           VALUES ($1, $2, $3)`,
+          [id_tecnico, id_incidente, calificacion]
+      );
+
+      res.send(`
+          <script>
+              alert("Calificación registrada exitosamente.");
+              window.close();
+          </script>
+      `);
+  } catch (error) {
+      console.error('Error al guardar la calificación:', error);
+      res.status(500).send('Error al guardar la calificación');
   }
 });
 

@@ -1,6 +1,6 @@
 <%- include("partials/header.ejs") %>
 
-<h1 class = "titulos-inc">Incidencias generadas</h1>
+<h1 class="titulos-inc">Incidencias generadas</h1>
 
 <div class="busqueda-filtros">
     <form action="/incidencias" method="GET">
@@ -14,10 +14,10 @@
     </form>
 </div>
 
-<div class  = "tabla-contenedor">
-    <table class = "tabla-incidencias">
+<div class="tabla-contenedor">
+    <table class="tabla-incidencias">
         <thead>
-            <tr class = "columnas-incidencias">
+            <tr class="columnas-incidencias">
                 <th>ID</th>
                 <th>Fecha de Creación</th>
                 <th>Departamento</th>
@@ -30,11 +30,12 @@
                 <th>Resolución</th>
                 <th>Fecha de Resolución</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <% incidentes.forEach(incidente => { %>
-                <tr class = "filas-incidencias">
+                <tr class="filas-incidencias">
                     <td><%= incidente.id_incidente %></td>
                     <td><%= incidente.fecha_creacion.toLocaleString() %></td>
                     <td><%= incidente.nombre_departamento %></td>
@@ -47,11 +48,51 @@
                     <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>
                     <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
+                    <td>
+                        <% if (incidente.estado === 'Liberado') { %>
+                            <% if (incidente.tiene_calificacion > 0) { %>
+                                <i class="fa-solid fa-circle-check"></i>
+                            <% } else { %>
+                                <button class="orden-trabajo-btn liberar-btn" data-id="<%= incidente.id_incidente %>">Calificar</button>
+                            <% } %>
+                        <% } else { %>
+                            <button class="orden-trabajo-btn" >...</button>
+                        <% } %>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
-   
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const asignarButtons = document.querySelectorAll('.liberar-btn');
+
+        asignarButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // Obtiene el id del incidente desde el atributo data-id del botón
+                const idIncidente = button.getAttribute('data-id');
+
+                // Configuración del tamaño del popup
+                const popupWidth = 600;
+                const popupHeight = 600;
+
+                // URL con el parámetro id_incidente
+                const url = `/calificar?id_incidente=${idIncidente}`;
+
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
+
+                // Abre el modal en una nueva ventana
+                window.open(url, 'Asignar Técnico', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
+        });
+    });
+
+</script>
 
 <%- include("partials/footer.ejs") %>

@@ -30,7 +30,7 @@
                 </div>
 
 
-                <% if (user.nombre_usuario != "Administrador" && user.puesto != "Tecnico") { %>
+                <% if (user.nombre_usuario != "Jefe" && user.puesto != "Tecnico" && user.nombre_usuario != "Comité") { %>
                     <div id="incidencias">
                         <i class="fa-solid fa-flag icon-sidebar"></i>
                         <a href="/incidencias" class="tituloOpciones">Incidencias</a>
@@ -42,7 +42,7 @@
                     </div>
                 <% } %>
 
-                <% if (user.nombre_usuario == "Administrador") { %>
+                <% if (user.nombre_usuario == "Jefe") { %>
 
                     <div id = "edificios">
                         <i class="fa-solid fa-building icon-sidebar"></i>
@@ -71,6 +71,13 @@
                     <div id = "orden-trabajo">
                         <i class="fa-solid fa-wrench icon-sidebar"></i>
                         <a href="/orden-trabajo" class="tituloOpciones">Órdenes</a>
+                    </div>
+                <% } %>
+
+                <% if (user.nombre_usuario == "Comité") { %>
+                    <div id = "Solicitudes">
+                        <i class="fa-solid fa-flag icon-sidebar"></i>
+                        <a href="/solicitudes" class="tituloOpciones">Solicitudes</a>
                     </div>
                 <% } %>
 

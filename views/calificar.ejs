@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Calificar</title>
+</head>
+<body class = "calificar-body">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class = "titulos-inc">Calificar Técnico</h2>
+        </div>
+        <div class="modal-content">
+            <div class="avatar">
+                <img src="images/user.png" alt="imagen de usuario" height="150">
+            </div>
+            <p class="rating">Del 1 al 5, ¿qué calificación le das a <strong><%= nombre_tecnico %></strong>?</p>
+            <div class="stars">
+                <span class="star" data-rating="1">&#9733;</span>
+                <span class="star" data-rating="2">&#9733;</span>
+                <span class="star" data-rating="3">&#9733;</span>
+                <span class="star" data-rating="4">&#9733;</span>
+                <span class="star" data-rating="5">&#9733;</span>
+            </div>
+            <form action="/calificar" method="POST">
+                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                <input type="hidden" name="id_tecnico" value="<%= incidente.id_tecnico %>">
+                <input type="hidden" name="calificacion" id="calificacion" value="0">
+                <button type="submit" class="submit-btn" disabled>Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const submitBtn = document.querySelector('.submit-btn');
+        const calificacionInput = document.getElementById('calificacion');
+        let rating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                const hoveredRating = star.dataset.rating;
+                highlightStars(hoveredRating);
+            });
+
+            star.addEventListener('mouseout', () => {
+                highlightStars(rating);
+            });
+
+            star.addEventListener('click', () => {
+                rating = star.dataset.rating;
+                calificacionInput.value = rating;
+                highlightStars(rating);
+                submitBtn.disabled = false;
+            });
+        });
+
+        function highlightStars(count) {
+            stars.forEach(star => {
+                star.classList.toggle('active', star.dataset.rating <= count);
+            });
+        }
+    </script>
+</body>
+</html>

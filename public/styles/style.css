@@ -145,15 +145,13 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     background-color:rgb(29, 28, 28);
     box-shadow: 1px 0 5px rgba(63, 63, 63, 0.2); 
     border-radius: 6px;
     color: white;
 }
 
-.p-nombre {
-    margin-bottom: 50px
-}
 
 .p {
     margin: 0;
@@ -1209,4 +1207,100 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+
+/* CALIFICAR */
+
+
+.calificar-body {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter Tight", sans-serif;
+}
+
+.modal {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.modal-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: #666;
+    margin-bottom: 20px;
+}
+.rating {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.stars {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.star {
+    cursor: pointer;
+    font-size: 32px;
+    color: #ddd;
+    outline: none;
+}
+.star.active {
+    color: #ffd700;
+}
+.submit-btn {
+    margin: 0;
+    padding: 7px 50px;
+    border-radius: 5px;
+    background-color: black;
+    border: 0.5px solid black;
+    color: rgb(255, 255, 255);
+    font-family: "Inter Tight", sans-serif;
+    font-size: 14px;
+}
+
+.submit-btn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 0.5px solid black;
+}
+
+.submit-btn:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+    border: none;
+}
+
+.submit-btn:disabled:hover {
+    background-color: #ddd;
+    color: white;
+    cursor: not-allowed;
+    border: none;
+}
+
+.calificacion {
+    font-weight: 200;
+    font-size: 16px;
 }
