@@ -872,6 +872,43 @@ app.get('/autorizacionCambio', async (req, res) => {
 });
 
 
+app.get('/recuentoSolicitudes', async (req, res) => {
+
+  if(req.isAuthenticated()){
+
+    try {
+      const query = `
+        SELECT 
+          i.id_incidente, i.descripcion AS descripcion_incidencia, i.fecha_creacion, i.estado, 
+          e.nombre AS nombre_elemento, e.codigo, l.nombre AS nombre_localidad,
+          d.nombre AS nombre_departamento, edif.nombre AS nombre_edificio, 
+          u.nombre AS nombre_tecnico, enc.nombre AS nombre_encargado,
+          sc.id_solicitud, sc.pieza_solicitada, sc.costo, sc.estado, sc.cambio
+        FROM solicitudes_cambio sc
+        JOIN incidentes i ON sc.id_incidente = i.id_incidente
+        JOIN elementos e ON i.id_elemento = e.id_elemento
+        LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+        LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+        LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+        LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+        LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+        WHERE i.solicitud_cambio = true 
+        ORDER BY i.fecha_creacion DESC;
+      `;
+
+      const solicitudes = await db.query(query);
+      res.render('recuentoSolicitudes', {solicitudes: solicitudes.rows});
+
+    } catch (error) {
+      console.error('Error al cargar la vista de solicitudes:', error);
+    }
+
+  }else {
+    res.redirect('/login')
+  }
+
+});
+
 
 app.get('/verIncidencia', async (req, res) => {
   const id_incidente = req.query.id_incidente;

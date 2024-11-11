@@ -1,0 +1,84 @@
+<%- include("partials/header.ejs") %>
+
+<h1 class="titulos-inc">Solicitudes de Cambio</h1>
+
+<div class="tabla-contenedor">
+    <table class="tabla-incidencias">
+        <thead>
+            <tr class="columnas-incidencias">
+                <th>Equipo</th>
+                <th>Análisis</th>
+                <th>Pieza Solicitada</th>
+                <th>Costo</th>
+                <th>Estado</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% solicitudes.forEach(solicitud => { %>
+                <tr class="filas-incidencias">
+                    <td>
+                        <button class="orden-trabajo-btn ver-mas-btn" data-id="<%= solicitud.id_incidente %>">Ver más</button>
+                    </td>
+                    <td>
+                        <button class="orden-trabajo-btn ver-analisis-btn" data-id="<%= solicitud.id_incidente %>">Ver más</button>
+                    </td>
+                    <td><%= solicitud.pieza_solicitada %></td>
+                    <td>$<%= solicitud.costo %> MXN</td>
+                    <td><%= solicitud.estado %></td>
+                    <% if(solicitud.estado === "Rechazado") { %>
+                        <td>Rechazado</td> 
+                    <% }else { %>
+                    <td><%= solicitud.cambio || 'Pendiente' %></td>
+                    <% } %>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const verMasButtons = document.querySelectorAll('.ver-mas-btn');
+    
+    verMasButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            const idIncidente = button.getAttribute('data-id');
+            
+            const popupWidth = 800;
+            const popupHeight = 500;
+            
+            const url = `/verIncidencia?id_incidente=${idIncidente}`;
+            const left = (window.screen.width / 2) - (popupWidth / 2);
+            const top = (window.screen.height / 2) - (popupHeight / 2);
+            
+            window.open(url, 'Ver Incidente', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+        });
+    });
+    
+    const verAnalisisButtons = document.querySelectorAll('.ver-analisis-btn');
+    
+    verAnalisisButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            const idIncidente = button.getAttribute('data-id');
+            
+            const popupWidth = 800;
+            const popupHeight = 400;
+            
+            const url = `/verAnalisis?id_incidente=${idIncidente}`;
+            const left = (window.screen.width / 2) - (popupWidth / 2);
+            const top = (window.screen.height / 2) - (popupHeight / 2);
+            
+            window.open(url, 'Ver Análisis', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+        });
+    });
+
+});
+
+</script>
+
+<%- include("partials/footer.ejs") %>
