@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Ver Análisis</title>
+</head>
+<body>
+
+    <div class="contenedor-descripcion">
+        <label class="etiqueta" for="Descripcion">Descripción del incidente</label>
+        <textarea class="input-incidencia descripcion" type="text" name="Descripcion" disabled><%= incidente.descripcion %></textarea>
+        <label class="etiqueta" for="Descripcion" name="resolucion">Resultado del Análisis</label>
+            <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion" disabled><%= incidente.resolucion %></textarea>
+    </div>
+    
+</body>
+</html>

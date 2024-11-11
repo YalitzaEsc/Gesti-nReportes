@@ -9,12 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <title>Autorizar Cambio</title>
+    <title>Ver Incidencia</title>
 </head>
 <body>
-
+    
     <div class="contenedor-incidencias">
-        <h2 class="titulos-inc">Resumen del incidente</h2>
+        <h2 class="titulos-inc">Resumen del Equipo</h2>
     
         <div class="incidencias-terminar">
             <!-- Detalles de Computadora -->
@@ -122,51 +122,9 @@
                 </div>
             <% } %>
         </div>
-    
-        <div class="contenedor-descripcion">
-            <label class="etiqueta" for="Descripcion">Descripción del incidente</label>
-            <textarea class="input-incidencia descripcion" type="text" name="Descripcion" disabled><%= incidente.descripcion %></textarea>
-            <label class="etiqueta" for="Descripcion" name="resolucion">Resultado del Análisis</label>
-                <textarea class="input-incidencia descripcion" name="resolucion" id="resolucion" disabled><%= incidente.resolucion %></textarea>
-        </div>
-
-        <div class="incidencias-terminar">
-
-            <div class = "incidencia-izquierda">
-                <label class="etiqueta" for="piezaSolicitada">Pieza Solicitada</label>
-                <input class="input-incidencia centrar-texto" type="text" name="piezaSolicitada" id="piezaSolicitada" value ="<%= solicitudCambio.pieza_solicitada %>"disabled>
-            </div>
-
-            <div class = "incidencia-derecha">
-                <label class="etiqueta" for="costo">Costo</label>
-                <input class="input-incidencia centrar-texto" type="text" name="costo" id="costo" value ="$<%= solicitudCambio.costo %>MXN" disabled>
-            </div>
-
-        </div>
-
-        <div class="form-cambio">
-            <form action="/autorizarCambio" method="POST">
-                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
-                <input type="hidden" name="id_solicitud" value="<%= solicitudCambio.id_solicitud %>">
-                <input type="hidden" name="contexto" value="modal">
-                <input type="hidden" name="accion" id="accion" value="">
-        
-                <!-- Botón para rechazar -->
-                <button type="submit" class="rechazarCambio-btn asignarBtn" onclick="document.getElementById('accion').value='rechazar'">
-                    Rechazar
-                </button>
-        
-                <!-- Botón para autorizar -->
-                <button type="submit" class="agregarComponentesBtn asignarBtn" onclick="document.getElementById('accion').value='autorizar'">
-                    Autorizar
-                </button>
-            </form>
-        </div>
-        
-
     </div>
 
-    
-    
+
+
 </body>
 </html>

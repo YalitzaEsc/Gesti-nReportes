@@ -1304,3 +1304,67 @@ main {
     font-weight: 200;
     font-size: 16px;
 }
+
+.ver-mas-btn {
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 13px;
+}
+
+.ver-mas-btn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.ver-analisis-btn {
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 13px;
+}
+
+.ver-analisis-btn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.autorizar-btn {
+    border-radius: 5px;
+    background-color: rgb(0, 0, 0);
+    border: 1px solid white;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 13px;
+}
+
+.autorizar-btn:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.rechazar-btn {
+    border-radius: 5px;
+    background-color: rgb(161, 4, 4);
+    border: 1px solid white;
+    color: white;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 13px;
+}
+
+.rechazar-btn:hover {
+    cursor: pointer;
+    background-color: rgb(216, 18, 18);
+    color: white;
+    border: 1px solid white;
+}

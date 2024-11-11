@@ -588,22 +588,38 @@ app.post('/confirmarCambio', async (req, res) => {
 
 app.get('/solicitudes', async (req, res) => {
   if (req.isAuthenticated()) {
-      try {
+    try {
+      const query = `
+        SELECT 
+          i.id_incidente, i.descripcion AS descripcion_incidencia, i.fecha_creacion, i.estado, 
+          e.nombre AS nombre_elemento, e.codigo, l.nombre AS nombre_localidad,
+          d.nombre AS nombre_departamento, edif.nombre AS nombre_edificio, 
+          u.nombre AS nombre_tecnico, enc.nombre AS nombre_encargado,
+          sc.id_solicitud, sc.pieza_solicitada, sc.costo
+        FROM solicitudes_cambio sc
+        JOIN incidentes i ON sc.id_incidente = i.id_incidente
+        JOIN elementos e ON i.id_elemento = e.id_elemento
+        LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+        LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+        LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+        LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+        LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+        WHERE sc.costo > 1000 AND i.solicitud_cambio = true AND i.estado = 'En autorización'
+        ORDER BY i.fecha_creacion DESC;
+      `;
 
-        const solicitudes = await db.query("SELECT * FROM solicitudes_cambio WHERE costo > 1000"); 
-        console.log(solicitudes.rows);
+      const solicitudes = await db.query(query);
 
-        const incicentes = await db.query("SELECT * FROM incidentes WHERE solicitud_cambio = true");
-          res.render('solicitudes', { solicitudes: solicitudes.rows });
+      res.render('solicitudes', { solicitudes: solicitudes.rows });
 
-      } catch (error) { 
-          console.error('Error al cargar la vista de solicitudes:', error);
-          res.status(500).send('Error al cargar la vista de solicitudes');
-      }
+    } catch (error) {
+      console.error('Error al cargar la vista de solicitudes:', error);
+    }
   } else {
-      res.redirect('/login');
+    res.redirect('/login');
   }
 });
+
 
 app.get('/calificar', async (req, res) => {
 
@@ -810,7 +826,6 @@ app.get('/autorizacionCambio', async (req, res) => {
         }
 
         const solicitudCambio = await db.query("SELECT * FROM solicitudes_cambio WHERE id_incidente = $1", [id_incidente]);
-
   
         res.render('autorizacionCambio', { 
           incidente: incidenteResult.rows[0], 
@@ -827,50 +842,129 @@ app.get('/autorizacionCambio', async (req, res) => {
 
 
   app.post('/autorizarCambio', async (req, res) => {
-    const { id_incidente, id_solicitud, accion } = req.body;
+    const { id_incidente, id_solicitud, accion, contexto } = req.body;
 
     try {
         if (accion === 'autorizar') {
-            // Cambiar el estado del incidente y solicitud a "Terminado" y "Autorizado"
-            await db.query(
-                "UPDATE incidentes SET estado = 'Cambio' WHERE id_incidente = $1",
-                [id_incidente]
-            );
-
-            await db.query(
-                "UPDATE solicitudes_cambio SET estado = 'Autorizado' WHERE id_solicitud = $1",
-                [id_solicitud]
-            );
-
-            res.send(`
-                <script>
-                    alert("Cambio autorizado exitosamente.");
-                    window.close();
-                </script>
-            `);
+            await db.query("UPDATE incidentes SET estado = 'Cambio' WHERE id_incidente = $1", [id_incidente]);
+            await db.query("UPDATE solicitudes_cambio SET estado = 'Autorizado' WHERE id_solicitud = $1", [id_solicitud]);
         } else if (accion === 'rechazar') {
-            // Cambiar el estado del incidente y solicitud a "Rechazado"
-            await db.query(
-                "UPDATE incidentes SET estado = 'Rechazado' WHERE id_incidente = $1",
-                [id_incidente]
-            );
+            await db.query("UPDATE incidentes SET estado = 'Rechazado' WHERE id_incidente = $1", [id_incidente]);
+            await db.query("UPDATE solicitudes_cambio SET estado = 'Rechazado' WHERE id_solicitud = $1", [id_solicitud]);
+        }
 
-            await db.query(
-                "UPDATE solicitudes_cambio SET estado = 'Rechazado' WHERE id_solicitud = $1",
-                [id_solicitud]
-            );
-
+        if (contexto === 'modal') {
             res.send(`
                 <script>
-                    alert("Cambio rechazado.");
+                    alert("${accion === 'autorizar' ? 'Cambio autorizado exitosamente.' : 'Cambio rechazado.'}");
                     window.close();
                 </script>
             `);
+        } else {
+            // Enviar un mensaje de éxito al cliente
+            res.redirect('/solicitudes');
         }
+
     } catch (error) {
         console.error('Error al procesar la autorización/rechazo:', error);
         res.status(500).send('Error al procesar la autorización/rechazo');
     }
+});
+
+
+
+app.get('/verIncidencia', async (req, res) => {
+  const id_incidente = req.query.id_incidente;
+
+  try {
+      const incidenteResult = await db.query(`
+          SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+                 e.nombre AS nombre_elemento, e.codigo, 
+                 l.nombre AS nombre_localidad,
+                 d.nombre AS nombre_departamento,
+                 u.nombre AS nombre_tecnico,
+                 enc.nombre AS nombre_encargado,
+                 edif.nombre AS nombre_edificio,
+                 
+                 -- Campos para detalles de computadoras
+                 comp.modelo AS modelo_computadora, comp.marca AS marca_computadora, comp.ram AS ram_computadora,
+                 comp.procesador AS procesador_computadora, comp.sistema_operativo AS so_computadora,
+                 comp.tipo_disco AS tipo_disco_computadora, comp.espacio_disco AS espacio_disco_computadora,
+                 comp.tarjeta_grafica AS tarjeta_grafica_computadora, comp.fecha_compra AS fecha_compra_computadora,
+                 comp.fecha_garantia AS fecha_garantia_computadora,
+
+                 -- Campos para detalles de impresoras
+                 imp.modelo AS modelo_impresora, imp.tipo_tinta AS tinta_impresora,
+                 imp.marca AS marca_impresora, imp.fecha_compra AS fecha_compra_impresora,
+                 imp.fecha_garantia AS fecha_garantia_impresora,
+
+                 -- Campos para detalles de proyectores
+                 proy.marca AS marca_proyector, proy.fecha_compra AS fecha_compra_proyector,
+                 proy.fecha_garantia AS fecha_garantia_proyector, proy.modelo AS modelo_proyector,
+                 proy.resolucion AS resolucion_proyector,
+
+                 -- Campos para detalles de access points
+                 access.direccion_ip AS direccion_ip_access, access.marca AS marca_access,
+                 access.modelo AS modelo_access, access.numero_serie AS numero_serie_access,
+                 access.fecha_compra AS fecha_compra_access, access.fecha_garantia AS fecha_garantia_access,
+
+                 -- Campos para detalles de servidores
+                 serv.nombre_servidor AS nombre_servidor_servidor, serv.fecha_compra AS fecha_compra_servidor,
+                 serv.fecha_garantia AS fecha_garantia_servidor, serv.marca AS marca_servidor,
+                 serv.modelo AS modelo_servidor,
+
+                 -- Campos para detalles de switches
+                 sw.marca AS marca_switch, sw.fecha_compra AS fecha_compra_switch,
+                 sw.fecha_garantia AS fecha_garantia_switch, sw.puertos AS puertos_switch,
+                 sw.numero_serie AS numero_serie_switch, sw.modelo AS modelo_switch
+                 
+          FROM incidentes i
+          JOIN elementos e ON i.id_elemento = e.id_elemento
+          LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+          LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+          LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+          LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+          LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+          LEFT JOIN computadoras comp ON e.id_elemento = comp.id_elemento
+          LEFT JOIN impresoras imp ON e.id_elemento = imp.id_elemento
+          LEFT JOIN proyectores proy ON e.id_elemento = proy.id_elemento
+          LEFT JOIN access_points access ON e.id_elemento = access.id_elemento
+          LEFT JOIN servidores serv ON e.id_elemento = serv.id_elemento
+          LEFT JOIN switches sw ON e.id_elemento = sw.id_elemento
+          WHERE i.id_incidente = $1
+      `, [id_incidente]);
+
+      if (incidenteResult.rows.length === 0) {
+          return res.status(404).send("Incidente no encontrado");
+      }
+
+      res.render('verIncidencia', { incidente: incidenteResult.rows[0] });
+  } catch (error) {
+      console.error('Error al cargar los detalles de la incidencia:', error);
+      res.status(500).send('Error al cargar los detalles de la incidencia');
+  }
+});
+
+app.get('/verAnalisis', async (req, res) => {
+  const id_incidente = req.query.id_incidente;
+
+  try {
+      const analisisResult = await db.query(`
+          SELECT i.id_incidente, i.descripcion, i.resolucion, u.nombre AS nombre_tecnico
+          FROM incidentes i
+          LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+          WHERE i.id_incidente = $1
+      `, [id_incidente]);
+
+      if (analisisResult.rows.length === 0) {
+          return res.status(404).send("Análisis del incidente no encontrado");
+      }
+
+      res.render('verAnalisis', { incidente: analisisResult.rows[0] });
+  } catch (error) {
+      console.error('Error al cargar el análisis del incidente:', error);
+      res.status(500).send('Error al cargar el análisis del incidente');
+  }
 });
 
 
