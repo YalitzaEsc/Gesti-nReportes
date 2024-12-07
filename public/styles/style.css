@@ -1033,6 +1033,16 @@ main {
     color: white;
 }
 
+.liberar-btn-calificar {
+    background-color: rgb(231, 59, 148);
+    color: white;
+}
+
+.liberar-btn-calificar:hover {
+    cursor: pointer;
+    background-color: rgb(119, 22, 72);
+}
+
 .rechazado-btn {
     background-color: rgb(141, 16, 16);
     color: white;
@@ -1077,7 +1087,7 @@ main {
     text-align: center;
     font-family: "Inter Tight", sans-serif;
     padding: 8px 0;
-    width: 300px;
+    width: 400px;
     font-size: 14px;
     background-color: white;
     color: black;
@@ -1085,6 +1095,11 @@ main {
     border-radius: 5px;
 }
 
+.incidencias-activas {
+    margin-top: 10px;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 14px;
+}
 
 
 /* TERMINAR INCIDENCIAS */

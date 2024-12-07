@@ -49,11 +49,16 @@
                     <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
                     <td>
-                        <% if (incidente.estado === 'Liberado') { %>
+                        <% if (incidente.estado === 'Terminado') { %>
+                            <form action="/liberarIncidencia" method="POST">
+                                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
+                                <button type="submit" class="orden-trabajo-btn liberar-btn">Liberar</button>
+                              </form>
+                        <% } else if (incidente.estado === 'Liberado') { %>
                             <% if (incidente.tiene_calificacion > 0) { %>
                                 <i class="fa-solid fa-circle-check"></i>
                             <% } else { %>
-                                <button class="orden-trabajo-btn liberar-btn" data-id="<%= incidente.id_incidente %>">Calificar</button>
+                                <button class="orden-trabajo-btn liberar-btn-calificar" data-id="<%= incidente.id_incidente %>">Calificar</button>
                             <% } %>
                         <% } else { %>
                             <button class="orden-trabajo-btn" >...</button>
@@ -67,7 +72,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const asignarButtons = document.querySelectorAll('.liberar-btn');
+        const asignarButtons = document.querySelectorAll('.liberar-btn-calificar');
 
         asignarButtons.forEach(button => {
             button.addEventListener('click', function(event) {

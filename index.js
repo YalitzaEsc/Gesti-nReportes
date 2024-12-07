@@ -7,7 +7,6 @@ import passport from "passport";
 import {Strategy} from "passport-local";
 import env from "dotenv";
 
-env.config();
 
 const app = express();
 const port = 3000;
@@ -244,7 +243,7 @@ app.get('/administrarIncidencias', async (req, res) => {
     try {
       const { estado } = req.query;
 
-      // Crear la consulta base con un LEFT JOIN para obtener el costo de la solicitud de cambio si el estado es "En autorización"
+      // Consulta para obtener los incidentes con los detalles adicionales
       let query = `
         SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
                e.nombre AS nombre_elemento, e.codigo, 
@@ -253,7 +252,10 @@ app.get('/administrarIncidencias', async (req, res) => {
                u.nombre AS nombre_tecnico,
                enc.nombre AS nombre_encargado,
                edif.nombre AS nombre_edificio,
-               sc.costo
+               sc.costo,
+               i.clasificacion,                -- Añadido la clasificación
+               s.nombre AS nombre_servicio,    -- Nombre del servicio
+               s.tiempo_estimado               -- Tiempo estimado del servicio (en horas)
         FROM incidentes i
         JOIN elementos e ON i.id_elemento = e.id_elemento
         LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
@@ -262,6 +264,7 @@ app.get('/administrarIncidencias', async (req, res) => {
         LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
         LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
         LEFT JOIN solicitudes_cambio sc ON i.id_incidente = sc.id_incidente AND i.estado = 'En autorización'
+        LEFT JOIN servicios s ON i.id_servicio = s.id_servicio -- Añadido JOIN para obtener el nombre del servicio
       `;
 
       // Aplicar filtro de estado si está presente
@@ -276,8 +279,38 @@ app.get('/administrarIncidencias', async (req, res) => {
       // Ejecutar la consulta
       const incidentes = await db.query(query, params);
 
-      // Renderizar la vista con los incidentes filtrados y el estado seleccionado
-      res.render('administrarIncidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
+      // Función para formatear hora en formato hh:mm:ss AM/PM
+      const formatAMPM = (date) => {
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // La hora "0" se convierte en 12
+        return `${hours}:${minutes}:${seconds} ${ampm}`;
+      };
+
+      // Procesar los incidentes para calcular la hora estimada de finalización y la hora de resolución
+      incidentes.rows.forEach(incidente => {
+        const fechaCreacion = new Date(incidente.fecha_creacion);
+        const tiempoEstimado = incidente.tiempo_estimado || 0; // En horas
+
+        // Calcular la hora estimada de finalización sumando el tiempo estimado al momento de la creación
+        fechaCreacion.setHours(fechaCreacion.getHours() + tiempoEstimado);
+        incidente.hora_estimada = formatAMPM(fechaCreacion);
+
+        // Si existe fecha de resolución, formatearla igualmente
+        if (incidente.fecha_resolucion) {
+          const fechaResolucion = new Date(incidente.fecha_resolucion);
+          incidente.hora_resolucion = formatAMPM(fechaResolucion);
+        }
+      });
+
+      // Renderizar la vista con los incidentes y el estado seleccionado
+      res.render('administrarIncidencias', { 
+        incidentes: incidentes.rows, 
+        estadoSeleccionado: estado 
+      });
     } catch (error) {
       console.error('Error al obtener los incidentes:', error);
       res.status(500).send('Error al obtener los incidentes');
@@ -288,16 +321,25 @@ app.get('/administrarIncidencias', async (req, res) => {
 });
 
 
-
 app.get('/asignar', async (req, res) => {
   if (req.isAuthenticated()) {
       try {
           const { id_incidente } = req.query;
 
           // Obtener la lista de técnicos
-          const tecnicos = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico'");
+          const tecnicos_software = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Software'");
+          const tecnicos_hardware = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Hardware'");
+          
+          // Obtener el catálogo de servicios
+          const servicios = await db.query("SELECT id_servicio, nombre FROM servicios");
 
-          res.render('asignar', { id_incidente, tecnicos: tecnicos.rows });
+          res.render('asignar', {
+              id_incidente,
+              tecnicos_software: tecnicos_software.rows,
+              tecnicos_hardware: tecnicos_hardware.rows,
+              servicios: servicios.rows // Pasar los servicios a la vista
+          });
+             
       } catch (error) {
           console.error('Error al cargar la vista de asignación:', error);
           res.status(500).send('Error al cargar la vista de asignación');
@@ -308,16 +350,40 @@ app.get('/asignar', async (req, res) => {
 });
 
 
+app.get('/incidencias-activas', async (req, res) => {
+  if (req.isAuthenticated()) {
+      try {
+          const { id_tecnico } = req.query;
+
+          // Contar incidencias activas del técnico (excluyendo "Terminado" y "Liberado")
+          const result = await db.query(
+              `SELECT COUNT(*) FROM incidentes 
+               WHERE id_tecnico = $1 
+               AND estado NOT IN ('Terminado', 'Liberado')`,
+              [id_tecnico]
+          );
+
+          const incidenciasActivas = result.rows[0].count;
+
+          res.json({ incidenciasActivas });
+      } catch (error) {
+          console.error('Error al contar las incidencias activas:', error);
+          res.status(500).send('Error al contar las incidencias activas');
+      }
+  } else {
+      res.redirect('/login');
+  }
+});
 
 
 app.post('/asignarIncidente', async (req, res) => {
-  const { id_incidente, tecnico, clasificacion, prioridad } = req.body;
+  const { id_incidente, tecnico, clasificacion, servicio, prioridad } = req.body;
 
   try {
       // Actualizar el técnico asignado al incidente
       await db.query(
-        "UPDATE incidentes SET id_tecnico = $1, estado = 'En proceso', clasificacion = $2, prioridad = $3 WHERE id_incidente = $4",
-        [tecnico, clasificacion, prioridad, id_incidente]
+        "UPDATE incidentes SET id_tecnico = $1, estado = 'En proceso', clasificacion = $2, prioridad = $3, id_servicio = $4 WHERE id_incidente = $5",
+        [tecnico, clasificacion, prioridad, servicio, id_incidente]
       );
 
       // Enviar un mensaje de éxito y cerrar el modal
@@ -334,14 +400,10 @@ app.post('/asignarIncidente', async (req, res) => {
 });
 
 app.post('/liberarIncidencia', async (req, res) => {
-  const { id_incidente } = req.body;
-
+  const { id_incidente } = req.body; // Captura desde el cuerpo del formulario
   try {
-      // Liberar el incidente asignado
       await db.query("UPDATE incidentes SET estado = 'Liberado' WHERE id_incidente = $1", [id_incidente]);
-
-      // Redirigir a /administrarIncidencia después de liberar
-      res.redirect('/administrarIncidencias');
+      res.redirect('/incidencias');
   } catch (error) {
       console.error('Error al liberar incidente:', error);
       res.status(500).send('Error al liberar incidente');
@@ -366,7 +428,9 @@ app.get('/orden-trabajo', async (req, res) => {
                      u.nombre AS nombre_tecnico,
                      enc.nombre AS nombre_encargado,
                      edif.nombre AS nombre_edificio,
-                     i.clasificacion, i.prioridad
+                     i.clasificacion, i.prioridad,
+                     s.nombre AS nombre_servicio,  -- Aquí agregamos el nombre del servicio
+                     s.tiempo_estimado
               FROM incidentes i
               JOIN elementos e ON i.id_elemento = e.id_elemento
               LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
@@ -374,6 +438,7 @@ app.get('/orden-trabajo', async (req, res) => {
               LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
               LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
               LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+              LEFT JOIN servicios s ON i.id_servicio = s.id_servicio  -- Unimos con la tabla servicios
               WHERE i.id_tecnico = $1
           `;
 
@@ -393,6 +458,36 @@ app.get('/orden-trabajo', async (req, res) => {
 
           const incidentes = await db.query(query, params);
 
+          // Función para formatear horas en formato hh:mm:ss AM/PM
+          const formatAMPM = (date) => {
+              let hours = date.getHours();
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              const seconds = date.getSeconds().toString().padStart(2, '0');
+              const ampm = hours >= 12 ? 'PM' : 'AM';
+              hours = hours % 12;
+              hours = hours ? hours : 12; // La hora "0" se convierte en 12
+              return `${hours}:${minutes}:${seconds} ${ampm}`;
+          };
+
+          // Calcular la fecha estimada de finalización y extraer solo las horas con AM/PM
+          incidentes.rows.forEach(incidente => {
+              const fechaCreacion = new Date(incidente.fecha_creacion);
+              const tiempoEstimado = incidente.tiempo_estimado || 0; // En horas
+
+              // Sumar las horas al tiempo de creación
+              fechaCreacion.setHours(fechaCreacion.getHours() + tiempoEstimado);
+
+              // Formatear la fecha estimada solo con hora (AM/PM)
+              incidente.hora_estimada = formatAMPM(fechaCreacion);
+
+              // Si existe fecha de resolución, formatearla de igual manera
+              if (incidente.fecha_resolucion) {
+                  const fechaResolucion = new Date(incidente.fecha_resolucion);
+                  incidente.hora_resolucion = formatAMPM(fechaResolucion);
+              }
+          });
+
+          // Renderizar la vista pasando los datos con la hora estimada y de resolución
           res.render('orden-trabajo', { 
               incidentes: incidentes.rows,
               estadoSeleccionado: estado,

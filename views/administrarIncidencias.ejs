@@ -21,15 +21,18 @@
             <tr class="columnas-incidencias">
                 <th>ID</th>
                 <th>Fecha de Creación</th>
+                <th>Hora estimada de finalización</th>
+                <th>Hora de resolución</th>
                 <th>Departamento</th>
                 <th>Edificio</th>
                 <th>Localidad</th>
                 <th>Equipo</th>
                 <th>Encargado</th>
                 <th>Descripción</th>
+                <th>Clasificación</th>
+                <th>Servicio</th>
                 <th>Técnico Asignado</th>
                 <th>Resolución</th>
-                <th>Fecha de Resolución</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -39,15 +42,18 @@
                 <tr class="filas-incidencias">
                     <td><%= incidente.id_incidente %></td>
                     <td><%= incidente.fecha_creacion.toLocaleString() %></td>
+                    <td><%= incidente.hora_estimada || 'N/A' %></td>
+                    <td><%= incidente.hora_resolucion || 'Pendiente' %></td>
                     <td><%= incidente.nombre_departamento %></td>
                     <td><%= incidente.nombre_edificio %></td>
                     <td><%= incidente.nombre_localidad || 'N/A' %></td>
                     <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
                     <td><%= incidente.nombre_encargado %></td>
                     <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
+                    <td><%= incidente.clasificacion || 'N/A' %></td>
+                    <td><%= incidente.nombre_servicio || 'Pendiente' %></td> 
                     <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
                     <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>
-                    <td><%= incidente.fecha_resolucion ? incidente.fecha_resolucion.toLocaleString() : 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
                     <td>
                         <% if (incidente.estado === 'Enviado') { %>
@@ -59,15 +65,13 @@
                                 data-id="<%= incidente.id_incidente %>"
                                 <%= incidente.costo && incidente.costo > 1000 ? 'disabled' : '' %>>
                                 Autorización
-                            </button>                           <% } else if(incidente.estado === "Rechazado")  { %>
+                            </button>                           
+                        <% } else if(incidente.estado === "Rechazado")  { %>
                             <button disabled class= "liberado-btn"><i class="fa-solid fa-ban"></i></button>
                         <% } else if(incidente.estado === "Cambio")  { %>
                             <button class="orden-trabajo-btn asignado-btn" disabled>En proceso</button>
                         <% } else if (incidente.estado === 'Terminado') { %>
-                            <form action="/liberarIncidencia" method="POST">
-                                <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
-                                <button type="submit" class="orden-trabajo-btn liberar-btn">Liberar</button>
-                            </form>
+                            <button class="orden-trabajo-btn asignado-btn" disabled>Terminado</button>
                         <% } else if (incidente.estado === 'Liberado') { %>
                                 <button class= "liberado-btn"><i class="fa-solid fa-circle-check"></i></i></button>
                         <% } %>
@@ -92,7 +96,7 @@
 
                 // Configuración del tamaño del popup
                 const popupWidth = 500;
-                const popupHeight = 400;
+                const popupHeight = 500;
 
                 // URL con el parámetro id_incidente
                 const url = `/asignar?id_incidente=${idIncidente}`;

@@ -30,7 +30,7 @@
                 </div>
 
 
-                <% if (user.nombre_usuario != "Jefe" && user.puesto != "Tecnico" && user.nombre_usuario != "Comité") { %>
+                <% if (user.nombre_usuario != "Jefe" && user.puesto != "Tecnico en Hardware" && user.puesto != "Tecnico en Software" && user.nombre_usuario != "Comité") { %>
                     <div id="incidencias">
                         <i class="fa-solid fa-flag icon-sidebar"></i>
                         <a href="/incidencias" class="tituloOpciones">Incidencias</a>
@@ -87,7 +87,7 @@
 
                     <div id = "solicitudesRecuento">
                         <i class="fa-solid fa-table-list icon-sidebar"></i>                        
-                        <a href="/recuentoSolicitudes" class="tituloOpciones">Solicitudes</a>
+                        <a href="/recuentoSolicitudes" class="tituloOpciones">Cambios </a>
                     </div>
                 <% } %>
 
