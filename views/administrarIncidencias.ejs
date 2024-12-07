@@ -43,14 +43,14 @@
                     <td><%= incidente.id_incidente %></td>
                     <td><%= incidente.fecha_creacion.toLocaleString() %></td>
                     <td><%= incidente.hora_estimada || 'N/A' %></td>
-                    <td><%= incidente.hora_resolucion || 'Pendiente' %></td>
+                    <td><%= incidente.hora_resolucion || 'Pendiente' %></td>                    
                     <td><%= incidente.nombre_departamento %></td>
                     <td><%= incidente.nombre_edificio %></td>
                     <td><%= incidente.nombre_localidad || 'N/A' %></td>
                     <td><%= incidente.nombre_elemento %> (<%= incidente.codigo %>)</td>
                     <td><%= incidente.nombre_encargado %></td>
                     <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
-                    <td><%= incidente.clasificacion || 'N/A' %></td>
+                    <td><%= incidente.clasificacion || 'Pendiente' %></td>
                     <td><%= incidente.nombre_servicio || 'Pendiente' %></td> 
                     <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
                     <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>

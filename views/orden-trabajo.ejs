@@ -29,7 +29,6 @@
                 <th>Descripción</th>
                 <th>Clasificación</th>
                 <th>Servicio</th>
-                <th>Técnico Asignado</th>
                 <th>Resolución</th>
                 <th>Estado</th>
                 <th>Prioridad</th>
@@ -51,7 +50,6 @@
                     <td class="col-descripcion" title="<%= incidente.descripcion %>"><%= incidente.descripcion %></td>
                     <td><%= incidente.clasificacion %></td>
                     <td><%= incidente.nombre_servicio || 'Pendiente' %></td> 
-                    <td><%= incidente.nombre_tecnico || 'Sin asignar' %></td>
                     <td class="col-descripcion" title="<%= incidente.resolucion %>"><%= incidente.resolucion || 'Pendiente' %></td>
                     <td><%= incidente.estado %></td>
                     <td>

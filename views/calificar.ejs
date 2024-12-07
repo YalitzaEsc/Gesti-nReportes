@@ -11,15 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Calificar</title>
 </head>
-<body class = "calificar-body">
+<body class="calificar-body">
     <div class="modal">
         <div class="modal-header">
-            <h2 class = "titulos-inc">Calificar Técnico</h2>
+            <h2 class="titulos-inc">Calificar Técnico</h2>
         </div>
         <div class="modal-content">
             <div class="avatar">
                 <img src="images/user.png" alt="imagen de usuario" height="150">
-            </div>
+            </div>            
+
             <p class="rating">Del 1 al 5, ¿qué calificación le das a <strong><%= nombre_tecnico %></strong>?</p>
             <div class="stars">
                 <span class="star" data-rating="1">&#9733;</span>
@@ -28,11 +29,26 @@
                 <span class="star" data-rating="4">&#9733;</span>
                 <span class="star" data-rating="5">&#9733;</span>
             </div>
+
             <form action="/calificar" method="POST">
                 <input type="hidden" name="id_incidente" value="<%= incidente.id_incidente %>">
                 <input type="hidden" name="id_tecnico" value="<%= incidente.id_tecnico %>">
                 <input type="hidden" name="calificacion" id="calificacion" value="0">
-                <button type="submit" class="submit-btn" disabled>Enviar</button>
+                
+                <div class = "square">
+                    <label for="termino_en_tiempo" class="rating">¿Terminó en el tiempo estimado?</label>
+                    <select class = "select-orden" name="termino_en_tiempo" id="termino_en_tiempo">
+                        <option value="">Selecciona una opción</option>
+                        <option value="Sí">Sí</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                
+                <div class = "square">
+                     <label for="comentarios" class="rating">¿Desea agregar un comentario?</label>
+                    <textarea name="comentarios"  class="comentarios" id="comentarios" rows="4" placeholder="Escribe tu comentario aquí..."></textarea><br>
+                    <button type="submit" class="submit-btn" disabled>Enviar</button>
+                </div>
             </form>
         </div>
     </div>

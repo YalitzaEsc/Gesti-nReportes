@@ -194,47 +194,54 @@ app.post('/agregarIncidencia', async (req, res) => {
 
 app.get('/incidencias', async (req, res) => {
   if (req.isAuthenticated()) {
-      try {
-          const usuario = res.locals.user;
-          const id_departamento = usuario.id_departamento;
-          const { estado } = req.query;
+    try {
+      const usuario = res.locals.user;
+      const id_departamento = usuario.id_departamento;
+      const { estado } = req.query;
 
-          let query = `
-              SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
-                     e.nombre AS nombre_elemento, e.codigo, 
-                     l.nombre AS nombre_localidad,
-                     d.nombre AS nombre_departamento,
-                     ed.nombre AS nombre_edificio,
-                     enc.nombre AS nombre_encargado,
-                     u.nombre AS nombre_tecnico,
-                     (SELECT COUNT(*) FROM calificaciones c WHERE c.id_incidente = i.id_incidente) AS tiene_calificacion
-              FROM incidentes i
-              JOIN elementos e ON i.id_elemento = e.id_elemento
-              LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
-              LEFT JOIN edificios ed ON l.id_edificio = ed.id_edificio
-              LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
-              LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
-              LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
-              WHERE i.id_departamento = $1
-          `;
+      let query = `
+        SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+               e.nombre AS nombre_elemento, e.codigo, 
+               l.nombre AS nombre_localidad,
+               d.nombre AS nombre_departamento,
+               ed.nombre AS nombre_edificio,
+               enc.nombre AS nombre_encargado,
+               u.nombre AS nombre_tecnico,
+               s.nombre AS nombre_servicio,   -- Obtener el servicio
+               i.clasificacion,               -- Obtener clasificación
+               -- Formatear la hora estimada de finalización (12h sin fecha)
+               TO_CHAR(i.fecha_creacion + INTERVAL '1 hour' * s.tiempo_estimado, 'HH12:MI:SS AM') AS hora_estimada,
+               -- Formatear la hora de resolución (12h sin fecha)
+               TO_CHAR(i.fecha_resolucion, 'HH12:MI:SS AM') AS hora_resolucion,
+               (SELECT COUNT(*) FROM calificaciones c WHERE c.id_incidente = i.id_incidente) AS tiene_calificacion
+        FROM incidentes i
+        JOIN elementos e ON i.id_elemento = e.id_elemento
+        LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+        LEFT JOIN edificios ed ON l.id_edificio = ed.id_edificio
+        LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+        LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+        LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+        LEFT JOIN servicios s ON i.id_servicio = s.id_servicio  -- Unir con la tabla de servicios
+        WHERE i.id_departamento = $1
+      `;
 
-          const params = [id_departamento];
-          if (estado) {
-              query += ` AND i.estado = $2`;
-              params.push(estado);
-          }
-
-          query += ` ORDER BY i.fecha_creacion DESC`;
-
-          const incidentes = await db.query(query, params);
-
-          res.render('incidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
-      } catch (error) {
-          console.error('Error al obtener los incidentes:', error);
-          res.status(500).send('Error al obtener los incidentes');
+      const params = [id_departamento];
+      if (estado) {
+        query += ` AND i.estado = $2`;
+        params.push(estado);
       }
+
+      query += ` ORDER BY i.fecha_creacion DESC`;
+
+      const incidentes = await db.query(query, params);
+
+      res.render('incidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
+    } catch (error) {
+      console.error('Error al obtener los incidentes:', error);
+      res.status(500).send('Error al obtener los incidentes');
+    }
   } else {
-      res.redirect('/login');
+    res.redirect('/login');
   }
 });
 
@@ -243,29 +250,32 @@ app.get('/administrarIncidencias', async (req, res) => {
     try {
       const { estado } = req.query;
 
-      // Consulta para obtener los incidentes con los detalles adicionales
+      // Crear la consulta base con un LEFT JOIN para obtener el costo de la solicitud de cambio si el estado es "En autorización"
       let query = `
-        SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
-               e.nombre AS nombre_elemento, e.codigo, 
-               l.nombre AS nombre_localidad,
-               d.nombre AS nombre_departamento,
-               u.nombre AS nombre_tecnico,
-               enc.nombre AS nombre_encargado,
-               edif.nombre AS nombre_edificio,
-               sc.costo,
-               i.clasificacion,                -- Añadido la clasificación
-               s.nombre AS nombre_servicio,    -- Nombre del servicio
-               s.tiempo_estimado               -- Tiempo estimado del servicio (en horas)
-        FROM incidentes i
-        JOIN elementos e ON i.id_elemento = e.id_elemento
-        LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
-        LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
-        LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
-        LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
-        LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
-        LEFT JOIN solicitudes_cambio sc ON i.id_incidente = sc.id_incidente AND i.estado = 'En autorización'
-        LEFT JOIN servicios s ON i.id_servicio = s.id_servicio -- Añadido JOIN para obtener el nombre del servicio
-      `;
+      SELECT i.id_incidente, i.descripcion, i.estado, i.fecha_creacion, i.fecha_resolucion, i.resolucion,
+             e.nombre AS nombre_elemento, e.codigo, 
+             l.nombre AS nombre_localidad,
+             d.nombre AS nombre_departamento,
+             u.nombre AS nombre_tecnico,
+             enc.nombre AS nombre_encargado,
+             edif.nombre AS nombre_edificio,
+             sc.costo,
+             s.nombre AS nombre_servicio,   -- Agregar servicio
+             i.clasificacion,               -- Obtener clasificación
+             -- Formatear la hora estimada de finalización (12h sin fecha)
+             TO_CHAR(i.fecha_creacion + INTERVAL '1 hour' * s.tiempo_estimado, 'HH12:MI:SS AM') AS hora_estimada,
+             -- Formatear la hora de resolución (12h sin fecha)
+             TO_CHAR(i.fecha_resolucion, 'HH12:MI:SS AM') AS hora_resolucion
+      FROM incidentes i
+      JOIN elementos e ON i.id_elemento = e.id_elemento
+      LEFT JOIN localidades l ON e.id_localidad = l.id_localidad
+      LEFT JOIN departamentos d ON i.id_departamento = d.id_departamento
+      LEFT JOIN usuarios u ON i.id_tecnico = u.id_usuario
+      LEFT JOIN encargados enc ON l.id_encargado = enc.id_encargado
+      LEFT JOIN edificios edif ON l.id_edificio = edif.id_edificio
+      LEFT JOIN solicitudes_cambio sc ON i.id_incidente = sc.id_incidente AND i.estado = 'En autorización'
+      LEFT JOIN servicios s ON i.id_servicio = s.id_servicio  -- Unir con la tabla de servicios
+    `;
 
       // Aplicar filtro de estado si está presente
       const params = [];
@@ -279,38 +289,8 @@ app.get('/administrarIncidencias', async (req, res) => {
       // Ejecutar la consulta
       const incidentes = await db.query(query, params);
 
-      // Función para formatear hora en formato hh:mm:ss AM/PM
-      const formatAMPM = (date) => {
-        let hours = date.getHours();
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // La hora "0" se convierte en 12
-        return `${hours}:${minutes}:${seconds} ${ampm}`;
-      };
-
-      // Procesar los incidentes para calcular la hora estimada de finalización y la hora de resolución
-      incidentes.rows.forEach(incidente => {
-        const fechaCreacion = new Date(incidente.fecha_creacion);
-        const tiempoEstimado = incidente.tiempo_estimado || 0; // En horas
-
-        // Calcular la hora estimada de finalización sumando el tiempo estimado al momento de la creación
-        fechaCreacion.setHours(fechaCreacion.getHours() + tiempoEstimado);
-        incidente.hora_estimada = formatAMPM(fechaCreacion);
-
-        // Si existe fecha de resolución, formatearla igualmente
-        if (incidente.fecha_resolucion) {
-          const fechaResolucion = new Date(incidente.fecha_resolucion);
-          incidente.hora_resolucion = formatAMPM(fechaResolucion);
-        }
-      });
-
-      // Renderizar la vista con los incidentes y el estado seleccionado
-      res.render('administrarIncidencias', { 
-        incidentes: incidentes.rows, 
-        estadoSeleccionado: estado 
-      });
+      // Renderizar la vista con los incidentes filtrados y el estado seleccionado
+      res.render('administrarIncidencias', { incidentes: incidentes.rows, estadoSeleccionado: estado });
     } catch (error) {
       console.error('Error al obtener los incidentes:', error);
       res.status(500).send('Error al obtener los incidentes');
@@ -319,6 +299,7 @@ app.get('/administrarIncidencias', async (req, res) => {
     res.redirect('/login');
   }
 });
+
 
 
 app.get('/asignar', async (req, res) => {
@@ -728,14 +709,14 @@ app.get('/calificar', async (req, res) => {
 });
 
 app.post('/calificar', async (req, res) => {
-  const { id_incidente, id_tecnico, calificacion } = req.body;
+  const { id_incidente, id_tecnico, calificacion, termino_en_tiempo, comentarios } = req.body;
 
   try {
-      // Insertar la calificación en la tabla `calificaciones`
+      // Insertar la calificación y los nuevos campos en la tabla `calificaciones`
       await db.query(
-          `INSERT INTO calificaciones (id_tecnico, id_incidente, calificacion)
-           VALUES ($1, $2, $3)`,
-          [id_tecnico, id_incidente, calificacion]
+          `INSERT INTO calificaciones (id_tecnico, id_incidente, calificacion, puntual, comentarios)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [id_tecnico, id_incidente, calificacion, termino_en_tiempo, comentarios]
       );
 
       res.send(`
