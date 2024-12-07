@@ -731,6 +731,42 @@ app.post('/calificar', async (req, res) => {
   }
 });
 
+app.get('/calificaciones', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const query = `
+        SELECT 
+          calificaciones.id_calificacion,
+          calificaciones.id_incidente,
+          usuarios.nombre AS nombre_tecnico,
+          encargados.nombre AS nombre_encargado,
+          calificaciones.calificacion,
+          calificaciones.puntual,
+          calificaciones.comentarios
+        FROM 
+          calificaciones
+        JOIN 
+          incidentes ON calificaciones.id_incidente = incidentes.id_incidente
+        LEFT JOIN 
+          usuarios ON calificaciones.id_tecnico = usuarios.id_usuario
+        LEFT JOIN 
+          encargados ON incidentes.id_encargado = encargados.id_encargado;
+      `;
+      
+      const calificaciones = await db
+        .query(query)
+        .then((result) => result.rows);
+
+      res.render('calificaciones', { calificaciones });
+    } catch (error) {
+      console.error('Error al cargar la vista de calificaciones:', error);
+      res.status(500).send('Error al cargar la vista de calificaciones');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
 
 
 app.get("/edificiosVista", async (req, res) => {

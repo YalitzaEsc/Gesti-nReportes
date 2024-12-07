@@ -1,0 +1,37 @@
+<%- include("partials/header.ejs") %>
+
+<h1 class="titulos-inc">Calificaciones</h1>
+
+<table class="tabla-incidencias">
+    <thead>
+      <tr class="columnas-incidencias">
+        <th>ID Incidente</th>
+        <th>Nombre del Técnico</th>
+        <th>Nombre del Encargado</th>
+        <th>Calificación</th>
+        <th>¿Termino en el tiempo estimado?</th>
+        <th>Comentarios</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (calificaciones.length > 0) { %>
+        <% calificaciones.forEach(calificacion => { %>
+          <tr class="filas-incidencias">
+            <td><%= calificacion.id_incidente %></td>
+            <td><%= calificacion.nombre_tecnico %></td>
+            <td><%= calificacion.nombre_encargado %></td>
+            <td><%= calificacion.calificacion %></td>
+            <td><%= calificacion.puntual %></td>
+            <td><%= calificacion.comentarios || 'Sin comentarios' %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="6">No hay calificaciones registradas</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+<%- include("partials/footer.ejs") %>
