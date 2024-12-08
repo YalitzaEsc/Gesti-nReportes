@@ -1,0 +1,60 @@
+<%- include("partials/header.ejs") %>
+
+<h1 class="titulos-inc">Tabla de problemas</h1>
+
+<!-- Campo de búsqueda -->
+<div class="busqueda">
+  <input type="text" id="searchInput" class = "input-incidencia" placeholder="Buscar por código..." onkeyup="searchTable()">
+</div>
+
+<table class="tabla-incidencias">
+    <thead>
+      <tr class="columnas-incidencias">
+        <th>ID Elemento</th>
+        <th>Error conocido</th>
+        <th>Causa raíz</th>
+        <th>Solución</th>
+      </tr>
+    </thead>
+    <tbody id="problemasTable">
+      <% if (problemas.length > 0) { %>
+        <% problemas.forEach(problema => { %>
+          <tr class="filas-incidencias">
+            <td><%= problema.codigo %></td>
+            <td><%= problema.error_conocido %></td>
+            <td><%= problema.causa_raiz %></td>
+            <td><%= problema.solucion %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="6">No hay problemas registrados.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  // Función de búsqueda
+  function searchTable() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+    const table = document.getElementById("problemasTable");
+    const tr = table.getElementsByTagName("tr");
+
+    // Iterar sobre todas las filas de la tabla
+    for (let i = 0; i < tr.length; i++) {
+      const td = tr[i].getElementsByTagName("td")[0]; // Obtener la columna del código (primera columna)
+      if (td) {
+        const txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = ""; // Mostrar fila si coincide con el filtro
+        } else {
+          tr[i].style.display = "none"; // Ocultar fila si no coincide
+        }
+      }
+    }
+  }
+</script>

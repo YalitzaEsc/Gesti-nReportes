@@ -778,6 +778,10 @@ app.get("/edificiosVista", async (req, res) => {
           // Obtener todos los departamentos excepto "Acceso General"
           const departamentos = await db.query("SELECT * FROM departamentos WHERE nombre != 'Acceso General' ORDER BY nombre ASC");
 
+          // Obtener técnicos de software y hardware
+          const tecnicos_software = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Software'");
+          const tecnicos_hardware = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Hardware'");
+
           let edificiosPorDepartamento = {};
 
           if (selectedDepartamento) {
@@ -833,7 +837,8 @@ app.get("/edificiosVista", async (req, res) => {
               departamentos: departamentos.rows,
               edificiosPorDepartamento,
               selectedDepartamento,
-              searchQuery
+              searchQuery,
+              tecnicos: [...tecnicos_software.rows, ...tecnicos_hardware.rows] // Combina técnicos de software y hardware
           });
       } catch (error) {
           console.error("Error al cargar la vista de edificios:", error);
@@ -844,6 +849,76 @@ app.get("/edificiosVista", async (req, res) => {
   }
 });
 
+
+app.get('/asignarProblema', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const { id_elemento } = req.query;
+
+      // Obtener la lista de técnicos
+      const tecnicos_software = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Software'");
+      const tecnicos_hardware = await db.query("SELECT id_usuario, nombre FROM usuarios WHERE puesto = 'Tecnico en Hardware'");
+
+
+      res.render('asignarProblema', {
+          id_elemento,
+          tecnicos_software: tecnicos_software.rows,
+          tecnicos_hardware: tecnicos_hardware.rows
+      });
+
+    } catch (error) {
+      console.error('Error al cargar la vista de asignación:', error);
+      res.status(500).send('Error al cargar la vista de asignación');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+
+app.post('/levantarProblema', async (req, res) => {
+  const { id_elemento, causa_raiz, error_conocido, solucion } = req.body;
+
+  try {
+      
+      await db.query(
+        'INSERT INTO problemas (id_elemento, causa_raiz, error_conocido, solucion) VALUES ($1, $2, $3, $4)',
+        [id_elemento, causa_raiz, error_conocido, solucion]
+      );
+
+      res.send(`
+          <script>
+              alert("Problema registrado exitosamente.");
+              window.close();
+          </script>
+      `);
+  } catch (error) {
+      console.error('Error al registrar problema:', error);
+      res.status(500).send('Error al registrar problema');
+  }
+});
+
+
+app.get('/vistaProblemas', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const query = `
+        SELECT p.*, e.codigo 
+        FROM problemas p
+        LEFT JOIN elementos e ON p.id_elemento = e.id_elemento
+      `;
+      
+      const result = await db.query(query);
+      
+      // Pasar los resultados a la vista
+      res.render('vistaProblemas', { problemas: result.rows });
+    } catch (error) {
+      console.error('Error al cargar la vista de problemas:', error);
+      res.status(500).send('Error al cargar la vista de problemas');
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
 
 // Envío del formulario de inicio de sesión
 app.post("/login", (req, res, next) => {
@@ -863,6 +938,9 @@ app.post("/login", (req, res, next) => {
     });
   })(req, res, next);
 });
+
+
+
 
 app.get('/autorizacionCambio', async (req, res) => {
     if(req.isAuthenticated()){

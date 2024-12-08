@@ -32,6 +32,12 @@
                                 <% localidad.componentes.forEach(componente => { %>
                                     <div class="componente-vista">
                                         <p><%= componente.nombre %> (<%= componente.codigo %>)</p>
+                                        <button 
+                                            class="btn-levantar-problema" 
+                                            data-id="<%= componente.id_elemento %>" 
+                                            data-nombre="<%= componente.nombre %>">
+                                            Levantar problema
+                                        </button>
                                     </div>
                                 <% }) %>
                             </div>
@@ -44,5 +50,35 @@
 <% } else if (selectedDepartamento) { %>
     <p>No hay edificios registrados para el departamento seleccionado.</p>
 <% } %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const asignarButtons = document.querySelectorAll('.btn-levantar-problema');
+
+        asignarButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // Obtiene el id del incidente desde el atributo data-id del botón
+                const idElemento = button.getAttribute('data-id');
+
+                // Configuración del tamaño del popup
+                const popupWidth = 800;
+                const popupHeight = 650;
+
+                // URL con el parámetro id_incidente
+                const url = `/asignarProblema?id_elemento=${idElemento}`;
+
+                // Calcula la posición para centrar el popup
+                const left = (window.screen.width / 2) - (popupWidth / 2);
+                const top = (window.screen.height / 2) - (popupHeight / 2);
+
+                // Abre el modal en una nueva ventana
+                window.open(url, 'Levantar problema', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+            });
+        });
+    });
+
+</script>
 
 <%- include("partials/footer.ejs") %>

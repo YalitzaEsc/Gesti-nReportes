@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dar de alta un Problema</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body class="contenedor-asignacion">
+
+    <h2 class="titulos-asig">Levantar problema</h2>
+
+    <form action="/levantarProblema" method="POST" class="form-asignar">
+        <!-- Campo oculto para el ID del elemento -->
+        <input type="hidden" name="id_elemento" value="<%= id_elemento %>">
+
+        <!-- Descripción del error conocido -->
+        <label for="error_conocido" class = "etiqueta">Error Conocido:</label>
+        <textarea name="error_conocido" id="error_conocido" class="input-incidencia descripcion" required></textarea>
+
+        <!-- Descripción de la causa raíz -->
+        <label for="causa_raiz" class = "etiqueta">Causa Raíz:</label>
+        <textarea name="causa_raiz" id="causa_raiz" class="input-incidencia descripcion" required></textarea>
+
+        <label for="solucion" class = "etiqueta">Solución:</label>
+        <textarea name="solucion" id="solucion" class="input-incidencia descripcion" required></textarea>
+
+        <!-- Botón para enviar -->
+        <button type="submit" class="agregarComponentesBtn asignarBtn">Agregar problema</button>
+    </form>
+
+    <%- include("partials/footer.ejs") %>
+</body>
+</html>

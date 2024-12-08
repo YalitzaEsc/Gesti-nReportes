@@ -1367,6 +1367,10 @@ main {
     align-items: center;
 }
 
+.busqueda {
+    margin: 10px 0 20px 0;
+}
+
 .ver-analisis-btn:hover {
     cursor: pointer;
     background-color: white;
